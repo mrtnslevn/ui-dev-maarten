@@ -1,0 +1,374 @@
+<div class='fade show' style='text-align: center; padding-top: calc(100vh / 2); height: 100vh' *ngIf="loadPage">
+  <c-spinner aria-hidden="true" size="sm" variant="grow"></c-spinner>
+  Loading...
+</div>
+<div [hidden]="loadPage" #appPayment>
+  <c-row ngPreserveWhitespaces>
+    <c-row>
+      <form cForm [formGroup]="searchAdmissionForm.form">
+        <app-card-app title="Search Bill" id="searchBill" [show]="showSearchBillCard">
+          <c-card-body>
+            <div class="row mb-3">
+              <label cLabel for="search-lob" class="col-sm-2 col-form-label">LOB<span *ngIf="selectPatientRequired" class="text-danger">*</span></label>
+              <div class="col-sm-3">
+                <select class="form-select form-select-sm" id="search-lob" formControlName="lob" 
+                [ngClass]="searchAdmissionForm.isFormValid('lob')" (ngModelChange)="onChangeLob($event)">
+                  <option value="" selected="" disabled>-- Select LOB --</option>
+                  <option *ngFor="let list of listLob" [ngValue]="list">{{list.value}}</option>
+                 </select>
+                 <div *ngIf="searchAdmissionForm.isFormError('lob')" class="text-danger">
+                  <div *ngFor="let e of searchAdmissionForm.getFormErrors('lob') | keyvalue">
+                    {{ searchAdmissionForm.getFormErrorMessage('lob', e.key) }}
+                  </div>
+                </div>
+              </div>
+              <label cLabel for="admission-sub-type" class="col-sm-2 col-form-label">
+                Admission Sub Type
+              </label>
+              <div class="col-sm-3">
+                <select class="form-select form-select-sm" id="admission-sub-type" formControlName="admissionSubType" 
+                (ngModelChange)="onChangeAdmissionSubType($event)">
+                  <option *ngFor="let list of filteredListAdmissionSubType" [ngValue]="list">{{list.admission_sub_type_name}}</option>
+                </select>
+              </div>
+            </div>
+            <div class="row mb-3">
+              <label cLabel for="admission-date-from" class="col-sm-2 col-form-label">Admission Date From<span *ngIf="selectPatientRequired" class="text-danger">*</span></label>
+              <div class="col-sm-3">
+                <input cFormControl id="admission-date-from" type="date" sizing="sm" formControlName="admissionDateFrom" 
+                (ngModelChange)="onChangeAdmissionDateFrom($event)"
+                [ngClass]="searchAdmissionForm.isFormValid('admissionDateFrom')" />
+                <div *ngIf="searchAdmissionForm.isFormError('admissionDateFrom')" class="text-danger">
+                  <div *ngFor="let e of searchAdmissionForm.getFormErrors('admissionDateFrom') | keyvalue">
+                    {{ searchAdmissionForm.getFormErrorMessage('admissionDateFrom', e.key) }}
+                  </div>
+                </div>
+              </div>
+              <label cLabel for="admission-date-to" class="col-sm-2 col-form-label">
+                Admission Date To<span *ngIf="selectPatientRequired" class="text-danger">*</span>
+              </label>
+              <div class="col-sm-3">
+                <input cFormControl id="admission-date-to" type="date" sizing="sm" formControlName="admissionDateTo" 
+                (ngModelChange)="onChangeAdmissionDateTo($event)"
+                [ngClass]="searchAdmissionForm.isFormValid('admissionDateTo')" />
+                <div *ngIf="searchAdmissionForm.isFormError('admissionDateTo')" class="text-danger">
+                  <div *ngFor="let e of searchAdmissionForm.getFormErrors('admissionDateTo') | keyvalue">
+                    {{ searchAdmissionForm.getFormErrorMessage('admissionDateTo', e.key) }}
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row mb-3">
+              <label cLabel for="search-admission-no" class="col-sm-2 col-form-label">Admission No.</label>
+              <div class="col-sm-3">
+                <input cFormControl id="search-admission-no" type="text" sizing="sm" formControlName="admissionNo"
+                (ngModelChange)="onChangeAdmissionNo($event)" />
+              </div>
+            </div>
+            <c-row class="mb-3">
+              <c-col sm="2">
+                <label cLabel class="col-form-label-sm" for="select-patient-mr-no">
+                  MR No<span *ngIf="selectPatientRequired" class="text-danger">*</span>
+                </label>
+              </c-col>
+              <c-col sm="3">
+                  <input cFormControl id="select-patient-mr-no" type="text" formControlName="mrNo" (ngModelChange)="onChangeMrNo($event)" sizing="sm"
+                  [ngClass]="searchAdmissionForm.isFormValid('mrNo')"/>
+                  <div *ngIf="searchAdmissionForm.isFormError('mrNo')" class="text-danger">
+                    <div *ngFor="let e of searchAdmissionForm.getFormErrors('mrNo') | keyvalue">
+                      {{ searchAdmissionForm.getFormErrorMessage('mrNo', e.key) }}
+                    </div>
+                  </div>
+              </c-col>
+              <c-col sm="2">
+                <label cLabel class="col-form-label-sm" for="select-patient-name">
+                  Patient Name
+                </label>
+              </c-col>
+              <c-col sm="3">
+                <input cFormControl id="select-patient-name" type= "text" formControlName="patientName" (ngModelChange)="onChangePatientName($event)" sizing="sm" />
+              </c-col>
+            </c-row>
+          </c-card-body>
+          <c-card-footer>
+            <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+              <button cButton color="primary" id="btnSearchBill" type="button" size="sm" (click)="onValidateSearchAdmissionList()"
+                [disabled]="progress">
+                <div *ngIf="!progress">
+                  <svg cIcon class="me-2" name="cil-search"></svg> Search
+                </div>
+                <div *ngIf="progress">
+                  <c-spinner aria-hidden="true" size="sm" variant="grow"></c-spinner>
+                  Loading...
+                </div>
+              </button>
+              <button cButton class="btn btn-primary btn-sm" type="button" (click)="onReset()">
+                <svg cIcon name="cilReload" size="sm"></svg>
+                Reset
+              </button>
+            </div>
+          </c-card-footer>
+          
+          <div class='fade show modal-body' style='text-align: center;' *ngIf="progress">
+            <c-spinner aria-hidden="true" size="sm" variant="grow"></c-spinner>
+            Loading...
+          </div>
+          <!-- table search result -->
+          <c-card-body style="display: block; overflow-x:scroll;" *ngIf="search && !progress">
+            <div class="row mb-3 mt-3">
+              <caption>Search Result</caption>
+              <table id="tableSearchBill" cTable responsive="true" [striped]="true"
+                style="width: 100%;  white-space: nowrap; overflow-x: auto;">
+                <thead>
+                  <tr>
+                    <th scope="col">
+                      <div class="text-center">
+                        <input cFormCheckInput type="checkbox" id="checkAllSearchBill" (change)="admissionListSelectAll($event)" >
+                      </div>
+                    </th>
+                    <th scope="col">Admission ID</th>
+                    <th scope="col">Admission Type</th>
+                    <th scope="col">Admission Sub Type</th>
+                    <th scope="col">Payer</th>
+                    <th scope="col">Admission No</th>
+                    <th scope="col">Admission Date</th>
+                    <th scope="col">MR No</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Address</th>
+                    <th scope="col">City</th>
+                    <th scope="col">Birth Date</th>
+                    <th scope="col">Sex</th>
+                  </tr>
+                </thead>
+                <tbody id="tbodySearchBill" *ngIf="admissionList.length > 0; else no_data">
+                  <tr *ngFor="let d of admissionList">
+                    <td scope="col">
+                      <div class="text-center">
+                        <input cFormCheckInput type="checkbox" [checked]="d.checked" (change)="admissionListChangeRadio(d, $event)">
+                      </div>
+                    </td>
+                    <td scope="col">{{d.admission_id}}</td>
+                    <td scope="col">{{d.admission_type}}</td>
+                    <td scope="col">{{d.admission_sub_type}}</td>
+                    <td scope="col">{{d.payer_name}}</td>
+                    <td scope="col">{{d.admission_no}}</td>
+                    <td scope="col">{{d.admission_date | date: 'dd-MMM-yyyy HH:mm'}}</td>
+                    <td scope="col">{{d.mr_no}}</td>
+                    <td scope="col">{{d.patient_name}}</td>
+                    <td scope="col">{{d.address}}</td>
+                    <td scope="col">{{d.city}}</td>
+                    <td scope="col">{{d.dob | date: 'dd MMM yyyy'}}</td>
+                    <td scope="col">{{d.sex}}</td>
+                  </tr>
+                </tbody>
+              </table>
+              <ng-template #no_data>
+                <tr ngClass="text-center">
+                  <td colspan="11">No Data</td>
+                </tr>
+              </ng-template>
+            </div>
+          </c-card-body>
+          <c-card-footer [hidden]="!search">
+            <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+              <button cButton type="button" id="btnAddBill" data-click="1" (click)="addBill()"
+                class="btn btn-primary btn-sm">
+                <svg cIcon name="cilPlus" size="sm"></svg>
+                Add Bill
+              </button>
+            </div>
+          </c-card-footer>
+        </app-card-app>
+      </form>
+      <app-card-combined-bill [footer]="true" [checkbox]="true" [(data)]="combinedBillList" 
+        [(invoice)]="invoice" [(orderedItem)]="orderedItem" [(patientInfo)]="patientInfo" 
+        [admissionList]="admissionList" [loadPage]="loadCombinedBillCard" 
+        [show]="showCombinedBillCard" (removeBillEvent)="removeBill()">
+      </app-card-combined-bill>
+      <ng-template contextDisposer let-context>
+        <app-card-patient-info [(data)]="patientInfo" [(payerChanged)]="shouldRecalculate" 
+        [searchPayer]="context.checkAction('0211_change_payer')" [loadPage]="loadPatientInfoCard" 
+        [show]="showPatientInfoCard" [(patientTypePayer)]="patientTypePayer" [payment]="true">
+        </app-card-patient-info>
+      </ng-template>
+      <app-card-ordered-item [footer]="true" [(data)]="orderedItem" (dataChange)="updateBilling()" [patientInfo]="patientInfo" 
+      [admissionList]="combinedBillList" [loadPage]="loadOrderedItemCard" [show]="showOrderedItemCard" [payment]="true"> 
+      </app-card-ordered-item>
+      <ng-template contextDisposer let-context> 
+        <app-card-input-sales-discount [admissionList]="combinedBillList" [orderedItem]="orderedItem" 
+        [show]="showInputSalesDiscountCard" (discountSaved)="updateBilling()">
+        </app-card-input-sales-discount>
+        <app-card-invoice [payment]="true" [(data)]="invoice" [showFooter]="true" 
+          [(paymentData)]="payment" [combinedBillList]="combinedBillList" [patientInfo]="patientInfo" 
+          [orderedItemList]="orderedItem" [saveInvoiceOrderedItem]="saveInvoiceOrderedItem" [(shouldRecalculate)]="shouldRecalculate" (recalculate)="recalculateBilling($event)"
+          [loadPage]="loadInvoiceCard" (dataChange)="recalculateBilling($event)" [disableDiscount]="context.checkAction('0216_add_invoice_discount')"
+          (saveInvoice)="saveInvoice($event)" [show]="showInvoiceCard" [showPrintButton]="context.checkAction('02110_print_invoice_sementara')"
+          [patientTypePayer]="patientTypePayer">
+        </app-card-invoice>
+      </ng-template>
+      <app-card-app title='Payment' [show]="showPaymentCard">
+        <c-card-body>
+          <form [formGroup]="fs.form">
+            <c-row class="mb-3">
+              <c-col xs="6">
+                <app-card-app title='Amount to be Settled' [show]="showPaymentCard">
+                  <c-card-body>
+                      <div class="row mb-3">
+                        <label for="amountToBeSettled" class="col-sm-4 col-form-label" cLabel>Amount to
+                          settled</label>
+                        <div class="col-sm-6">
+                          <input type="text" class="form-control form-control-sm" id="amountToBeSettled"
+                            [disabled]="readOnlyAmountToSettled" value="{{payment.amount_to_settled | number}}">
+                        </div>
+                      </div>
+                      <div class="row mb-3">
+                        <label for="settleAmount" class="col-sm-4 col-form-label" cLabel>Settled
+                          Amount</label>
+                        <div class="col-sm-6">
+                          <input type="text" class="form-control form-control-sm" id="settleAmount"
+                            [disabled]="readOnlySettleAmount"  value="{{payment.settle_amount | number}}">
+                        </div>
+                      </div>
+                      <div class="row mb-3">
+                        <label for="balance" class="col-sm-4 col-form-label" cLabel>Balance</label>
+                        <div class="col-sm-6">
+                          <input type="text" class="form-control form-control-sm" id="balance" [disabled]="readOnlyBalance"
+                          value="{{payment.balance | number}}">
+                        </div>
+                      </div>
+                      <div class="row mb-3">
+                        <label for="depositBalance" class="col-sm-4 col-form-label" cLabel>Deposit
+                          Balance</label>
+                        <div class="col-sm-6">
+                          <input type="text" class="form-control form-control-sm" id="depositBalance"
+                            [disabled]="readOnlyDeposit" value="{{ payment.deposit_balance | number}}">
+                        </div>
+                      </div>
+                      <div class="row mb-3">
+                        <label for="amount" class="col-sm-4 col-form-label" cLabel>Amount</label>
+                        <div class="col-sm-6">
+                          <fieldset [disabled]="readOnlyAmount">
+                            <input cFormControl type="text" id="amount" formControlName="amount" 
+                            class="form-control form-control-sm currency_input"
+                            [ngClass]="fs.isFormValid('amount')"
+                            (ngModelChange)="onChangePaymentAmount($event)"
+                            numeric>
+                          </fieldset>
+                          <div *ngIf="fs.isFormError('amount')" class="text-danger">
+                            <div *ngFor="let e of fs.getFormErrors('amount') | keyvalue">{{ fs.getFormErrorMessage('amount', e.key) }}</div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row mb-3">
+                        <label for="paymentMode" class="col-sm-4 col-form-label" cLabel>Payment
+                          Mode</label>
+                        <div class="col-sm-6">
+                          <fieldset [disabled]="readOnlyPaymentMode">
+                            <select cSelect id="paymentMode" formControlName="paymentMode" 
+                            class="form-select form-select-sm" 
+                            [ngClass]="fs.isFormValid('paymentMode')"
+                            (ngModelChange)="onChangePaymentMode($event)">
+                              <option selected="" disabled="">-- Select Payment Mode --</option>
+                              <option *ngFor="let p of paymentModeList" [ngValue]="p">{{ p.value }}</option>
+                            </select>
+                          </fieldset>
+                          <div *ngIf="fs.isFormError('paymentMode')" class="text-danger">
+                            <div *ngFor="let e of fs.getFormErrors('paymentMode') | keyvalue">{{ fs.getFormErrorMessage('paymentMode', e.key) }}</div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row mb-3" id="divQrisBank" style="display: none">
+                        <label for="qrisBank" class="col-sm-4 col-form-label" cLabel>Bank</label>
+                        <div class="col-sm-6">
+                          <select class="form-select form-select-sm" id="qrisBank" [disabled]="readOnlyBank">
+                            <option selected></option>
+                            <option value="1">Nobu</option>
+                            <option value="2">CIMB Niaga</option>
+                          </select>
+                        </div>
+                      </div>
+                      <div class="row mb-3">
+                        <label for="netPayment" class="col-sm-4 col-form-label" cLabel>Net</label>
+                        <div class="col-sm-6">
+                          <input type="text" class="form-control form-control-sm" id="netPayment" [disabled]="readOnlyNet" value="{{payment.net | number: '.0-4'}}">
+                        </div>
+                      </div>
+                    
+                  </c-card-body>
+                </app-card-app>
+              </c-col>
+              <c-col xs="6">
+                <app-div-bank-transfer [(data)]="bankTransfer" [readOnly]="!paymentMode.bankTransfer" 
+                  [(formValid)]="formValid.bankTransfer" [submitted]="fs.submitted" 
+                  [hidden]="!paymentMode.bankTransfer">
+                </app-div-bank-transfer>
+                <app-div-cash [(data)]="cash" [readOnly]="!paymentMode.cash" 
+                  [(formValid)]="formValid.cash" [submitted]="fs.submitted" [payment]="payment" 
+                  [hidden]="!paymentMode.cash">
+                </app-div-cash>
+                <app-div-deposit-ipd [hidden]="!paymentMode.depositIpd"></app-div-deposit-ipd>
+                <app-div-digital-payment [(data)]="digitalPayment" 
+                  [readOnly]="!paymentMode.digitalPayment" [(formValid)]="formValid.digitalPayment" 
+                  [(submitted)]="fs.submitted" [transactionType]="'Payment'" [patientInfo]="patientInfo" 
+                  [invoice]="invoice" [payment]="payment" [hidden]="!paymentMode.digitalPayment" 
+                  [paymentFormValid]="fs.valid">
+                </app-div-digital-payment>
+                <app-div-edc [(data)]="card" [readOnly]="!paymentMode.edc" [paymentFormValid]="fs.valid" 
+                  [(formValid)]="formValid.edc" [(submitted)]="fs.submitted" [payment]="payment" 
+                  [hidden]="!paymentMode.edc">
+                </app-div-edc>
+                <app-div-giro [(data)]="giro" [readOnly]="!paymentMode.giro"
+                  [(formValid)]="formValid.giro" [submitted]="fs.submitted" 
+                  [hidden]="!paymentMode.giro"></app-div-giro>
+                <app-div-payer [(data)]="payer" [readOnly]="!paymentMode.payer"
+                  [(formValid)]="formValid.payer" [submitted]="fs.submitted" 
+                  [hidden]="!paymentMode.payer">
+                </app-div-payer>
+                <app-div-prepaid [(data)]="prepaid" [readOnly]="!paymentMode.prepaid" 
+                  [(formValid)]="formValid.prepaid" [submitted]="fs.submitted" 
+                  [patientInfo]="patientInfo" [hidden]="!paymentMode.prepaid" (dataChange)="updateAmountFromPrepaid()">
+                </app-div-prepaid>
+                <app-div-qris [hidden]="!paymentMode.qris"></app-div-qris>
+                <app-div-voucher [hidden]="!paymentMode.voucher"></app-div-voucher>
+              </c-col>
+            </c-row>
+          </form>
+        </c-card-body>
+        <c-card-footer>
+          <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+            <ng-template contextDisposer let-context>
+              <button cButton id="btnAdd" class="btn btn-primary btn-sm" [disabled]="disabledAdd"
+                (click)="addPaymentMode()" *ngIf="context.checkAction('0219_add_payment')">
+                <svg cIcon name="cilPlus" size="sm"></svg>
+                Add
+              </button>
+            </ng-template>
+            <button cButton id="btnSave" class="btn btn-primary btn-sm"
+              (click)="submitAddPayment()" [disabled]="savePaymentProgress || disabledSave">
+              <div *ngIf="!savePaymentProgress">
+                <svg cIcon name="cilSave" size="sm"></svg> Save
+              </div>
+              <div *ngIf="savePaymentProgress">
+                <c-spinner aria-hidden="true" size="sm" variant="grow"></c-spinner>
+                Loading...
+              </div>
+            </button>
+            <button cButton id="btnCancel" [disabled]="disabledCancel || savePaymentProgress" class="btn btn-primary btn-sm"
+              (click)="cancelAddPaymentMode()">
+              <svg cIcon name="cilX" size="sm"></svg>
+              Cancel
+            </button>
+          </div>
+        </c-card-footer>
+      </app-card-app>
+      <ng-template contextDisposer let-context>
+        <app-card-payment-settlement [type]="'payment'" [showFooter]="true"
+        [patientInfo]="patientInfo" [invoice]="invoice" [params]="paymentSettlementParams" 
+        [showPrintOri]="context.checkAction('02111_print_invoice_original') || context.checkAction('02112_print_invoice_original_many_times')"
+        [printOriManyTimes]="context.checkAction('02112_print_invoice_original_many_times')"
+        [showPrintCopy]="context.checkAction('02114_print_invoice_copy')" [show]="showPaymentSettlementCard">
+        </app-card-payment-settlement>
+      </ng-template>
+    </c-row>
+  </c-row>
+</div>

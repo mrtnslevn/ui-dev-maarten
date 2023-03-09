@@ -1,0 +1,236 @@
+<div class='fade show' style='text-align: center; padding-top: calc(100vh / 2); height: 100vh' *ngIf="loadPage">
+  <c-spinner aria-hidden="true" size="sm" variant="grow"></c-spinner>
+  Loading...
+</div>
+<div *ngIf="loadPage==false">
+<c-row ngPreserveWhitespaces>
+  <c-col xs="12">
+    <form cForm>
+      <app-card-app title="Search Invoice">
+        <c-card-body>
+          <c-row class="mb-3">
+            <c-col sm="2">
+              <label cLabel class="col-form-label" for="lob">
+                LOB
+              </label>
+            </c-col>
+            <c-col sm="3">
+              <select class="form-select form-select-sm" id="lob" name="lob" [(ngModel)]="selectedLob"
+              (ngModelChange)="onChangeLob($event)">
+                <option *ngFor="let list of listLob" [ngValue]="list">{{list.value}}</option>
+               </select>
+            </c-col>
+            <c-col sm="2">
+              <label cLabel class="col-form-label" for="admission-no">
+                Admission No.
+              </label>
+            </c-col>
+            <c-col sm="3">
+              <input cFormControl id="admission-no" type="text" sizing="sm" name="admissionno" [(ngModel)]="admissionNo"
+              (ngModelChange)="onChangeAdmissionNo($event)" />
+            </c-col>
+          </c-row>
+          <c-row class="mb-3">
+            <c-col sm="2">
+              <label cLabel class="col-form-label" for="invoice-no">
+                Invoice No
+              </label>
+            </c-col>
+            <c-col sm="3">
+              <input cFormControl id="invoice-no" type="text" sizing="sm" name="invoiceno" [(ngModel)]="invoiceNo"
+              (ngModelChange)="onChangeInvoiceNo($event)"/>
+            </c-col>
+            <c-col sm="2">
+              <label cLabel class="col-form-label" for="created-user">
+                Created User
+              </label>
+            </c-col>
+            <c-col sm="3">
+              <input cFormControl id="created-user" type="text" sizing="sm" name="createduser" [(ngModel)]="createdUser"
+              (ngModelChange)="onChangeCreatedUser($event)"/>
+            </c-col>
+          </c-row>
+          <c-row class="mb-3">
+            <c-col sm="2">
+              <label cLabel class="col-form-label" for="invoice-status">
+                Invoice Status
+              </label>
+            </c-col>
+            <c-col sm="3">
+              <select class="form-select form-select-sm" id="invoice-status" name="invoice-status" [(ngModel)]="selectedInvoiceStatus"
+              (ngModelChange)="onChangeInvoiceStatus($event)">
+                <option value="" selected="" disabled>-- Select Invoice Status --</option>
+                <option *ngFor="let list of invoiceStatusList" [ngValue]="list">{{list.value}}</option>
+              </select>
+            </c-col>
+            <c-col sm="2">
+              <label cLabel class="col-form-label" for="settlement-status">
+                Settlement Status
+              </label>
+            </c-col>
+            <c-col sm="3">
+              <select class="form-select form-select-sm" id="settlement-status" name="settlement-status" [(ngModel)]="selectedSettlementStatus"
+              (ngModelChange)="onChangeSettlementStatus($event)">
+                <option value="" selected="" disabled>-- Select Settlement Status --</option>
+                <option *ngFor="let list of settlementStatusList" [ngValue]="list">{{list.value}}</option>
+                </select>
+            </c-col>
+          </c-row>
+          <c-row class="mb-3">
+            <c-col sm="2">
+              <label cLabel class="col-form-label" for="invoice-date-from">
+                Invoice Date From
+              </label>
+            </c-col>
+            <c-col sm="3">
+              <input cFormControl id="invoice-date-from" type="date" sizing="sm" name="invoiceFrom" [(ngModel)]="invoiceDateFrom"
+              (ngModelChange)="onChangeInvoiceDateFrom($event)"/>
+            </c-col>
+            <c-col sm="2">
+              <label cLabel class="col-form-label" for="invoice-date-to">
+                Invoice Date To
+              </label>
+            </c-col>
+            <c-col sm="3">
+              <input cFormControl id="invoice-date-to" type="date" sizing="sm" name="invoiceTo" [(ngModel)]="invoiceDateTo"
+              (ngModelChange)="onChangeInvoiceDateTo($event)"/>
+            </c-col>
+          </c-row>
+          <c-row class="mb-3">
+            <c-col sm="2">
+              <label cLabel class="col-form-label-sm" for="select-patient-mr-no">
+                MR No
+              </label>
+            </c-col>
+            <c-col sm="3">
+                <input cFormControl id="select-patient-mr-no" type="text" name="mrNo" [(ngModel)]="mrNo" (ngModelChange)="onChangeMrNo($event)" sizing="sm"
+                  />
+            </c-col>
+            <c-col sm="2">
+              <label cLabel class="col-form-label-sm" for="select-patient-name">
+                Patient Name
+              </label>
+            </c-col>
+            <c-col sm="3">
+              <input cFormControl id="select-patient-name" type="text" name="patientName" [(ngModel)]="patientName" (ngModelChange)="onChangePatientName($event)" sizing="sm" />
+            </c-col>
+          </c-row>
+        </c-card-body>
+        <c-card-footer footer class="text-center">
+          <button cButton color="primary" id="btn-get-invoice" type="button" size="sm" (click)="searchInvoiceList()"
+            [disabled]="progress">
+            <div *ngIf="!progress">
+              <svg cIcon class="me-2" name="cil-search"></svg> Search
+            </div>
+            <div *ngIf="progress">
+              <c-spinner aria-hidden="true" size="sm" variant="grow"></c-spinner>
+              Loading...
+            </div>
+          </button>
+          <button cButton color="primary" id="btn-reset" type="button" size="sm" (click)="onReset()">
+            <svg cIcon class="me-2" name="cil-reload" size="sm"></svg> Reset
+          </button>
+        </c-card-footer>
+      </app-card-app>
+    </form>
+  </c-col>
+</c-row>
+
+<c-row ngPreserveWhitespaces>
+  <c-col xs="12">
+      <app-card-app title="Search Result" *ngIf="searched">
+        <div class='fade show modal-body' style='text-align: center;' *ngIf="progress">
+          <c-spinner aria-hidden="true" size="sm" variant="grow"></c-spinner>
+          Loading...
+        </div>
+        <c-card-body [hidden]="progress">
+          <table cTable id="tableSearchPatientInvoice" [responsive]="true">
+            <thead>
+              <tr>
+                <th scope="col">Invoice Type</th>
+                <th scope="col">Invoice No</th>
+                <th scope="col">Invoice Date</th>
+                <th scope="col">Admission No</th>
+                <th scope="col">Admission Date</th>
+                <th scope="col">MR No</th>
+                <th scope="col">Name</th>
+                <th scope="col">Patient Type</th>
+                <th scope="col">Payer</th>
+                <th scope="col">Sex</th>
+                <th scope="col">Birth Date</th>
+                <th scope="col">Status</th>
+                <th scope="col">Settlement Status</th>
+                <th scope="col">Create User</th>
+                <th scope="col"></th>
+              </tr>
+            </thead>
+            <tbody id="tbodySearchPatientInvoice" *ngIf="listInvoice.length > 0; else no_data">
+              <tr *ngFor="let invoice of listInvoice">
+                <td>{{invoice.invoice_type}}</td>
+                <td>{{invoice.invoice_no}}</td>
+                <td>{{invoice.invoice_date | date: 'dd-MMM-yyyy HH:mm'}}</td>
+                <td>{{invoice.admission_no}}</td>
+                <td>{{invoice.admission_date | date: 'dd-MMM-yyyy HH:mm'}}</td>
+                <td>{{invoice.mr_no}}</td>
+                <td>{{invoice.patient_name}}</td>
+                <td>{{invoice.patient_type}}</td>
+                <td>{{invoice.payer_name}}</td>
+                <td>{{invoice.sex}}</td>
+                <td>{{invoice.dob}}</td>
+                <td>{{invoice.status}}</td>
+                <td>{{invoice.settlement_status}}</td>
+                <td>{{invoice.invoice_by}}</td>
+                <td>
+                  <ng-template contextDisposer let-context>
+                    <div style="display: flex" class="gap-1">
+                      <button cButton type="button" size="sm" (click)="navigateToDetails(invoice.invoice_no)"
+                      *ngIf="context.checkAction('0222_view_detail')">
+                        <svg cIcon class="me-2" name="cil-external-link"></svg>
+                      </button>
+                      <!-- <button cButton type="button" size="sm" (click)="navigateToDetails(invoice.invoice_no)" -->
+                      <!-- >
+                        <svg cIcon class="me-2" name="cil-external-link"></svg>
+                      </button> -->
+                      <button cButton color="primary" type="button" size="sm" (click)="showModalCancel(invoice.invoice_no)" 
+                      *ngIf="context.checkAction('0229_cancel_invoice') && invoice.status != 'Cancelled'">
+                      Cancel
+                      </button>
+                    </div>
+                  </ng-template>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <ng-template #no_data>
+            <tr ngClass="text-center">
+              <td colspan="15">No Data</td>
+            </tr>
+          </ng-template>
+          <pagination *ngIf="paging.total_row > 0"
+            [boundaryLinks]="true"
+            [totalItems]="paging.total_row"
+            [(ngModel)]="current_page"
+            (pageChanged)="pageChanged($event)"
+            [itemsPerPage]="paging.rows_per_page"
+            [rotate]="false"
+            [maxSize]="paging.max_size" [disabled]="progress">
+          </pagination>
+        </c-card-body>
+        <c-card-footer footer class="text-center" [hidden]="progress">
+          <ng-template contextDisposer let-context>
+            <button cButton color="primary" id="btn-export" type="button" size="sm"
+            [disabled]="progressExport" *ngIf="context.checkAction('0221_export')" (click)="exportInvoiceList()">
+              <div *ngIf="!progressExport">
+                <svg cIcon class="me-2" name="cil-file" size="sm"></svg> Export
+              </div>
+              <div *ngIf="progressExport">
+                <c-spinner aria-hidden="true" size="sm" variant="grow"></c-spinner>
+                Loading...
+              </div>
+            </button>
+          </ng-template>
+        </c-card-footer>
+      </app-card-app>
+  </c-col>
+</c-row>
+</div>

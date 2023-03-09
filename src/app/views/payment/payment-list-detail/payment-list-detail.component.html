@@ -1,0 +1,136 @@
+<div class='fade show' style='text-align: center; padding-top: calc(100vh / 2); height: 100vh' *ngIf="loadPage">
+  <c-spinner aria-hidden="true" size="sm" variant="grow"></c-spinner>
+  Loading...
+</div>
+
+<div *ngIf="loadPage==false">
+<c-row ngPreserveWhitespaces>
+  <app-card-combined-bill readonly="true" [data]="combinedBill"></app-card-combined-bill>
+</c-row>
+<c-row ngPreserveWhitespaces>
+  <app-card-patient-info readonly="true" [data]="patientInformations"></app-card-patient-info>
+</c-row>
+<c-row ngPreserveWhitespaces>
+  <app-card-ordered-item readonly="true" [data]="orderedItem" [readOnly]="true"></app-card-ordered-item>
+</c-row>
+<c-row ngPreserveWhitespaces>
+  <app-card-sales-discount readonly="true" [data]="salesDiscount" [invoiceNo]="invoiceNo"></app-card-sales-discount>
+</c-row>
+<c-row ngPreserveWhitespaces>
+  <app-card-invoice readonly="true" [data]="invoice" [disabledForm]="true" [payment]="true"></app-card-invoice>
+</c-row>
+
+<c-row ngPreserveWhitespaces>
+  <app-card-app title='Payment'>
+    <c-card-body>
+    <c-row class="mb-3">
+      <c-col xs="6">
+        <app-card-app title='Amount to be Settled'>
+          <c-card-body>
+            <form #paymentForm="ngForm">
+              <!-- <div class="row mb-3">
+                <label for="amountToBeSettled"
+                       class="col-sm-4 col-form-label-sm">Amount to
+                  settled</label>
+                <div class="col-sm-6">
+                  <input type="text"
+                         class="form-control form-control-sm"
+                         id="amountToBeSettled" readonly
+                         value="{{paymentDetail.amount}}">
+                </div>
+              </div> -->
+              <!-- <div class="row mb-3">
+                <label for="settleAmount"
+                       class="col-sm-4 col-form-label-sm">Settle
+                  Amount</label>
+                <div class="col-sm-6">
+                  <input type="text"
+                         class="form-control form-control-sm"
+                         id="settleAmount" readonly value="{{paymentDetail.amount}}">
+                </div>
+              </div> -->
+              <div class="row mb-3">
+                <label for="balance" class="col-sm-4 col-form-label" cLabel>Balance</label>
+                <div class="col-sm-6">
+                  <input type="text"
+                         class="form-control form-control-sm" readonly
+                         id="balance" value="0" value="{{paymentDetail.amount}}">
+                </div>
+              </div>
+              <!-- <div class="row mb-3">
+                <label for="depositBalance"
+                       class="col-sm-4 col-form-label-sm">Deposit
+                  Balance</label>
+                <div class="col-sm-6">
+                  <input type="text"
+                         class="form-control form-control-sm"
+                         id="depositBalance" readonly
+                         value="0" value="{{paymentDetail.amount}}">
+                </div>
+              </div> -->
+              <div class="row mb-3">
+                <label for="paymentMode"
+                       class="col-sm-4 col-form-label" cLabel>Payment
+                  Mode</label>
+                <div class="col-sm-6">
+                  <input type="text"
+                    class="form-control form-control-sm currency_input"
+                    id="paymentMode" readonly value="{{paymentDetail.payment_mode}}">
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label for="amountPayment"
+                       class="col-sm-4 col-form-label" cLabel>Amount</label>
+                <div class="col-sm-6">
+                  <input type="text"
+                         class="form-control form-control-sm"
+                         id="amountPayment" readonly value="{{paymentDetail.amount}}">
+                </div>
+              </div>
+              <!-- <div class="row mb-3">
+                <label for="netPayment"
+                       class="col-sm-4 col-form-label-sm">Net</label>
+                <div class="col-sm-6">
+                  <input type="text"
+                         class="form-control form-control-sm"
+                         id="netPayment" readonly value="{{paymentDetail.amount}}">
+                </div>
+              </div> -->
+            </form>
+          </c-card-body>
+        </app-card-app>
+      </c-col>
+      <c-col xs="6">
+        <app-div-cash *ngIf="paymentId==1"  [readOnly]="true" [data]="data"></app-div-cash>
+        <app-div-edc *ngIf="paymentId==2 || paymentId==3" [readOnly]="true" [data]="data"></app-div-edc>
+        <app-div-giro *ngIf="paymentId==4"  [readOnly]="true" [data]="data"></app-div-giro>
+        <app-div-voucher *ngIf="paymentId==5"  [readOnly]="true" [data]="data"></app-div-voucher>
+        <app-div-bank-transfer *ngIf="paymentId==6" [readOnly]="true" [data]="data"></app-div-bank-transfer>
+        <app-div-deposit-ipd *ngIf="paymentId==7" [readOnly]="true" [data]="data"></app-div-deposit-ipd>
+        <app-div-payer *ngIf="paymentId==9" [readOnly]="true" [data]="data"></app-div-payer>
+        <app-div-digital-payment *ngIf="paymentId==10" [readOnly]="true" [data]="data"></app-div-digital-payment>
+        <app-div-qris *ngIf="paymentId==11" [readOnly]="true" [data]="data"></app-div-qris>
+        <app-div-prepaid *ngIf="paymentId==12" [readOnly]="true" [data]="data"></app-div-prepaid>
+      </c-col>
+    </c-row>
+    </c-card-body>
+  </app-card-app>
+</c-row>
+
+<c-row ngPreserveWhitespaces>
+  <app-card-payment-settlement readonly="true" [data]="paymentSettlementList"></app-card-payment-settlement>
+</c-row>
+
+<c-row ngPreserveWhitespaces>
+  <c-col xs="12">
+    <c-card-body>
+      <div class="text-center">
+        <button cButton id="btnBack" class="btn btn-primary btn-sm" (click)="back()">
+          <svg cIcon name="cilArrowLeft" size="sm"></svg>
+          Back
+        </button>
+      </div>
+    </c-card-body>
+  </c-col>
+</c-row>
+</div>

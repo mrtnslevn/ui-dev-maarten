@@ -1,0 +1,47 @@
+<div class="modal-header">
+    <h5 class="modal-title pull-left">{{title}}</h5>
+    <button type="button" class="btn-close close pull-right" aria-label="Close" (click)="bsModalRef.hide()">
+      <span aria-hidden="true" class="visually-hidden">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <c-row ngPreserveWhitespaces>
+      <c-col xs="12">
+        <form cForm>
+          <c-row *ngIf="!approve" class="mb-3">
+            <c-col col="3">
+              <label cLabel class="col-form-label" for="rejectReason">{{type}} Reason</label>
+            </c-col>
+            <c-col col="4">
+              <select class="form-select form-select-sm" id="cancelReason" name="cancelReason" [ngModel]="selectedCancelReason" (ngModelChange)="onChangeCancelReason($event)">
+                <option selected="" disabled="">-- Select Reason --</option>
+                <option *ngFor="let list of listCancelReason" [ngValue]="list">{{list.value}}</option>
+              </select>
+            </c-col>
+          </c-row>
+          <c-row class="mb-3">
+            <c-col col="3">
+              <label cLabel class="col-form-label" for="notes">Notes</label>
+            </c-col>
+            <c-col col="4">
+              <textarea cFormControl class="form-control form-control-sm" id="reject-reason-notes" name="rejectReasonNotes" [(ngModel)]="notes"
+              (ngModelChange)="onChangeNotes($event)"></textarea>
+            </c-col>
+          </c-row>
+        </form>
+      </c-col>
+    </c-row>
+  </div>
+  <div class="modal-footer d-block">
+    <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+      <button cButton color="primary" (click)="bsModalRef.hide()">Close</button>
+      <button cButton color="primary" (click)="submitCancellation()">
+        <div *ngIf="!progress">Submit</div>
+        <div *ngIf="progress">
+          <c-spinner aria-hidden="true" size="sm" variant="grow"></c-spinner>
+          Loading...
+        </div>
+      </button>
+    </div>
+  </div>
+  

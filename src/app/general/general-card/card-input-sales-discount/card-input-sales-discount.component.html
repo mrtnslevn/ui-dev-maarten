@@ -1,0 +1,153 @@
+<app-card-app title='Sales Discount' [show]="show">
+  <div class='fade show modal-body' style='text-align: center;' *ngIf="loadPage">
+    <c-spinner aria-hidden="true" size="sm" variant="grow"></c-spinner>
+    Loading...
+  </div>
+   <c-card-body [hidden]="loadPage">
+     <form [formGroup]="salesDiscountForm">
+       <fieldset formGroupName="customAdditionalDiscountGroup">
+        <div class="row mb-3">
+          <label cLabel for="admission-no" class="col-sm-2 col-form-label">Admission No</label>
+          <div class="col-sm-3">
+            <select class="form-select form-select-sm" id="admission-no"
+             formControlName="admissionNo"
+             [ngClass]="isCustomAdditionalDiscountFormValid('admissionNo')"
+             (ngModelChange)="onChangeAdmissionNo($event)">
+              <option selected="" disabled="">-- Select Admission No. --</option> 
+              <option *ngFor="let list of admissionList" [ngValue]="list">{{list.admission_no}}</option>
+            </select>
+            <!-- Form Errors -->
+            <div *ngIf="isCustomAdditionalDiscountFormError('admissionNo')" class="text-danger">
+              <div *ngFor="let e of getCustomAdditionalDiscountFormErrors('admissionNo') | keyvalue">
+                {{ getErrorMessage('admissionNo', e.key) }}
+              </div>
+            </div>
+          </div>
+          <div class="col md-6"></div>
+        </div>
+        <div class="row mb-2">
+          <label cLabel for="discount-type" class="col-sm-2 col-form-label-sm">Discount Type</label>
+          <div class="col-sm-3">
+            <select class="form-select form-select-sm" id="discount-type" 
+             formControlName="discountType"
+             [ngClass]="isCustomAdditionalDiscountFormValid('discountType')"
+             (ngModelChange)="onChangeDiscountType($event)">
+             <option selected="" disabled="">-- Select Discount Type --</option> 
+             <option *ngFor="let list of listDiscountType" [ngValue]="list">{{list.value}}</option>
+            </select>
+            <!-- Form Errors -->
+            <div *ngIf="isCustomAdditionalDiscountFormError('discountType')" class="text-danger">
+              <div *ngFor="let e of getCustomAdditionalDiscountFormErrors('discountType') | keyvalue">
+                {{ getErrorMessage('discountType', e.key) }}
+              </div>
+            </div>
+          </div>
+        </div>
+       </fieldset>
+       <div class="row mb-2">
+         <label cLabel for="input-predefined-discount" class="col-sm-2 col-form-label-sm">Predefined Discount</label>
+         <div class="col-sm-3">
+           <ng-select cSelect 
+              id="input-predefined-discount"
+              formControlName="predefinedDiscount"
+              [ngClass]="isSalesDiscountFormValid('predefinedDiscount')"
+              (ngModelChange)="onChangePredefinedDiscount($event)">
+                  <ng-option selected disabled>-- Select Predefined Discount --</ng-option>
+                  <ng-option *ngFor="let list of listPredefinedDiscount" [value]="list">{{list.value}}</ng-option>
+            </ng-select>
+           <!-- Form Errors -->
+           <div *ngIf="isSalesDiscountFormError('predefinedDiscount')" class="text-danger">
+            <div *ngFor="let e of getSalesDiscountFormErrors('predefinedDiscount') | keyvalue">
+              {{ getErrorMessage('predefinedDiscount', e.key) }}
+            </div>
+          </div>
+         </div>
+       </div>
+     </form>
+     <div class="col-md-12 mb-4" id="panelCustomDiscount" *ngIf="selectedDiscountType.key=='3' && !searchSalesDiscountProgress">
+       <div class="row mt-2 px-4">
+         <div class="col-md-12 text-center">
+           <button type="button" class="btn btn-primary btn-sm m-1" 
+           (click)="onValidateAddCustomAdditionalDiscount()" [disabled]="isSaved">
+             <svg cIcon name="cilPlus" size="sm"></svg>
+             Add
+           </button>
+           <button type="button" class="btn btn-primary btn-sm m-1" 
+           (click)="removeCustomAdditionalDiscount()" [disabled]="isSaved">
+             <svg cIcon name="cilDelete" size="sm"></svg>
+             Remove
+           </button>
+         </div>
+       </div>
+       <div class="row mb-2 px-4">
+         <div class="col-md-12 mb-2 px-0 py-2">
+           <table cTable id="tableSalesDiscount" class="table table-striped table-hover table-sm"
+             style="width: 100%;  white-space: nowrap; overflow-x: auto;" [responsive]="true">
+             <thead>
+               <tr>
+                 <th scope="col">
+                   <div class="text-center">
+                     <input id="checkAllSalesDiscount" data-check="false" class="form-check-input"
+                       style="border-color: black;" type="checkbox" value="" (change)="customAdditionalDiscountSelectAll($event)">
+                   </div>
+                 </th>
+                 <th scope="col">Transaction Level</th>
+                 <th scope="col">Sales Item Type</th>
+                 <th scope="col">Sales Item Group</th>
+                 <th scope="col">Sales Item</th>
+                 <th scope="col">Ordered Item</th>
+                 <th scope="col">Portion Type</th>
+                 <th scope="col">Disc. Type</th>
+                 <th scope="col">Disc. Factor</th>
+                 <th scope="col">Notes</th>
+               </tr>
+             </thead>
+             <tbody id="tBodySalesDiscount" *ngIf="customAdditionalDiscountList.length > 0; else no_data">
+               <tr *ngFor="let d of customAdditionalDiscountList">
+                <td>
+                  <input class="form-check-input" style="border-color: black;" type="checkbox" [checked]="d.checked" (change)="customAdditionalDiscountChangeRadio(d, $event)">
+                </td>
+                <td>{{d.transaction_level_name}}</td>
+                <td>{{d.sales_item_type_name}}</td>
+                <td>{{d.sales_item_group_name}}</td>
+                <td>{{d.sales_item_name}}</td>
+                <td>{{d.ordered_item_name}}</td>
+                <td>{{d.portion_type_name}}</td>
+                <td>{{d.disc_type_name}}</td>
+                <td>{{d.disc_factor | number}}</td>
+                <td>{{d.notes}}</td>
+               </tr>
+             </tbody>
+           </table>
+           <ng-template #no_data>
+            <tr ngClass="text-center">
+              <td colspan="10">No Data</td>
+            </tr>
+          </ng-template>
+         </div>
+       </div>
+     </div>
+     <div class="col-md-12 mb-4" id="panelCustomDiscount" *ngIf="selectedDiscountType.key=='3' && searchSalesDiscountProgress">
+      <div class="row mt-2 px-4">
+        <div class="col-md-12 text-center">
+          <c-spinner aria-hidden="true" size="sm" variant="grow"></c-spinner>
+          Loading...
+        </div>
+      </div>
+     </div>
+   </c-card-body>
+   <c-card-footer [hidden]="loadPage">
+     <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+       <button type="button" class="btn btn-primary btn-sm"
+         (click)="onValidateSaveSalesDiscount()" [disabled]="progress || isSaved || searchSalesDiscountProgress">
+         <div *ngIf="!progress">
+          <svg cIcon name="cilSave" size="sm"></svg> Save Discount
+         </div>
+         <div *ngIf="progress">
+          <c-spinner aria-hidden="true" size="sm" variant="grow"></c-spinner>
+          Loading...
+        </div>
+       </button>
+     </div>
+   </c-card-footer>
+</app-card-app>

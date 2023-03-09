@@ -1,0 +1,108 @@
+<div class="col-md-12" id="divPayer">
+  <app-card-app title="Payer">
+    <c-card-body class="card-body" *ngIf="_readOnly; else elseBlock">
+      <div class="row mb-3">
+        <label for="payerName" class="col-sm-4 col-form-label-sm">Payer</label>
+        <div class="col-sm-6">
+          <input type="text" class="form-control form-control-sm"
+                 id="payerName" readonly value="{{data.payer_name}}">
+        </div>
+        <!-- <div class="col-1 m-0 p-0">
+          <button id="btnSearchPatient" type="button"
+                  class="btn btn-primary btn-sm  "
+                  onclick="showSearchPayer('divPayment');">
+            <svg class="icon me-2">
+              <use xlink:href="vendors/@coreui/icons/svg/free.svg#cil-search"></use>
+            </svg>
+          </button>
+        </div> -->
+      </div>
+      <div class="row mb-3">
+        <label for="payerIdNo"
+               class="col-sm-4 col-form-label-sm">Payer ID
+          No.</label>
+        <div class="col-sm-6">
+          <input type="text"
+                 class="form-control form-control-sm"
+                 id="payerIdNo" readonly value="{{data.payer_id_no}}">
+        </div>
+      </div>
+      <div class="row mb-3">
+        <label for="payerEligibilityNo"
+               class="col-sm-4 col-form-label-sm">Eligibility
+          No</label>
+        <div class="col-sm-6">
+          <input type="text"
+                 class="form-control form-control-sm"
+                 id="payerEligibilityNo" readonly value="{{data.eligibility_no}}">
+        </div>
+      </div>
+      <div class="row mb-3">
+        <label for="payerNotes"
+               class="col-sm-4 col-form-label-sm">Notes</label>
+        <div class="col-sm-6">
+          <input type="text"
+                 class="form-control form-control-sm"
+                 id="payerNotes" readonly value="{{data.notes}}">
+        </div>
+      </div>
+    </c-card-body>
+
+    <ng-template #elseBlock>
+      <c-card-body class="card-body">
+        <form [formGroup]="form">
+          <div class="row mb-3">
+            <label for="payerId" class="col-sm-4 col-form-label-sm">Payer</label>
+            <div class="col-sm-4">
+              <input type="text" id="payerId" formControlName="payer" 
+              class="form-control form-control-sm" readonly
+              [ngClass]="isFormValid('payer')">
+              <div *ngIf="isFormError('payer')" class="text-danger">
+                <div *ngFor="let e of getErrors('payer') | keyvalue">{{ getErrorMessage('payer', e.key) }}</div>
+              </div>
+            </div>
+            <div class="col-1 m-0 p-0">
+              <button id="btnSearchPatient" type="button" class="btn btn-primary btn-sm"
+              (click)="openModalSearchPayer()">
+                <svg cIcon name="cilSearch" size="sm"></svg>
+              </button>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label for="payerIdNo" class="col-sm-4 col-form-label-sm">Payer ID No.</label>
+            <div class="col-sm-6">
+              <input type="text" id="payerIdNo" formControlName="payerIdNo" 
+              class="form-control form-control-sm" [ngClass]="isFormValid('payerIdNo')"
+              (ngModelChange)="onChangePayerIdNo($event)">
+              <div *ngIf="isFormError('payerIdNo')" class="text-danger">
+                <div *ngFor="let e of getErrors('payerIdNo') | keyvalue">{{ getErrorMessage('payerIdNo', e.key) }}</div>
+              </div>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label for="payerEligibilityNo" class="col-sm-4 col-form-label-sm">Eligibility No</label>
+            <div class="col-sm-6">
+              <input type="text" id="payerEligibilityNo" formControlName="eligibilityNo" 
+              class="form-control form-control-sm" [ngClass]="isFormValid('eligibilityNo')"
+              (ngModelChange)="onChangeEligibilityNo($event)">
+              <div *ngIf="isFormError('eligibilityNo')" class="text-danger">
+                <div *ngFor="let e of getErrors('eligibilityNo') | keyvalue">{{ getErrorMessage('eligibilityNo', e.key) }}</div>
+              </div>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label for="payerNotes" class="col-sm-4 col-form-label-sm">Notes</label>
+            <div class="col-sm-6">
+              <input type="text" id="payerNotes" formControlName="notes" 
+              class="form-control form-control-sm" [ngClass]="isFormValid('notes')"
+              (ngModelChange)="onChangeNotes($event)">
+              <div *ngIf="isFormError('notes')" class="text-danger">
+                <div *ngFor="let e of getErrors('notes') | keyvalue">{{ getErrorMessage('notes', e.key) }}</div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </c-card-body>
+    </ng-template>
+  </app-card-app>
+</div>

@@ -1,0 +1,194 @@
+<div class='fade show col-md-12' style='text-align: center;' *ngIf="loadPage">
+  <c-spinner aria-hidden="true" size="sm" variant="grow"></c-spinner>
+  Loading...
+</div>
+<div class="col-md-12" id="divPrepaid" *ngIf="loadPage == false">
+  <app-card-app title="Prepaid">
+    <c-card-body class="card-body" *ngIf="_readOnly; else elseBlock">
+      <div class="row mb-3">
+        <label for="bookingName" class="col-sm-4 col-form-label-sm">Booking Name</label>
+        <div class="col-sm-6">
+          <input type="text" class="form-control form-control-sm" id="bookingName" readonly value="{{data.booking_name}}">
+        </div>
+      </div>
+      <div class="row mb-3">
+        <label for="orderId" class="col-sm-4 col-form-label-sm">Order ID</label>
+        <div class="col-sm-6">
+          <input type="text" class="form-control form-control-sm" id="orderId" readonly value="{{data.order_id}}">
+        </div>
+      </div>
+      <div class="row mb-3">
+        <label for="acquiringBank" class="col-sm-4 col-form-label-sm">Acquiring Bank</label>
+        <div class="col-sm-6">
+          <input type="text" class="form-control form-control-sm" id="acquiringBank" readonly value="{{data.acquiring_bank}}">
+        </div>
+      </div>
+      <div class="row mb-3">
+        <label for="bankNo" class="col-sm-4 col-form-label-sm">Bank No.</label>
+        <div class="col-sm-6">
+          <input type="text" class="form-control form-control-sm" id="bankNo" readonly value="{{data.bank_number}}">
+        </div>
+      </div>
+      <div class="row mb-3">
+        <label for="cardAssoc" class="col-sm-4 col-form-label-sm">Card Assoc.</label>
+        <div class="col-sm-6">
+          <input type="text" class="form-control form-control-sm" id="cardAssoc" readonly value="{{data.card_assoc}}">
+        </div>
+      </div>
+      <div class="row mb-3">
+        <label for="cardNo" class="col-sm-4 col-form-label-sm">Card No.</label>
+        <div class="col-sm-6">
+          <input type="text" class="form-control form-control-sm" id="cardNo" readonly value="{{data.card_no}}">
+        </div>
+      </div>
+      <div class="row mb-3">
+        <label for="customer" class="col-sm-4 col-form-label-sm">Customer</label>
+        <div class="col-sm-6">
+          <input type="text" class="form-control form-control-sm" id="customer" readonly value="{{data.customer_name}}">
+        </div>
+      </div>
+      <div class="row mb-3">
+        <label for="paymentMode" class="col-sm-4 col-form-label-sm">Payment Mode</label>
+        <div class="col-sm-6">
+          <input type="text" class="form-control form-control-sm" id="paymentMode" readonly value="{{data.payment_mode}}">
+        </div>
+      </div>
+      <div class="row mb-3">
+        <label for="amount" class="col-sm-4 col-form-label-sm">Amount</label>
+        <div class="col-sm-6">
+          <input type="text" class="form-control form-control-sm" id="amount" readonly value="{{data.amount | number}}">
+        </div>
+      </div>
+      <div class="row mb-3">
+        <label for="notes" class="col-sm-4 col-form-label-sm">Notes</label>
+        <div class="col-sm-6">
+          <input type="text" class="form-control form-control-sm" id="notes" readonly value="{{data.notes}}">
+        </div>
+      </div>
+    </c-card-body>
+    
+    <ng-template #elseBlock>
+      <c-card-body class="card-body">
+        <form [formGroup]="form">
+          <div class="row mb-3">
+            <label for="bookingId" class="col-sm-4 col-form-label-sm">Booking ID</label>
+            <div class="col-sm-6">
+              <select cSelect id="bookingId" formControlName="bookingId" 
+              class="form-select form-select-sm" [ngClass]="isFormValid('bookingId')"
+              (ngModelChange)="onChangeBookingId($event)">
+                <option selected="" disabled="">-- Select Booking --</option> 
+                <option *ngFor="let prepaid of prepaidList" [ngValue]="prepaid">{{ prepaid.booking_id }} - {{ prepaid.booking_name }}</option>
+              </select>
+              <div *ngIf="isFormError('bookingId')" class="text-danger">
+                <div *ngFor="let e of getErrors('bookingId') | keyvalue">{{ getErrorMessage('bookingId', e.key) }}</div>
+              </div>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label for="orderId" class="col-sm-4 col-form-label-sm">Order ID</label>
+            <div class="col-sm-6">
+              <input type="text" class="form-control form-control-sm" id="orderId" readonly value="{{data.order_id}}">
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label for="acquiringBank" class="col-sm-4 col-form-label-sm">Acquiring Bank</label>
+            <div class="col-sm-6">
+              <input type="text" class="form-control form-control-sm" id="acquiringBank" readonly value="{{data.acquiring_bank}}">
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label for="bankNo" class="col-sm-4 col-form-label-sm"> Bank No.</label>
+            <div class="col-sm-6">
+              <input type="text" class="form-control form-control-sm" id="bankNo" readonly value="{{data.bank_number}}">
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label for="cardAssoc" class="col-sm-4 col-form-label-sm"> Card Assoc.</label>
+            <div class="col-sm-6">
+              <input type="text" class="form-control form-control-sm" id="cardAssoc" readonly value="{{data.card_assoc}}">
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label for="cardNo" class="col-sm-4 col-form-label-sm">Card No.</label>
+            <div class="col-sm-6">
+              <input type="text" class="form-control form-control-sm" id="cardNo" readonly value="{{data.card_no}}">
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label for="customer" class="col-sm-4 col-form-label-sm">Customer</label>
+            <div class="col-sm-6">
+              <input type="text" class="form-control form-control-sm" id="customer" readonly value="{{data.customer_name}}">
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label for="paymentMode" class="col-sm-4 col-form-label-sm">Payment Mode</label>
+            <div class="col-sm-6">
+              <input type="text" class="form-control form-control-sm" id="paymentMode" readonly value="{{data.payment_mode}}">
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label for="amount" class="col-sm-4 col-form-label-sm">Amount</label>
+            <div class="col-sm-6">
+              <input type="text" class="form-control form-control-sm" id="amount" readonly value="{{data.amount | number}}">
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label for="notes" class="col-sm-4 col-form-label-sm">Notes</label>
+            <div class="col-sm-6">
+              <input cFormControl type="text" class="form-control form-control-sm" id="notes"
+              formControlName="notes" [value]="data.notes" [ngClass]="isFormValid('notes')" 
+              (ngModelChange)="onChangeNotes($event)">
+            </div>
+          </div>
+        </form>
+        <!-- <div class="row mb-3">
+          <label class="col-sm-4 col-form-label-sm"></label>
+          <div class="col-sm-8" align="left">
+            <button type="button" class="btn btn-primary btn-sm"
+                    onclick="addPayment();">
+              <svg class="icon me-2">
+                <use xlink:href="vendors/@coreui/icons/svg/free.svg#cil-plus"></use>
+              </svg>
+              Add
+            </button>
+          </div>
+        </div>
+        <div class="row mb-3"
+             style="width: 100%;  white-space: nowrap; overflow-x: auto;">
+          <table id="tablePaymentAdvance"
+                 class="table table-striped table-hover table-sm"
+                 style="width: 100%;  white-space: nowrap; overflow-x: auto;">
+            <thead>
+            <tr>
+              <th scope="col">Booking ID</th>
+              <th scope="col">Order ID</th>
+              <th scope="col">Acquiring Bank</th>
+              <th scope="col">Bank No</th>
+              <th scope="col">Card Assoc</th>
+              <th scope="col">Card No</th>
+              <th scope="col">Customer</th>
+              <th scope="col">Notes</th>
+              <th scope="col">Payment Mode</th>
+              <th scope="col">Amount</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let d of newData">
+              <th scope="row">{{d.booking_id}}</th>
+              <th scope="col">{{d.order_id}}</th>
+              <th scope="col">{{d.acquiring_bank}}</th>
+              <th scope="col">{{d.bank_no}}</th>
+              <th scope="col">{{d.card_assoc}}</th>
+              <th scope="col">{{d.card_no}}</th>
+              <th scope="col">{{d.customer}}</th>
+              <th scope="col">{{d.notes}}</th>
+              <th scope="col">{{d.payment_mode}}</th>
+              <th scope="col">{{d.amount}}</th>
+            </tr>
+            </tbody>
+          </table>
+        </div> -->
+      </c-card-body>
+    </ng-template>
+  </app-card-app>
+</div>

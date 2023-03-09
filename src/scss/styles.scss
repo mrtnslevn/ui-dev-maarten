@@ -1,0 +1,233 @@
+/* You can add global styles to this file, and also import other style files */
+// If you want to override variables do it here
+@import "variables";
+
+$enable-ltr: true;
+$enable-rtl: true;
+
+// Import styles with default layout.
+@import "~@coreui/coreui/scss/coreui";
+
+// Import Chart.js custom tooltips styles
+@import "~@coreui/chartjs/scss/coreui-chartjs";
+
+// perfect scrollbar theming for use with [perfectScrollbar] directive
+//@import '~perfect-scrollbar/css/perfect-scrollbar.css';
+
+@import "layout";
+
+// Some temp fixes
+@import "fixes";
+
+// Prism.js
+@import "examples";
+
+// If you want to add something do it here
+@import "custom";
+
+@import "node_modules/ngx-bootstrap/datepicker/bs-datepicker";
+
+@import "~@ng-select/ng-select/themes/default.theme.css";
+
+$ng-select-primary-text: $input-color !default;
+$ng-select-disabled-text: $text-muted !default;
+$ng-select-border: $input-border-color !default;
+$ng-select-bg: $input-bg !default;
+$ng-select-selected: $dropdown-link-active-bg !default;
+$ng-select-marked: $dropdown-link-active-bg !default;
+
+.table {
+  --cui-table-color: rgba(44, 56, 74, 0.95);
+  --cui-table-bg: transparent;
+  --cui-table-border-color: #d8dbe0;
+  --cui-table-accent-bg: transparent;
+  --cui-table-striped-color: rgba(44, 56, 74, 0.95);
+  --cui-table-striped-bg: rgba(74, 156, 46, 0.05);
+  --cui-table-active-color: rgba(44, 56, 74, 0.95);
+  --cui-table-active-bg: rgba(0, 0, 21, 0.1);
+  --cui-table-hover-color: rgba(44, 56, 74, 0.95);
+  --cui-table-hover-bg: rgba(0, 0, 21, 0.075);
+  width: 100%;
+  margin-bottom: 1rem;
+  color: var(--cui-table-color);
+  vertical-align: middle;
+  border-color: var(--cui-table-border-color);
+
+  @extend .table-striped;
+  @extend .table-hover
+}
+
+.table > thead {
+  vertical-align: middle;
+  padding: 10px;
+  border-top: 2px solid #4a9c2e;
+  border-bottom: 2px solid #4a9c2e;
+}
+
+// .bootstrap-theme {
+
+.ng-select {
+  // display: block;
+  // width: 100%;
+  // padding: 0.375rem 2.25rem 0.375rem 0.75rem;
+  // padding-top: 0.375rem;
+  // padding-bottom: 0.375rem;
+  // // padding-left: 0.5rem;
+  // // padding-top: 0.25rem;
+  // // padding-bottom: 0.25rem;
+  font-size: 11px;
+  // font-weight: 400;
+  // line-height: 1.5;
+  color: var(--cui-form-select-color, rgba(44, 56, 74, 0.95));
+}
+
+// .ng-select.ng-invalid {
+//   border-color: #e55353;
+// }
+
+// .ng-select.ng-invalid.ng-touched .ng-select-container {
+//   border-color: #e55353;
+//   background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' width='12' height='12' fill='none' stroke='%23e55353'%3e%3ccircle cx='6' cy='6' r='4.5'/%3e%3cpath stroke-linejoin='round' d='M5.8 3.6h.4L6 6.5z'/%3e%3ccircle cx='6' cy='8.2' r='.6' fill='%23e55353' stroke='none'/%3e%3c/svg%3e");
+//   background-repeat: no-repeat;
+//   background-position: right calc(0.375em + 0.1875rem) center;
+//   background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
+// }
+
+.ng-select.ng-invalid.is-invalid .ng-select-container {
+  border-color: #dc3545;
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 0 3px #fde6e8;
+}
+
+.ng-select.ng-valid.is-valid .ng-select-container {
+  border-color: #2eb85c;
+}
+
+.ng-select.ng-select-focused:not(.ng-select-opened)>.ng-select-container {
+  border-color: #2eb85c;
+  box-shadow: inset 0 1px 1px rgb(0 0 0 / 8%), 0 0 0 3px rgb(0 126 255 / 10%);
+}
+
+.ng-select.ng-select-disabled .ng-select-container {
+  color: var(--cui-form-select-disabled-color, );
+  background-color: var(--cui-form-select-disabled-bg, #d8dbe0);
+  border-color: var(--cui-input-disabled-border-color, #b1b7c1)
+}
+
+.ng-dropdown-panel {
+  width: fit-content !important;
+  background-color: $ng-select-bg;
+  border: $dropdown-border-width solid $ng-select-border;
+  @include box-shadow($dropdown-box-shadow);
+  left: 0;
+
+  &.ng-select-bottom {
+    top: 100%;
+    border-bottom-right-radius: $dropdown-border-radius;
+    border-bottom-left-radius: $dropdown-border-radius;
+    margin-top: -$dropdown-border-width;
+    .ng-dropdown-panel-items {
+      .ng-option {
+        &:last-child {
+          border-bottom-right-radius: $dropdown-border-radius;
+          border-bottom-left-radius: $dropdown-border-radius;
+        }
+      }
+    }
+  }
+  &.ng-select-top {
+    bottom: 100%;
+    border-top-right-radius: $dropdown-border-radius;
+    border-top-left-radius: $dropdown-border-radius;
+    margin-bottom: -1px;
+    .ng-dropdown-panel-items {
+      .ng-option {
+        &:first-child {
+          border-top-right-radius: $dropdown-border-radius;
+          border-top-left-radius: $dropdown-border-radius;
+        }
+      }
+    }
+  }
+
+  .ng-dropdown-header {
+    border-bottom: 1px solid $ng-select-border;
+    padding: 5px 7px;
+  }
+  .ng-dropdown-footer {
+    border-top: 1px solid $ng-select-border;
+    padding: 5px 7px;
+  }
+  .ng-dropdown-panel-items {
+    margin-bottom: 1px;
+    .ng-optgroup {
+      user-select: none;
+      padding: 8px 10px;
+      font-weight: 500;
+      color: rgba(0, 0, 0, 0.54);
+      cursor: pointer;
+      &.ng-option-disabled {
+        cursor: default;
+      }
+      &.ng-option-marked {
+        background-color: $ng-select-marked;
+      }
+      &.ng-option-selected,
+      &.ng-option-selected.ng-option-marked {
+        color: $dropdown-link-active-color;
+        background-color: $ng-select-selected;
+      }
+    }
+    .ng-option {
+      background-color: $ng-select-bg;
+      padding: $input-padding-y $input-padding-x;
+
+      &.ng-option-selected,
+      &.ng-option-selected.ng-option-marked {
+        color: $dropdown-link-active-color;
+        background-color: $ng-select-selected;
+      }
+      &.ng-option-marked {
+        color: $dropdown-link-active-color;
+        background-color: $ng-select-marked;
+      }
+      &.ng-option-disabled {
+        color: $dropdown-link-disabled-color;
+      }
+      &.ng-option-child {
+        padding-left: 22px;
+        @include rtl {
+          padding-right: 22px;
+          padding-left: 0;
+        }
+      }
+      .ng-tag-label {
+        font-size: 80%;
+        font-weight: 400;
+        padding-right: 5px;
+        @include rtl {
+          padding-left: 5px;
+          padding-right: 0;
+        }
+      }
+    }
+  }
+
+  @include rtl {
+    direction: rtl;
+    text-align: right;
+  }
+}
+
+.theme-green .bs-datepicker-body table td span:not(.disabled):not(.is-other-month) {
+  background-color: #5cb85c;
+  color: #fff;
+
+  &:hover {
+    color: #337ab7 !important;
+  }
+}
+
+.theme-green .bs-datepicker-body table td span.selected {
+  background-color: #337ab7 !important;
+  color: #fff;
+}

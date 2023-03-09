@@ -1,0 +1,111 @@
+<div class='fade show' style='text-align: center; padding-top: calc(100vh / 2); height: 100vh' *ngIf="loadPage">
+  <c-spinner aria-hidden="true" size="sm" variant="grow"></c-spinner>
+  Loading...
+</div>
+<div [hidden]="loadPage">
+  <c-row ngPreserveWhitespaces>
+    <c-col xs="12">
+      <form cForm>
+        <app-card-app title="Interface Log">
+          <c-card-body>
+            <c-row class="mb-3">
+              <label for="interfaceType" class="col-sm-3 col-form-label-sm">Interface Type</label>
+              <c-col sm="3">
+                <select class="form-select form-select-sm" id="interfaceType" name="interface_type" [(ngModel)]="interface_type" (ngModelChange)="onChangeInterfaceType($event)">
+                  <option *ngFor="let list of interfaceType" [ngValue]="list">{{list.value}}</option>
+                </select>
+              </c-col>
+            </c-row>
+            <c-row class="mb-3">
+              <label for="processDate" class="col-sm-3 col-form-label-sm">Process Date</label>
+              <c-col sm="3">
+                <input cFormControl type="date" class="form-control form-control-sm" id="processDate" name="process_date_start" [(ngModel)]="process_date_start" (ngModelChange)="onChangeProcessDateStart($event)">
+              </c-col>
+              <label for="processDateTo" class="col-sm-3 col-form-label-sm">To</label>
+              <c-col sm="3">
+                <input cFormControl type="date" class="form-control form-control-sm" id="processDateTo" name="process_date_end" [(ngModel)]="process_date_end" (ngModelChange)="onChangeProcessDateEnd($event)">
+              </c-col>
+            </c-row>
+            <c-row>
+              <label for="status" class="col-sm-3 col-form-label-sm">Status</label>
+              <c-col sm="3">
+                <select class="form-select form-select-sm" aria-label="Status" id="Status" name="status" [(ngModel)]="status" (ngModelChange)="onChangeStatus($event)">
+                  <option *ngFor="let list of interfaceStatus" [ngValue]="list">{{list.value}}</option>
+                </select>
+              </c-col>
+            </c-row>
+          </c-card-body>
+          <c-card-footer footer class="text-center">
+            <button cButton color="primary" id="search" type="button" size="sm" (click)="searchInterfaceLog()"
+                [disabled]="progress">
+              <div *ngIf="!progress">
+                <svg cIcon class="me-2" name="cil-search"></svg> Search
+              </div>
+              <div *ngIf="progress">
+                <c-spinner aria-hidden="true" size="sm" variant="grow"></c-spinner>
+                Loading...
+              </div>
+            </button>
+            <button cButton color="primary" id="reset" type="button" size="sm" (click)="onReset()">
+              <svg cIcon class="me-2" name="cil-reload"></svg> Reset
+            </button>
+          </c-card-footer>
+        </app-card-app>
+      </form>
+    </c-col>
+  </c-row>
+  <c-row ngPreserveWhitespaces>
+    <c-col xs="12">
+      <app-card-app title="Interface Log" *ngIf="searched">
+        <div class='fade show modal-body' style='text-align: center;' *ngIf="progress">
+          <c-spinner aria-hidden="true" size="sm" variant="grow"></c-spinner>
+          Loading...
+        </div>
+        <c-card-body [hidden]="progress">
+          <table cTable id="tableInterfaceLog" [responsive]="true">
+            <thead>
+            <tr>
+              <th scope="col">Interface Type</th>
+              <th scope="col">Process Date</th>
+              <th scope="col">Endpoint</th>
+              <th scope="col">Status</th>
+              <th scope="col"></th>
+            </tr>
+            </thead>
+            <tbody id="tbodyVoucherSales" *ngIf="interfaceList.length > 0; else no_data">
+              <tr *ngFor="let p of interfaceList">
+                <td>{{p.interface_type}}</td>
+                <td>{{p.process_date | date:'dd-MMM-yyyy HH:mm'}}</td>
+                <td>{{p.endpoint}}</td>
+                <td>{{p.status}}</td>
+                <td>
+                  <ng-template contextDisposer let-context>
+                    <button cButton type="button" size="sm" color="primary" 
+                    *ngIf="context.checkAction('081_view_detail')"
+                    (click)="navigateToDetails(p)">
+                      <svg cIcon class="me-2" name="cil-external-link"></svg>
+                    </button>
+                  </ng-template>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <ng-template #no_data>
+            <tr ngClass="text-center">
+              <td colspan="18">No Data</td>
+            </tr>
+          </ng-template>
+          <pagination *ngIf="paging.total_row > 0"
+            [boundaryLinks]="true"
+            [totalItems]="paging.total_row"
+            [(ngModel)]="current_page"
+            (pageChanged)="pageChanged($event)"
+            [itemsPerPage]="paging.rows_per_page"
+            [rotate]="false"
+            [maxSize]="paging.max_size" [disabled]="progress">
+          </pagination>
+        </c-card-body>
+      </app-card-app>
+    </c-col>
+  </c-row>
+</div>

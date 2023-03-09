@@ -1,0 +1,106 @@
+<div class="bg-light min-vh-100 d-flex flex-row align-items-center">
+  <c-container>
+    <c-row class="justify-content-center">
+      <c-col md="8">
+        <c-card-group>
+          <c-card class="p-4">
+            <c-card-body>
+              <div cForm>
+                <h3>Welcome to</h3>
+                <h1>Payment System</h1>
+                <p class="text-medium-emphasis">Sign In to your account</p>
+                <c-alert color="danger" class="d-flex align-items-center" *ngIf="isError()">
+                  <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Info:"
+                  cIcon name="cilWarning">
+                  </svg>
+                  <div>{{ errorMessage }}</div>
+                </c-alert>
+                <form [formGroup]="loginForm" *ngIf="!selectUnit">
+                  <c-input-group class="mb-3">
+                    <span cInputGroupText>
+                      <svg cIcon name="cilUser"></svg>
+                    </span>
+                    <input autoComplete="username" type="text" cFormControl placeholder="Username" sizing="sm"
+                      formControlName="username" [ngClass]="isLoginFormValid('username')"
+                      (ngModelChange)="onChangeUsername($event)" />
+                    <c-form-feedback [valid]="false" *ngFor="let e of getLoginFormErrors('username') | keyvalue">{{ getFormErrorMessage('username', e.key) }}</c-form-feedback>
+                  </c-input-group>
+                  
+                  <c-input-group class="mb-3">
+                    <span cInputGroupText>
+                      <svg cIcon name="cilLockLocked"></svg>
+                    </span>
+                    <input autoComplete="current-password" cFormControl placeholder="Password" type="password"
+                      sizing="sm" formControlName="password" [ngClass]="isLoginFormValid('password')"
+                      (ngModelChange)="onChangePassword($event)" />
+                      <c-form-feedback [valid]="false" *ngFor="let e of getLoginFormErrors('password') | keyvalue">{{ getFormErrorMessage('password', e.key) }}</c-form-feedback>
+                  </c-input-group>
+                 
+                  <c-row *ngIf="!selectUnit">
+                    <c-col xs="6">
+                      <button cButton class="px-4" color="primary" type="button" (click)="onValidateLogin()"
+                      [disabled]="progress">
+                        <div *ngIf="!progress">
+                          Login
+                        </div>
+                        <div *ngIf="progress">
+                          <c-spinner aria-hidden="true" size="sm" variant="grow"></c-spinner>
+                          Loading...
+                        </div>
+                      </button>
+                    </c-col>
+                    <c-col class="text-right" xs="6">
+                      <button cButton class="px-0 mr-0" type="button" color="link" (click)="toForgotPassword()">
+                        <p class="text-primary">Forgot password?</p>
+                      </button>
+                    </c-col>
+                  </c-row>
+                </form>
+                <form [formGroup]="selectUnitForm" *ngIf="selectUnit">
+                  <c-input-group class="mb-4" *ngIf="selectUnit">
+                    <span cInputGroupText>
+                      <svg cIcon name="cilLocationPin"></svg>
+                    </span>
+                    <select aria-label="Small select example" cSelect sizing="sm"
+                    formControlName="unit" (ngModelChange)="doSelectUnit($event)"
+                    [ngClass]="isSelectUnitFormValid('unit')">
+                      <option value="" disabled selected>Select Unit</option>
+                      <option *ngFor="let unit of userData" [ngValue]="unit">
+                        {{unit.organization_name}}
+                      </option>
+                    </select>
+                    <c-form-feedback [valid]="false" *ngFor="let e of getSelectUnitFormErrors('unit') | keyvalue">{{ getFormErrorMessage('unit', e.key) }}</c-form-feedback>
+                  </c-input-group>
+                  <c-row *ngIf="selectUnit">
+                    <c-col xs="6">
+                      <ng-template contextDisposer let-context>
+                        <button cButton class="px-4" color="primary" type="button"
+                        (click)="onValidateSelectUnit()"
+                        [disabled]="progress">
+                          <div *ngIf="!progress">
+                            Next
+                          </div>
+                          <div *ngIf="progress">
+                            <c-spinner aria-hidden="true" size="sm" variant="grow"></c-spinner>
+                            Loading...
+                          </div>
+                        </button>
+                      </ng-template>
+                    </c-col>
+                  </c-row>
+                </form>
+              </div>
+            </c-card-body>
+          </c-card>
+          <c-card [ngStyle]="{'width.%': 44}" class="text-white bg-primary py-5">
+            <c-card-body class="text-center">
+              <div>
+                <img src="./assets/img/siloam-hospital.jpg" alt="" srcset="" height="270" width="270">
+              </div>
+            </c-card-body>
+          </c-card>
+        </c-card-group>
+      </c-col>
+    </c-row>
+  </c-container>
+</div>

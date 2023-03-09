@@ -1,0 +1,79 @@
+<div class='fade show' style='text-align: center; padding-top: calc(100vh / 2); height: 100vh' *ngIf="loadPage; else elseBlock">
+  <c-spinner aria-hidden="true" size="sm" variant="grow"></c-spinner>
+  Loading...
+</div>
+
+<ng-template #elseBlock>
+<c-row ngPreserveWhitespaces>
+  <c-col xs="12">
+    <form cForm>
+      <app-card-app title="Cancel Reason">
+        <c-card-body>
+          <c-row class="mb-3">
+            <c-col col="3">
+              <label cLabel for="cancel-reason" class="col-sm-2 col-form-label">Cancel Reason</label>
+            </c-col>
+            <c-col col="3">
+              <input type="text" class="form-control form-control-sm" id="cancel-reason"
+                value="{{cancelReason.cancel_reason}}" readonly>
+            </c-col>
+            <c-col col="3">
+              <label cLabel for="cancel-notes" class="col-sm-2 col-form-label">Cancel Notes</label>
+            </c-col>
+            <c-col col="3">
+              <input type="text" class="form-control form-control-sm" id="cancel-notes"
+                value="{{cancelReason.cancel_notes}}" readonly>
+            </c-col>
+          </c-row>
+          <c-row class="mb-3">
+            <c-col col="3">
+              <label cLabel for="cancel-date" class="col-sm-2 col-form-label">Cancel Date</label>
+            </c-col>
+            <c-col col="3">
+              <input type="text" class="form-control form-control-sm" id="cancel-date"
+                value="{{cancelReason.cancelled_date | date: 'dd-MMM-yyyy HH:mm'}}" readonly>
+            </c-col>
+            <c-col col="3">
+              <label cLabel for="cancel-by" class="col-sm-2 col-form-label">Cancel By</label>
+            </c-col>
+            <c-col col="3">
+              <input type="text" class="form-control form-control-sm" id="cancel-by"
+                value="{{cancelReason.cancelled_by}}" readonly>
+            </c-col>
+          </c-row>
+        </c-card-body>
+      </app-card-app>
+    </form>
+  </c-col>
+</c-row>
+<app-card-combined-bill [data]="dataCombinedBill"></app-card-combined-bill>
+<app-card-patient-info [data]="dataPatient"></app-card-patient-info>
+<app-card-ordered-item [data]="orderedItem"></app-card-ordered-item>
+<app-card-sales-discount [data]="dataSalesDiscount"  [invoiceNo]="invoiceNo"></app-card-sales-discount>
+<app-card-invoice [data]="dataInvoice" [disabledForm]="true" [payment]="true"></app-card-invoice>
+<app-card-payment-settlement [data]="dataPaymentSettlement"></app-card-payment-settlement>
+
+<c-row ngPreserveWhitespaces>
+  <c-col xs="12">
+    <app-card-app>
+      <c-card-body class="text-center">
+        <a [routerLink]="['/payment/approval-for-invoice-cancellation']" 
+        [state]="{ fromDetail: true }" color="primary" id="btn-search-mr" 
+        class="btn btn-primary btn-sm">
+          <svg cIcon class="me-2" name="cil-arrow-left" size="sm"></svg> Back
+        </a>
+        <ng-template contextDisposer let-context>
+          <button cButton color="primary" id="btn-search-mr" type="button" size="sm" 
+          *ngIf="context.checkAction('0242_approval')"
+          (click)="showModalReject('1')">
+            <svg cIcon class="me-2" name="cil-check-alt" size="sm"></svg> Approve
+          </button>
+        </ng-template>
+        <button cButton color="primary" id="btn-search-mr" type="button" size="sm" (click)="showModalReject('0')">
+          <svg cIcon class="me-2" name="cil-x" size="sm"></svg> Reject
+        </button>
+      </c-card-body>
+    </app-card-app>
+  </c-col>
+</c-row>
+</ng-template>

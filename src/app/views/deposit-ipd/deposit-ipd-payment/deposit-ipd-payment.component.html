@@ -1,0 +1,136 @@
+<c-row ngPreserveWhitespaces>
+  <c-col xs="12">
+    <form cForm [formGroup]="patientForm">
+      <app-card-app title="Search Patient">
+      <!-- <c-card [cBorder]="{top: {color: 'primary', width: 3}}" class="mb-4"> -->
+        <c-card-body>
+          <c-row class="mb-2">
+            <label cLabel class="col-sm-2 col-form-label" for="search-patient-name">
+              Patient Name<span class="text-danger">*</span>
+            </label>
+            <c-col sm="2">
+              <div class="form-group">
+                <input cFormControl id="search-patient-name" formControlName="name" type="text" sizing="sm"
+                (ngModelChange)="onChangePatientName($event)"
+                [ngClass]="isFormValid('name')" />
+              </div>
+              <div *ngIf="isFormError('name')" class="text-danger">
+                <div *ngFor="let e of getErrors('name') | keyvalue">{{ getErrorMessage('name', e.key) }}</div>
+              </div>
+            </c-col>
+            <label cLabel class="col-sm-2 col-form-label" for="search-patient-dob">
+              Date of birth<span class="text-danger">*</span>
+            </label>
+            <c-col sm="2">
+              <input cFormControl id="search-patient-dob" formControlName="dob" type="date" sizing="sm"
+              (ngModelChange)="onChangeDOB($event)"
+              [ngClass]="isFormValid('dob')"/>
+              <div *ngIf="isFormError('dob')" class="text-danger">
+                <div *ngFor="let e of getErrors('dob') | keyvalue">{{ getErrorMessage('dob', e.key) }}</div>
+              </div>
+            </c-col>
+            <label cLabel class="col-sm-2 col-form-label" for="search-patient-mr-no">
+              MR No
+            </label>
+            <c-col sm="2">
+              <input cFormControl id="search-patient-mr-no" formControlName="mrNo" type="text" sizing="sm"
+              (ngModelChange)="onChangeMrNo($event)"
+              [ngClass]="isMrNoValid('mrNo')" />
+              <div *ngIf="isFormError('mrNo')" class="text-danger">
+                <div *ngFor="let e of getErrors('mrNo') | keyvalue">{{ getErrorMessage('mrNo', e.key) }}</div>
+              </div>
+            </c-col>
+          </c-row>
+          <c-row class="mb-2">
+            <label cLabel class="col-sm-2 col-form-label" for="search-patient-id-no">
+              ID No
+            </label>
+            <c-col sm="2">
+              <input cFormControl id="search-patient-id-no" formControlName="idNo" type="text" sizing="sm"
+              (ngModelChange)="onChangeIdNo($event)"/>
+            </c-col>
+            <label cLabel class="col-sm-2 col-form-label" for="search-patient-sex">
+              Sex
+            </label>
+            <c-col sm="2">
+              <select id="search-patient-sex" formControlName="selectedSex" class="form-select form-select-sm" (ngModelChange)="onChangeSex($event)">
+                <option *ngFor="let list of listSex" [ngValue]="list">{{list.value}}</option>
+              </select>
+            </c-col>
+          </c-row>
+        </c-card-body>
+        <c-card-footer class="text-center">
+          <button cButton color="primary" id="btn-search-mr" type="button" size="sm" (click)="onValidate()"
+            [disabled]="progress">
+            <div *ngIf="!progress">
+              <svg cIcon class="me-2" name="cil-search"></svg> Search
+            </div>
+            <div *ngIf="progress">
+              <c-spinner aria-hidden="true" size="sm" variant="grow"></c-spinner>
+              Loading...
+            </div>
+          </button>
+          <button cButton color="primary" id="btn-reset-patient" type="reset" size="sm" (click)="reset()">
+            <svg cIcon class="me-2" name="cil-reload"></svg> Reset
+          </button>
+        </c-card-footer>
+        <!-- </c-card> -->
+      </app-card-app>
+    </form>
+  </c-col>
+</c-row>
+
+<!--Search Result-->
+<c-row ngPreserveWhitespaces *ngIf="search">
+  <app-card-app title="Search Result">
+    <c-card-body>
+      <table cTable id="tableSearchModalPatient" [responsive]="true" small>
+        <thead style="font-size: 14px">
+          <tr>
+            <th scope="col">MR No.</th>
+            <th scope="col">Patient Name</th>
+            <th scope="col">ID No</th>
+            <th scope="col">Sex</th>
+            <th scope="col">Birth Date</th>
+            <th scope="col">Address</th>
+            <th scope="col">Phone No</th>
+            <th scope="col"></th>
+          </tr>
+        </thead>
+        <tbody id="tbodySearchPatientInvoice" *ngIf="patient_list.length > 0; else no_data">
+          <tr *ngFor="let patient of patient_list">
+            <td>{{patient.mr_no}}</td>
+            <td>{{patient.patient_name}}</td>
+            <td>{{patient.id_no}}</td>
+            <td>{{patient.sex}}</td>
+            <td>{{patient.dob | date:'dd-MMM-yyyy'}}</td>
+            <td>{{patient.address}}</td>
+            <td>{{patient.contact_no}}</td>
+            <td>
+              <div class="d-flex gap-1 text-center">
+                <button cButton type="button" size="sm" class="d-flex" (click)="selectPatient(patient)">
+                  Next
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <ng-template #no_data>
+        <tr ngClass="text-center">
+          <td colspan="8">No Data</td>
+        </tr>
+      </ng-template>
+      <pagination *ngIf="paging.total_row > 0"
+        [boundaryLinks]="true"
+        [totalItems]="paging.total_row"
+        [(ngModel)]="current_page"
+        (pageChanged)="pageChanged($event)"
+        [itemsPerPage]="paging.rows_per_page"
+        [rotate]="false"
+        [maxSize]="paging.max_size" [disabled]="progress">
+      </pagination>
+    </c-card-body>
+  </app-card-app>
+</c-row>
+  

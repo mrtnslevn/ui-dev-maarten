@@ -1,0 +1,65 @@
+<app-card-app title="Patient Information" [show]="show">
+    <c-card-body>
+      <c-row class="mb-2">
+        <label cLabel class="col-sm-2 col-form-label" for="patient-mr-no">
+          MR No
+        </label>
+        <c-col sm="2">
+          <input cFormControl id="patientMrNo" type="text" sizing="sm" value="{{detailPatient.mr_no}}" readonly/>
+        </c-col>
+        <label cLabel class="col-sm-2 col-form-label" for="patient-dob">
+          Birth Date</label>
+        <c-col sm="2">
+          <input cFormControl id="patientDob" type="text" sizing="sm" value="{{detailPatient.dob | date:'dd/MM/yyyy'}}" readonly/>
+        </c-col>
+        <label cLabel class="col-sm-2 col-form-label" for="patient-sex">
+          Sex
+        </label>
+        <c-col sm="2">
+          <input cFormControl id="patientSex" type="text" sizing="sm" value="{{detailPatient.sex}}"readonly/> 
+        </c-col>
+      </c-row>
+
+      <c-row class="mb-2">
+        <label cLabel class="col-sm-2 col-form-label" for="patient-name">
+          Patient Name </label>
+        <c-col sm="2">
+            <input cFormControl id="patientName" type="text" sizing="sm" value="{{detailPatient.patient_name}}"readonly/>
+        </c-col>
+        <label cLabel class="col-sm-2 col-form-label" for="patient-age">
+          Age
+        </label>
+        <c-col sm="2">
+          <input cFormControl id="patientAge" type="text" sizing="sm" value="{{this.age}}"readonly/>
+        </c-col>
+        <label cLabel class="col-sm-2 col-form-label" for="patient-deposit-balance">
+          Deposit Balance
+        </label>
+        <c-col sm="2">
+          <input cFormControl id="patientDepositBalance" type="text" sizing="sm" value="{{this.deposit_amount | number}}"readonly/>
+        </c-col>
+        </c-row>
+
+      <c-row class="mb-2" *ngIf="ipdHistory">
+        <label cLabel class="col-sm-2 col-form-label" for="patient-id">
+          ID No </label>
+        <c-col sm="2">
+          <div class="form-group">
+            <input cFormControl id="patientId" type="text" sizing="sm" readonly value="{{detailPatient.id_no}}"/>
+          </div>
+        </c-col>
+        <label cLabel class="col-sm-2 col-form-label" for="patient-email" *ngIf="ipdHistory">
+          Email
+        </label>
+        <c-col sm="2" *ngIf="ipdHistory">
+          <input cFormControl id="patientEmail" type="text" sizing="sm" readonly value="{{detailPatient.email}}"/>
+        </c-col>
+        <label cLabel class="col-sm-2 col-form-label" for="patient-deposit-balance">
+          Deposit Balance
+        </label>
+        <c-col sm="2">
+          <input cFormControl id="patientDepositBalance" type="text" sizing="sm" readonly value="{{detailPatient.deposit_amount}}"/>
+        </c-col>
+      </c-row>
+    </c-card-body>
+  </app-card-app>

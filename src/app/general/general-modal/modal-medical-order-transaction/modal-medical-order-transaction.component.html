@@ -1,0 +1,52 @@
+<div class="modal-header">
+    <h5  class="modal-title pull-left">Medical Order Transaction</h5>
+    <button  class="btn-close close pull-right" aria-label="Close" (click)="bsModalRef.hide()"></button>
+</div>
+<div class="modal-body">
+    <div class="row mb-3">
+        <label cLabel for="admission-date-from" class="col-sm-2 col-form-label">Date From</label>
+        <div class="col-sm-3">
+          <input cFormControl id="admission-date-from" type="date" sizing="sm" [(ngModel)]="admissionDateFrom" 
+          (ngModelChange)="onChangeAdmissionDateFrom($event)"/>
+        </div>
+        <label cLabel for="admission-date-to" class="col-sm-2 col-form-label">
+          Date To
+        </label>
+        <div class="col-sm-3">
+          <input cFormControl id="admission-date-to" type="date" sizing="sm" [(ngModel)]="admissionDateTo" 
+          (ngModelChange)="onChangeAdmissionDateTo($event)" />
+        </div>
+        <div class="col-sm-2">
+            <button cButton size="sm" (click)="getDataMedicalOrderTransaction()">Search</button>
+        </div>
+      </div>
+
+    <c-col xs="12">
+        <app-table-medical-order-transaction (dataOutput) = "getMedicalOrderData($event)"
+        [dataMedicalOrderTransaction]="dataMedicalOrderTransaction" [status]="'payment'"></app-table-medical-order-transaction>
+        <div class='fade show modal-body' style='text-align: center;' *ngIf="loadPage">
+          <c-spinner aria-hidden="true" size="sm" variant="grow"></c-spinner>
+          Loading...
+        </div>
+        <pagination *ngIf="paging.total_row > 0"
+            [boundaryLinks]="true"
+            [totalItems]="paging.total_row"
+            [(ngModel)]="current_page"
+            (pageChanged)="pageChanged($event)"
+            [itemsPerPage]="paging.rows_per_page"
+            [rotate]="false"
+            [maxSize]="10" [disabled]="loadPage">
+          </pagination>
+
+    </c-col>
+</div>
+<div class="modal-footer d-block">
+    <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+        <button cButton color="primary" type="button" size="sm" (click)="addData()">
+            <svg cIcon class="me-2" name="cilPlus"></svg> Add
+        </button>
+        <button cButton color="primary" type="button" size="sm" (click)="bsModalRef.hide()">
+            <svg cIcon class="me-2" name="cil-x"></svg> Close
+        </button>
+    </div>
+</div>

@@ -1,0 +1,9 @@
+<div *ngIf="loadPage == false">
+    <context-provider provide="privilege action_list addPrivilege removePrivilege checkAction">
+        <router-outlet></router-outlet>
+    </context-provider>
+</div>
+<div *ngIf="loadPage" class='fade show' style='text-align: center; padding-top: calc(100vh / 2); height: 100vh'>
+    <c-spinner aria-hidden="true" size="sm" variant="grow"></c-spinner>
+    Loading...
+</div>

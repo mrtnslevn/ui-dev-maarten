@@ -1,0 +1,171 @@
+<div class='fade show' style='text-align: center; padding-top: calc(100vh / 2); height: 100vh' *ngIf="loadPage">
+  <c-spinner aria-hidden="true" size="sm" variant="grow"></c-spinner>
+  Loading...
+</div>
+<div *ngIf="loadPage==false">
+<c-row ngPreserveWhitespaces>
+  <c-col xs="12">
+    <form cForm>
+      <app-card-app title="Search Booking">
+        <c-card-body>
+          <c-row class="mb-3">
+            <c-col sm="2">
+              <label cLabel class="col-form-label" for="lob">
+                From Date
+              </label>
+            </c-col>
+            <c-col sm="2">
+              <input cFormControl id="lob" type="date" sizing="sm" name="fromDate" [(ngModel)]="fromDate"
+              (ngModelChange)="onChangeFromDate($event)"/>
+            </c-col>
+            <c-col sm="2">
+              <label cLabel class="col-form-label" for="admission-no">
+                To Date
+              </label>
+            </c-col>
+            <c-col sm="2">
+              <input cFormControl id="admission-no" type="date" sizing="sm" name="toDate" [(ngModel)]="toDate"
+              (ngModelChange)="onChangeToDate($event)"/>
+            </c-col>
+            <c-col sm="2">
+              <label cLabel class="col-form-label" for="admission-no">
+                Appointment Date
+              </label>
+            </c-col>
+            <c-col sm="2">
+              <input cFormControl id="admission-no" type="date" sizing="sm" name="appointmentDate" [(ngModel)]="appointmentDate"
+              (ngModelChange)="onChangeAppointmentDate($event)"/>
+            </c-col>
+          </c-row>
+          <c-row class="mb-3">
+            <c-col sm="2">
+              <label cLabel class="col-form-label" for="lob">
+                Status
+              </label>
+            </c-col>
+            <c-col sm="2">
+              <select class="form-select form-select-sm" id="status" name="status" [ngModel]="selectedPrepaidStatus" (ngModelChange)="onChangePrepaidStatus($event)">
+                <option selected="" disabled="">-- Select Status --</option> 
+                <option *ngFor="let list of listPrepaidStatus" [ngValue]="list">{{list.value}}</option>
+              </select>
+            </c-col>
+            <c-col sm="2">
+              <label cLabel class="col-form-label" for="booking-id">
+                Booking ID
+              </label>
+            </c-col>
+            <c-col sm="2">
+              <input cFormControl id="booking-id" type="text" sizing="sm" name="bookingId" [(ngModel)]="bookingId"
+              (ngModelChange)="onChangeBookingId($event)"/>
+            </c-col>
+            <c-col sm="2">
+              <label cLabel class="col-form-label" for="service">
+                Service
+              </label>
+            </c-col>
+            <c-col sm="2">
+              <select class="form-select form-select-sm" id="service" name="service" [ngModel]="selectedPrepaidService" (ngModelChange)="onChangePrepaidService($event)">
+                <option selected="" disabled="">-- Select Service --</option> 
+                <option *ngFor="let list of listPrepaidService" [ngValue]="list">{{list.value}}</option>
+              </select>
+            </c-col>
+          </c-row>
+          <c-row class="mb-3">
+            <b>Select Patient</b>
+          </c-row>
+          <app-select-patient [(patient)]="selectedPatient" [resetDataPatient]="resetDataPatient"></app-select-patient>
+        </c-card-body>
+        <c-card-footer footer class="text-center">
+          <button cButton color="primary" id="btn-search-mr" type="button" size="sm" (click)="searchPrepaidList()" [disabled]="progress">
+            <div *ngIf="!progress">
+              <svg cIcon class="me-2" name="cil-search"></svg> Search
+            </div>
+            <div *ngIf="progress">
+              <c-spinner aria-hidden="true" size="sm" variant="grow"></c-spinner>
+              Loading...
+            </div>
+          </button>
+          <button cButton color="primary" id="btn-search-mr" type="button" size="sm" (click)="onReset()">
+            <svg cIcon class="me-2" name="cil-reload" size="sm"></svg> Reset
+          </button>
+        </c-card-footer>
+      </app-card-app>
+    </form>
+  </c-col>
+</c-row>
+
+<c-row ngPreserveWhitespaces>
+  <c-col xs="12">
+    <app-card-app title="Search Result" *ngIf="searched">
+      <div class='fade show modal-body' style='text-align: center;' *ngIf="progress">
+        <c-spinner aria-hidden="true" size="sm" variant="grow"></c-spinner>
+        Loading...
+      </div>
+      <c-card-body [hidden]="progress">
+          <form cForm>
+            <table cTable id="tableSearchInvoiceList" [responsive]="true">
+              <thead>
+                <tr>
+                  <th scope="col">Booking ID</th>
+                  <th scope="col">Transaction Date</th>
+                  <th scope="col">Patient Name</th>
+                  <th scope="col">ID No.</th>
+                  <th scope="col">MR No.</th>
+                  <th scope="col">Order ID</th>
+                  <th scope="col">Appointment Date</th>
+                  <th scope="col">Package</th>
+                  <th scope="col">Status</th>
+                  <th scope="col">Expired Date</th>
+                  <th scope="col">Create User</th>
+                  <th scope="col"></th>
+                </tr>
+              </thead>
+              <tbody id="tbodySearchPrepaid" *ngIf="listPrepaid.length > 0; else no_data">
+                <tr *ngFor="let invoice of listPrepaid">
+                  <td>{{invoice.booking_id}}</td>
+                  <td>{{invoice.transaction_date | date: 'dd-MMM-yyyy HH:mm'}}</td>
+                  <td>{{invoice.patient_name}}</td>
+                  <td>{{invoice.id_no}}</td>
+                  <td>{{invoice.mr_no}}</td>
+                  <td>{{invoice.order_id}}</td>
+                  <td>{{invoice.appointment_date}}</td>
+                  <td>{{invoice.package_name}}</td>
+                  <td>{{invoice.status}}</td>
+                  <td>{{invoice.expired_date | date:'dd-MMM-yyyy'}}</td>
+                  <td>{{invoice.created_by}}</td>
+                  <td>
+                    <ng-template contextDisposer let-context>
+                      <button cButton type="button" size="sm" 
+                      *ngIf="context.checkAction('0321_view_detail')"
+                      (click)="navigateToHistory(invoice.booking_id, invoice.prepaid_id)">
+                        <svg cIcon name="cil-external-link"></svg>
+                      </button>
+                      <!-- <button cButton type="button" size="sm" 
+                      *ngIf="context.checkAction('0322_redirect_refund')">
+                        Refund
+                      </button> -->
+                    </ng-template>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <ng-template #no_data>
+              <tr ngClass="text-center">
+                <td colspan="12">No Data</td>
+              </tr>
+            </ng-template>
+          </form>
+          <pagination *ngIf="paging.total_row > 0"
+            [boundaryLinks]="true"
+            [totalItems]="paging.total_row"
+            [(ngModel)]="current_page"
+            (pageChanged)="pageChanged($event)"
+            [itemsPerPage]="paging.rows_per_page"
+            [rotate]="false"
+            [maxSize]="paging.max_size" [disabled]="progress">
+          </pagination>
+      </c-card-body>
+    </app-card-app>
+  </c-col>
+</c-row>
+</div>

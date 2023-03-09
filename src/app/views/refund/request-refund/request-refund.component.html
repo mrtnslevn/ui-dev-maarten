@@ -1,0 +1,310 @@
+<div class='fade show' style='text-align: center; padding-top: calc(100vh / 2); height: 100vh' *ngIf="loadPage">
+    <c-spinner aria-hidden="true" size="sm" variant="grow"></c-spinner>
+    Loading...
+</div>
+<div *ngIf="loadPage==false">
+    <c-row ngPreserveWhitespaces>
+        <c-col xs="12">
+            <app-card-app title="Refund Type">
+                <c-card-body>
+                    <div class="row mb-3">
+                        <div class="col-sm-2">
+                            <select class="form-select form-select-sm" id="refundType" 
+                            name="refundType" (ngModelChange)="onChangeRefundType($event)"
+                            [(ngModel)]="selectedRefundType">
+                                <option selected="" disabled="">--Select Refund Type--</option>
+                                <option *ngFor="let list of refundTypeList" [ngValue]="list">{{list.value}}</option>
+                            </select>
+                        </div>
+                    </div>
+                </c-card-body>
+            </app-card-app>
+        </c-col>
+    </c-row>
+
+    <c-row ngPreserveWhitespaces *ngIf="selectedRefundType.key=='deposit-ipd-refund'">
+        <c-col xs="12">
+         <form [formGroup]="fs.formDeposit">
+            <app-card-app title="Refund Deposit IPD">
+              <c-card-body>
+                <div class="row mb-3">
+                  <label cLabel for="patient-name" class="col-sm-2 col-form-label">Patient Name<span class="text-danger">*</span></label>
+                  <c-col sm="2">
+                    <input type="text" class="form-control form-control-sm" id="patient-name" formControlName="patientName" 
+                    (ngModelChange)="onChangePatientName($event, 'deposit')"
+                    [ngClass]="fs.isFormValid('patientName')">
+                    <div *ngIf="fs.isFormError('patientName')" class="text-danger">
+                      <div *ngFor="let e of fs.getFormErrors('patientName') | keyvalue">{{ fs.getFormErrorMessage('patientName', e.key) }}</div>
+                    </div>
+                    </c-col>
+                  <label cLabel for="dob" class="col-sm-2 col-form-label">Date of Birth<span class="text-danger">*</span></label>
+                  <c-col sm="2">
+                      <input type="date" id="dob" class="form-control form-control-sm" formControlName="dob" 
+                      (ngModelChange)="onChangeDob($event, 'deposit')"
+                      [ngClass]="fs.isFormValid('dob')">
+                      <div *ngIf="fs.isFormError('dob')" class="text-danger">
+                        <div *ngFor="let e of fs.getFormErrors('dob') | keyvalue">{{ fs.getFormErrorMessage('dob', e.key) }}</div>
+                      </div>
+                  </c-col>
+                  <label cLabel for="mrNo" class="col-sm-2 col-form-label">MR No</label>
+                  <div class="col-sm-2">
+                      <input type="text" class="form-control form-control-sm" id="mrNo"formControlName="mrNo" (ngModelChange)="onChangeMrNo($event, 'deposit')">
+                  </div>
+                </div>
+                <div class="row mb-3">
+                    <label cLabel for="idNo" class="col-sm-2 col-form-label">ID No</label>
+                    <div class="col-sm-2">
+                        <input type="text" class="form-control form-control-sm" id="idNo" formControlName="idNo" (ngModelChange)="onChangeIdNo($event)"> 
+                    </div>
+                    <label cLabel for="sex" class="col-sm-2 col-form-label">Sex</label>
+                    <div class="col-sm-2">
+                        <select class="form-select form-select-sm" (ngModelChange)="onChangeGender($event)"
+                        formControlName="selectedGender"
+                        id="sex"  name="sex">
+                            <option selected="" disabled="">--Select Gender--</option>
+                            <option *ngFor="let list of genderList" [ngValue]="list">{{list.value}}</option>
+                        </select>
+                    </div>
+                </div>
+              </c-card-body>
+              <c-card-footer>
+                  <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+                      <button cButton color="primary" id="btn-get-invoice" type="button" size="sm" (click)="onValidateRefundDeposit()"
+                          [disabled]="progress">
+                          <div *ngIf="!progress">
+                          <svg cIcon class="me-2" name="cil-search"></svg> Search
+                          </div>
+                          <div *ngIf="progress">
+                          <c-spinner aria-hidden="true" size="sm" variant="grow"></c-spinner>
+                          Loading...
+                          </div>
+                      </button>
+                      <button cButton color="primary" id="btn-reset" type="button" size="sm" (click)="onReset()">
+                          <svg cIcon class="me-2" name="cil-reload" size="sm"></svg> Reset
+                      </button>
+                  </div>
+              </c-card-footer>
+            </app-card-app>
+          </form>
+        </c-col>
+    </c-row>
+
+    <c-row ngPreserveWhitespaces>
+        <c-col xs="12">
+          <form [formGroup]="fsp.formPrepaid">
+            <app-card-app title="Refund Prepaid" *ngIf="selectedRefundType.key=='prepaid-refund'">
+                <c-card-body>
+                    <div class="row mb-3">
+                        <label cLabel for="bookingId" class="col-sm-2 col-form-label">Booking ID</label>
+                        <div class="col-sm-2">
+                            <input type="text" class="form-control form-control-sm" id="bookingId" formControlName="bookingId" (ngModelChange)="onChangeBookingId($event)">
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <label cLabel class="col-sm-2 col-form-label-sm" for="select-patient-mr-no">
+                          MR No
+                        </label>
+                        <c-col sm="2">
+                          <input cFormControl id="select-patient-mr-no" type="text" formControlName="mrNo" (ngModelChange)="onChangeMrNo($event, 'prepaid')" sizing="sm"/>
+                        </c-col>
+                        <label cLabel class="col-sm-2 col-form-label-sm" for="select-patient-name">
+                          Patient Name<span class="text-danger">*</span>
+                        </label>
+                        <c-col sm="2">
+                          <input cFormControl id="select-patient-name" type= "text" formControlName="patientName" 
+                          (ngModelChange)="onChangePatientName($event, 'prepaid')" sizing="sm" 
+                          [ngClass]="fsp.isFormValid('patientName')"  />
+                          <div *ngIf="fsp.isFormError('patientName')" class="text-danger">
+                            <div *ngFor="let e of fsp.getFormErrors('patientName') | keyvalue">{{ fsp.getFormErrorMessage('patientName', e.key) }}</div>
+                          </div>
+                        </c-col>
+                        <label cLabel class="col-sm-2 col-form-label-sm" for="dob">
+                          Date of Birth<span class="text-danger">*</span>
+                        </label>
+                        <c-col sm="2">
+                          <input cFormControl id="dob" type= "date" formControlName="dob" 
+                          (ngModelChange)="onChangeDob($event, 'prepaid')" sizing="sm" 
+                          [ngClass]="fsp.isFormValid('dob')"   />
+                          <div *ngIf="fsp.isFormError('dob')" class="text-danger">
+                            <div *ngFor="let e of fsp.getFormErrors('dob') | keyvalue">{{ fsp.getFormErrorMessage('dob', e.key) }}</div>
+                          </div>
+                        </c-col>
+                    </div>
+                </c-card-body>
+                <c-card-footer>
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+                        <button cButton color="primary" id="btn-get-invoice" type="button" size="sm" (click)="onValidatePrepaid()"
+                            [disabled]="progress">
+                            <div *ngIf="!progress">
+                            <svg cIcon class="me-2" name="cil-search"></svg> Search
+                            </div>
+                            <div *ngIf="progress">
+                            <c-spinner aria-hidden="true" size="sm" variant="grow"></c-spinner>
+                            Loading...
+                            </div>
+                        </button>
+                        <button cButton color="primary" id="btn-reset" type="button" size="sm" (click)="onReset()">
+                            <svg cIcon class="me-2" name="cil-reload" size="sm"></svg> Reset
+                        </button>
+                    </div>
+                </c-card-footer>
+            </app-card-app>
+          </form>
+        </c-col>
+    </c-row>
+    
+    <c-row ngPreserveWhitespaces>
+        <c-col xs="12">
+            <app-card-app title="Search Result" *ngIf="depositSearched">
+              <div class='fade show modal-body' style='text-align: center;' *ngIf="progress">
+                <c-spinner aria-hidden="true" size="sm" variant="grow"></c-spinner>
+                Loading...
+              </div>
+              <c-card-body [hidden]="progress">
+                <table cTable id="tableSearchRefundDepositIpd" [responsive]="true">
+                  <thead>
+                    <tr>
+                        <th scope="col">MR No.</th>
+                        <th scope="col">Patient Name</th>
+                        <th scope="col">ID No</th>
+                        <th scope="col">Sex</th>
+                        <th scope="col">Birth Date</th>
+                        <th scope="col">Address</th>
+                        <th scope="col">Phone No</th>
+                        <th scope="col">Balance</th>
+                        <th scope="col"></th>
+                    </tr>
+                  </thead>
+                  <tbody id="tbodySearchRefundDepositIpd" *ngIf="refundDepositList.length > 0; else deposit_no_data">
+                    <tr *ngFor="let r of refundDepositList">
+                      <td>{{r.mr_no}}</td>
+                      <td>{{r.patient_name}}</td>
+                      <td>{{r.id_no}}</td>
+                      <td>{{r.sex}}</td>
+                      <td>{{r.dob | date: 'dd-MMM-yyyy HH:mm'}}</td>
+                      <td>{{r.address}}</td>
+                      <td>{{r.phone_no}}</td>
+                      <td>{{r.deposit_amount | number}}</td>
+                      <td>
+                        <ng-template contextDisposer let-context>
+                          <div style="display: flex" class="gap-1">
+                            <button cButton type="button" size="sm" (click)="navigateToRefundDepositIpdDetail(r)">
+                              <svg cIcon class="me-2" name="cil-external-link"></svg>
+                            </button>
+                          </div>
+                        </ng-template>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+                <ng-template #deposit_no_data>
+                  <tr ngClass="text-center">
+                    <td colspan="9">No Data</td>
+                  </tr>
+                </ng-template>
+                <pagination *ngIf="paging.total_row > 0"
+                  [boundaryLinks]="true"
+                  [totalItems]="paging.total_row"
+                  [(ngModel)]="current_page"
+                  (pageChanged)="pageChanged($event)"
+                  [itemsPerPage]="paging.rows_per_page"
+                  [rotate]="false"
+                  [maxSize]="paging.max_size" [disabled]="progress">
+                </pagination>
+              </c-card-body>
+              <c-card-footer footer class="text-center" [hidden]="progress">
+                <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+                  <ng-template contextDisposer let-context>
+                    <button cButton color="primary" id="btn-export" type="button" size="sm"
+                    [disabled]="progressExport" (click)="exportRefundPrepaidList()">
+                      <div *ngIf="!progressExport">
+                        <svg cIcon class="me-2" name="cil-file" size="sm"></svg> Export
+                      </div>
+                      <div *ngIf="progressExport">
+                        <c-spinner aria-hidden="true" size="sm" variant="grow"></c-spinner>
+                        Loading...
+                      </div>
+                    </button>
+                  </ng-template>
+                </div>
+              </c-card-footer>
+            </app-card-app>
+        </c-col>
+    </c-row>
+
+    <c-row ngPreserveWhitespaces>
+        <c-col xs="12">
+            <app-card-app title="Search Result" *ngIf="prepaidSearched">
+              <div class='fade show modal-body' style='text-align: center;' *ngIf="progress">
+                <c-spinner aria-hidden="true" size="sm" variant="grow"></c-spinner>
+                Loading...
+              </div>
+              <c-card-body [hidden]="progress">
+                <table cTable id="tableSearchRefundPrepaid" [responsive]="true">
+                  <thead>
+                    <tr>
+                      <th scope="col">Booking ID</th>
+                      <th scope="col">Order ID</th>
+                      <th scope="col">Service</th>
+                      <th scope="col">MR No.</th>
+                      <th scope="col">Patient Name</th>
+                      <th scope="col">Prepaid Date</th>
+                      <th scope="col"></th>
+                    </tr>
+                  </thead>
+                  <tbody id="tbodySearchPatientInvoice" *ngIf="refundPrepaidList.length > 0; else no_data">
+                    <tr *ngFor="let r of refundPrepaidList">
+                      <td>{{r.booking_id}}</td>
+                      <td>{{r.order_id}}</td>
+                      <td>{{r.service_name}}</td>
+                      <td>{{r.mr_no}}</td>
+                      <td>{{r.patient_name}}</td>
+                      <td>{{r.transaction_date | date: 'dd-MMM-yyyy HH:mm'}}</td>
+                      <td>
+                        <ng-template contextDisposer let-context>
+                          <div style="display: flex" class="gap-1">
+                            <button cButton type="button" size="sm" (click)="navigateToRefundPrepaidDetail(r)">
+                              <svg cIcon class="me-2" name="cil-external-link"></svg>
+                            </button>
+                          </div>
+                        </ng-template>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+                <ng-template #no_data>
+                  <tr ngClass="text-center">
+                    <td colspan="7">No Data</td>
+                  </tr>
+                </ng-template>
+                <pagination *ngIf="paging.total_row > 0"
+                  [boundaryLinks]="true"
+                  [totalItems]="paging.total_row"
+                  [(ngModel)]="current_page"
+                  (pageChanged)="pageChanged($event)"
+                  [itemsPerPage]="paging.rows_per_page"
+                  [rotate]="false"
+                  [maxSize]="paging.max_size" [disabled]="progress">
+                </pagination>
+              </c-card-body>
+              <c-card-footer footer class="text-center" [hidden]="progress">
+                <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+                  <ng-template contextDisposer let-context>
+                    <button cButton color="primary" id="btn-export" type="button" size="sm"
+                    [disabled]="progressExport" (click)="exportRefundPrepaidList()">
+                      <div *ngIf="!progressExport">
+                        <svg cIcon class="me-2" name="cil-file" size="sm"></svg> Export
+                      </div>
+                      <div *ngIf="progressExport">
+                        <c-spinner aria-hidden="true" size="sm" variant="grow"></c-spinner>
+                        Loading...
+                      </div>
+                    </button>
+                  </ng-template>
+                </div>
+              </c-card-footer>
+            </app-card-app>
+        </c-col>
+    </c-row>
+
+</div>

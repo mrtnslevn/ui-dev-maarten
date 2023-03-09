@@ -1,0 +1,101 @@
+<div class="modal-header">
+   <h5 class="modal-title pull-left">Package</h5>
+   <button type="button" class="btn-close close pull-right" aria-label="Close" (click)="bsModalRef.hide()">
+     <span aria-hidden="true" class="visually-hidden">&times;</span>
+   </button>
+</div>
+<div class="modal-body">
+<app-card-app title="Search Package">
+   <c-card-body>
+      <c-row class="mb-3">
+         <c-col sm="2">
+           <label cLabel class="col-form-label" for="package_name">
+             Package Name
+           </label>
+         </c-col>
+         <c-col sm="3">
+           <input [(ngModel)]="package_name" cFormControl sizing="sm" name="package_name" [(ngModel)]="package_name" 
+           id="package_name" (ngModelChange)="onChangePackageName($event)"/>
+         </c-col>
+      </c-row>
+      <!-- <c-row class="mb-3">
+         <c-col sm="2">
+           <label cLabel class="col-form-label" for="package_code">
+             Package Code
+           </label>
+         </c-col>
+         <c-col sm="3">
+           <input [(ngModel)]="package_code" cFormControl sizing="sm" name="package_code" id="package_code" />
+         </c-col>
+      </c-row> -->
+   </c-card-body>
+   <c-card-footer>
+    <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+      <button cButton color="primary" id="btn-search-patient" type="button" size="sm" (click)="onSearchPackage()" [disabled]="loadButton">
+        <div *ngIf="!loadButton">
+            <svg cIcon class="me-2" name="cil-search"></svg> Search
+        </div>
+        <div *ngIf="loadButton">
+            <c-spinner aria-hidden="true" size="sm" variant="grow"></c-spinner>
+            Loading...
+        </div>
+    </button>
+      <button cButton color="primary" id="btn-reset-patient" type="button" size="sm" (click)="onReset()">
+        Reset
+      </button>
+    </div>
+   </c-card-footer>
+</app-card-app>
+
+<app-card-app title="Search Result">
+   <c-card-body>
+     <div class="row mb-3">
+       <table cTable id="tableSalesDisc" [responsive]="true" small [striped]="true">
+         <thead>
+           <tr>
+             <th scope="col">Package {{this.typePackage=='mcu' ? 'ID' : 'Code'}}</th>
+             <th scope="col">Package Name</th>
+             <th scope="col"></th>
+           </tr>
+         </thead>
+         <tbody id="tbodyPackage" *ngIf="data.length>0; else no_data">
+             <tr *ngFor="let d of data">
+               <td>{{d.sales_item_id}}</td>
+               <td>{{d.sales_item_name}}</td>
+               <td ngClass="text-center">
+                 <button cButton color="primary" size="sm"
+                   (click)="onSelectedPackage(d)">
+                  <svg cIcon class="me-2" name="cil-check"></svg> Select
+                 </button>
+               </td>
+             </tr>
+         </tbody>
+       </table>
+       <ng-template #no_data>
+        <tr ngClass="text-center" *ngIf="loadData">
+          <c-spinner aria-hidden="true" size="sm" variant="grow"></c-spinner>
+          Loading...
+        </tr>
+         <tr ngClass="text-center" *ngIf="loadData==false">
+           <td colspan="4">no data</td>
+         </tr>
+       </ng-template>
+       <pagination *ngIf="paging.total_row > 0"
+         [boundaryLinks]="true"
+         [totalItems]="paging.total_row"
+         [(ngModel)]="current_page"
+         (pageChanged)="pageChanged($event)"
+         [itemsPerPage]="paging.rows_per_page"
+         [rotate]="false"
+         [maxSize]="paging.max_size" [disabled]="progress"></pagination>
+     </div>
+   </c-card-body>
+ </app-card-app>
+</div>
+<div class="modal-footer d-block">
+   <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+       <button cButton color="primary" id="btn-search-mr" type="button" size="sm" (click)="bsModalRef.hide()">
+           Close
+       </button>
+   </div>
+</div>

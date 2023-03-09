@@ -1,0 +1,48 @@
+<div class="modal-header">
+   <h5 class="modal-title pull-left">User Validation</h5>
+   <button type="button" class="btn-close close pull-right" aria-label="Close" 
+   [disabled]="disabledCloseButton" (click)="bsModalRef.hide()">
+     <span aria-hidden="true" class="visually-hidden">&times;</span>
+   </button>
+</div>
+<div class="modal-body">
+   <form [formGroup]="userForm">
+      <!-- <c-row class="mb-3">
+        <label for="userId" class="col-sm-2 col-form-label-sm">User ID</label>
+        <div class="col-sm-5">
+          <input type="text" class="form-control form-control-sm" id="userId" formControlName="userId" (ngModelChange)="onChangeUserId($event)"/>
+        </div>
+      </c-row> -->
+      <c-row class="mb-3">
+          <label for="password" class="col-sm-2 col-form-label-sm">Password</label>
+          <div class="col-sm-5">
+            <input cForm type="password" required 
+            class="form-control form-control-sm" id="password" formControlName="password" 
+            (ngModelChange)="onChangePassword($event)"
+            [ngClass]="{ 'is-invalid': (submitted || f['password'].touched) && f['password'].errors, 'is-valid': f['password'].touched && !f['password'].errors }"
+            />
+            <div *ngIf="submitted && f['password'].errors">
+              Password is required
+            </div>
+          </div>
+      </c-row>
+    </form>
+</div>
+<div class="modal-footer d-block">
+   <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+     <button cButton color="primary" id="btn-ok" type="button" size="sm" (click)="onValidate()"
+     [disabled]="progress">
+       <div *ngIf="!progress">
+         OK
+       </div>
+       <div *ngIf="progress">
+         <c-spinner aria-hidden="true" size="sm" variant="grow"></c-spinner>
+         Loading...
+       </div>
+     </button>
+     <button cButton [disabled]="disabledCloseButton" 
+     color="primary" id="btn-close-modal" type="button" size="sm" (click)="bsModalRef.hide()">
+       CANCEL
+     </button>
+   </div>
+ </div>

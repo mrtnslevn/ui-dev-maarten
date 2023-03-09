@@ -1,0 +1,13 @@
+<div class="modal-header">
+   <h5 *ngIf="!isLogout" class="modal-title pull-left">Alert</h5>
+ </div>
+ <div class="modal-body">
+   <c-alert color="{{type}}">{{message}}</c-alert>
+ </div>
+ <div class="modal-footer d-block" >
+   <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+     <button cButton color="primary" type="button" size="sm" (click)="bsModalRef.hide()" *ngIf="!isLogout">
+       Ok
+     </button>
+   </div>
+ </div>

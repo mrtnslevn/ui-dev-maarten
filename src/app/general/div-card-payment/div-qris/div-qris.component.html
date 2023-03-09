@@ -1,0 +1,168 @@
+<div class="col-md-12" id="divQris">
+  <app-card-app title="QRIS">
+    <c-card-body class="card-body" *ngIf="readOnly; else elseBlock">
+      <div class="row mb-3">
+        <label for="qrisTransactionId"
+               class="col-sm-4 col-form-label-sm">Transaction
+          ID</label>
+        <div class="col-sm-6">
+          <input type="text"
+                 class="form-control form-control-sm"
+                 id="qrisTransactionId" readonly="readonly" value="{{data.transaction_id}}">
+        </div>
+      </div>
+      <div class="row mb-3">
+        <label for="qrisCustName"
+               class="col-sm-4 col-form-label-sm">Customer
+          Name</label>
+        <div class="col-sm-6">
+          <input type="text"
+                 class="form-control form-control-sm"
+                 id="qrisCustName" readonly="readonly" value="{{data.customer_name}}">
+        </div>
+      </div>
+      <div class="row mb-3">
+        <label for="qrisPhoneNo"
+               class="col-sm-4 col-form-label-sm">Phone
+          No.</label>
+        <div class="col-sm-6">
+          <input type="text"
+                 class="form-control form-control-sm"
+                 id="qrisPhoneNo" readonly="readonly" value="{{data.phone_no}}">
+        </div>
+      </div>
+      <div class="row mb-3">
+        <label for="qrisIssuer"
+               class="col-sm-4 col-form-label-sm">Issuer</label>
+        <div class="col-sm-6">
+          <input type="text"
+                 class="form-control form-control-sm"
+                 id="qrisIssuer" readonly="readonly" value="{{data.issuer}}">
+        </div>
+      </div>
+      <div class="row mb-3">
+        <label for="qrisPaymentDate"
+               class="col-sm-4 col-form-label-sm">Payment
+          Date</label>
+        <div class="col-sm-6">
+          <input type="text"
+                 class="form-control form-control-sm"
+                 id="qrisPaymentDate" readonly="readonly" value="{{data.payment_date | date:'dd-MMM-yyyy HH:mm'}}">
+        </div>
+      </div>
+      <div class="row mb-3">
+        <label for="qrisApprovalCode"
+               class="col-sm-4 col-form-label-sm">Approval
+          Code</label>
+        <div class="col-sm-6">
+          <input type="text"
+                 class="form-control form-control-sm"
+                 id="qrisApprovalCode" readonly="readonly" value="{{data.approval_code}}">
+        </div>
+      </div>
+      <div class="row mb-3">
+        <label for="qrisNotes"
+               class="col-sm-4 col-form-label-sm">Notes</label>
+        <div class="col-sm-6">
+          <input type="text"
+                 class="form-control form-control-sm"
+                 id="qrisNotes" readonly value="{{data.notes}}">
+        </div>
+      </div>
+    </c-card-body>
+
+    <ng-template #elseBlock>
+      <c-card-body class="card-body">
+        <div class="row mb-3">
+          <label class="col-sm-4 col-form-label-sm">QRIS</label>
+          <div class="col-sm-4">
+            <input type="text"
+                   class="form-control form-control-sm">
+          </div>
+          <div class="col-sm-3">
+            <button type="button"
+                    class="btn btn-primary btn-sm">
+              <svg class="icon me-2">
+                <use xlink:href="vendors/@coreui/icons/svg/free.svg#cil-reload"></use>
+              </svg>
+              Process
+            </button>
+          </div>
+        </div>
+        <div class="row mb-3" align="center">
+          <div class="col-sm-12" align="center">
+            <img src="./img/qris.jpg">
+          </div>
+        </div>
+        <div class="row mb-3">
+          <label for="qrisTransactionId"
+                 class="col-sm-4 col-form-label-sm">Transaction
+            ID</label>
+          <div class="col-sm-6">
+            <input type="text"
+                   class="form-control form-control-sm"
+                   id="qrisTransactionId">
+          </div>
+        </div>
+        <div class="row mb-3">
+          <label for="qrisCustName"
+                 class="col-sm-4 col-form-label-sm">Customer
+            Name</label>
+          <div class="col-sm-6">
+            <input type="text"
+                   class="form-control form-control-sm"
+                   id="qrisCustName">
+          </div>
+        </div>
+        <div class="row mb-3">
+          <label for="qrisPhoneNo"
+                 class="col-sm-4 col-form-label-sm">Phone
+            No.</label>
+          <div class="col-sm-6">
+            <input type="text"
+                   class="form-control form-control-sm"
+                   id="qrisPhoneNo">
+          </div>
+        </div>
+        <div class="row mb-3">
+          <label for="qrisIssuer"
+                 class="col-sm-4 col-form-label-sm">Issuer</label>
+          <div class="col-sm-6">
+            <input type="text"
+                   class="form-control form-control-sm"
+                   id="qrisIssuer">
+          </div>
+        </div>
+        <div class="row mb-3">
+          <label for="qrisPaymentDate"
+                 class="col-sm-4 col-form-label-sm">Payment
+            Date</label>
+          <div class="col-sm-6">
+            <input type="text"
+                   class="form-control form-control-sm"
+                   id="qrisPaymentDate">
+          </div>
+        </div>
+        <div class="row mb-3">
+          <label for="qrisApprovalCode"
+                 class="col-sm-4 col-form-label-sm">Approval
+            Code</label>
+          <div class="col-sm-6">
+            <input type="text"
+                   class="form-control form-control-sm"
+                   id="qrisApprovalCode">
+          </div>
+        </div>
+        <div class="row mb-3">
+          <label for="qrisNotes"
+                 class="col-sm-4 col-form-label-sm">Notes</label>
+          <div class="col-sm-6">
+            <input type="text"
+                   class="form-control form-control-sm"
+                   id="qrisNotes">
+          </div>
+        </div>
+      </c-card-body>
+    </ng-template>
+  </app-card-app>
+</div>

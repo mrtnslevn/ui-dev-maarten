@@ -1,0 +1,101 @@
+<div class="col-md-12" id="divVoucher">
+  <app-card-app title="Voucher">
+    <c-card-body class="card-body" *ngIf="readOnly; else elseBlock">
+      <div class="row mb-3">
+        <label for="voucherNo"
+               class="col-sm-4 col-form-label-sm">Voucher
+          No.</label>
+        <div class="col-sm-4">
+          <input type="text"
+                 class="form-control form-control-sm"
+                 id="voucherNo" readonly value="{{data.voucher_no}}">
+        </div>
+      </div>
+      <div class="row mb-3">
+        <label for="voucherCode"
+               class="col-sm-4 col-form-label-sm">Voucher
+          Code</label>
+        <div class="col-sm-4">
+          <input type="text"
+                 class="form-control form-control-sm"
+                 id="voucherCode" readonly value="{{data.voucher_code}}">
+        </div>
+      </div>
+      <div class="row mb-3">
+        <label for="voucherName"
+               class="col-sm-4 col-form-label-sm">Voucher
+          Name</label>
+        <div class="col-sm-4">
+          <input type="text"
+                 class="form-control form-control-sm"
+                 id="voucherName" readonly value="{{data.voucher_name}}">
+        </div>
+      </div>
+      <div class="row mb-3">
+        <label for="voucherType"
+               class="col-sm-4 col-form-label-sm">Voucher
+          Type</label>
+        <div class="col-sm-4">
+          <input type="text"
+                 class="form-control form-control-sm"
+                 id="voucherType" readonly value="{{data.voucher_type}}">
+        </div>
+      </div>
+      <div class="row mb-3">
+        <label for="amount"
+               class="col-sm-4 col-form-label-sm">
+          Amount</label>
+        <div class="col-sm-4">
+          <input type="text"
+                 class="form-control form-control-sm"
+                 id="amount" readonly value="{{data.amount}}">
+        </div>
+      </div>
+      <div class="row mb-3">
+        <label for="notes"
+               class="col-sm-4 col-form-label-sm">
+          Notes</label>
+        <div class="col-sm-4">
+          <input type="text"
+                 class="form-control form-control-sm"
+                 id="notes" readonly value="{{data.notes}}">
+        </div>
+      </div>
+    </c-card-body>
+
+    <ng-template #elseBlock>
+      <c-card-body class="card-body">
+        <div class="row mb-3"
+             style="width: 100%;  white-space: nowrap; overflow-x: auto;">
+          <table id="tableVoucher"
+                 class="table table-striped table-hover table-sm"
+                 style="width: 100%;  white-space: nowrap; overflow-x: auto;">
+            <thead>
+            <tr>
+              <th scope="col">Voucher No</th>
+              <th scope="col">Voucher Code</th>
+              <th scope="col">Voucher Name</th>
+              <th scope="col">Voucher Type</th>
+              <th scope="col">Amount</th>
+              <th scope="col">Notes</th>
+              <th scope="col"></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let d of newData">
+              <th scope="row">{{d.voucher_no}}</th>
+              <th scope="col">{{d.voucher_code}}</th>
+              <th scope="col">{{d.voucher_name}}</th>
+              <th scope="col">{{d.voucher_name}}</th>
+              <th scope="col">{{d.voucher_type}}</th>
+              <th scope="col">{{d.amount}}</th>
+              <th scope="col">{{d.notes}}</th>
+              <th scope="col"></th>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </c-card-body>
+    </ng-template>
+  </app-card-app>
+</div>

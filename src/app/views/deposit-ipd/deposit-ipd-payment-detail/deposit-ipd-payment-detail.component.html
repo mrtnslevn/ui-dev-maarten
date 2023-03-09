@@ -1,0 +1,200 @@
+<div class='fade show' style='text-align: center; padding-top: calc(100vh / 2); height: 100vh' *ngIf="loadPage">
+  <c-spinner aria-hidden="true" size="sm" variant="grow"></c-spinner>
+  Loading...
+</div>
+<div *ngIf="loadPage == false">
+  <!--Patient Information after click next-->
+<c-row ngPreserveWhitespaces>
+  <app-card-patient-info-deposit [mrNo]="mrNo" [age]="age" [deposit_amount]="depositAmount"></app-card-patient-info-deposit>
+  </c-row>
+  
+  <!--Deposit IPD History-->
+  <c-row ngPreserveWhitespaces>
+    <app-card-deposit-ipd-history title="Deposit IPD History"
+    [hide]="['created_by']" [admissionNo]="admission.admission_no"></app-card-deposit-ipd-history>
+    <!-- <pagination *ngIf="paging.total_row > 0"
+      [boundaryLinks]="true"
+      [totalItems]="paging.total_row"
+      [(ngModel)]="current_page"
+      (pageChanged)="pageChanged($event)"
+      [itemsPerPage]="paging.rows_per_page"
+      [rotate]="false"
+      [maxSize]="paging.max_size" [disabled]="loadPage">
+    </pagination> -->
+  </c-row>
+  
+  <!--Deposit By-->
+  <c-row ngPreserveWhitespaces>
+    <app-card-depositor [readOnly]="false" [patientInfoRepo]="patientInfoDeposit" [(depositor)]="depositor"></app-card-depositor>
+  </c-row>
+  
+  <!--Deposit IPD Payment-->
+  <c-row ngPreserveWhitespaces>
+    <app-card-app title="Deposit IPD Payment">
+      <c-card-body>
+            <form [formGroup]="fs.form">
+              <c-row class="mb-3">
+                <c-col xs="6">
+                  <app-card-app title='Deposit Detail'>
+                    <c-card-body>
+                        <div class="row mb-3">
+                          <label for="openingBalance" class="col-sm-4 col-form-label" cLabel>Opening
+                            Balance</label>
+                          <div class="col-sm-6">
+                            <input type="text" class="form-control form-control-sm" id="openingBalance" formControlName="openingBalance"
+                              value="{{this.depositAmount | number}}" readonly>
+                          </div>
+                        </div>
+                        <div class="row mb-3">
+                          <label for="amount" class="col-sm-4 col-form-label" cLabel>Amount</label>
+                          <div class="col-sm-6">
+                            <fieldset>
+                              <input cFormControl type="text" id="amount" formControlName="amount" 
+                              class="form-control form-control-sm currency_input"
+                              [readOnly]="readOnlyAmount"
+                              [ngClass]="fs.isFormValid('amount')"
+                              (ngModelChange)="onChangePaymentAmount($event)"
+                              numeric>
+                            </fieldset>
+                            <div *ngIf="fs.isFormError('amount')" class="text-danger">
+                              <div *ngFor="let e of fs.getFormErrors('amount') | keyvalue">{{ fs.getFormErrorMessage('amount', e.key) }}</div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="row mb-3">
+                          <label for="paymentMode" class="col-sm-4 col-form-label" cLabel>Payment
+                            Mode</label>
+                          <div class="col-sm-6">
+                            <fieldset [disabled]="readOnlyPaymentMode">
+                              <select cSelect id="paymentMode" formControlName="paymentMode" 
+                              class="form-select form-select-sm" 
+                              [ngClass]="fs.isFormValid('paymentMode')"
+                              (ngModelChange)="onChangePaymentMode($event)">
+                                <option selected="" disabled="">-- Select Payment Mode --</option>
+                                <option *ngFor="let p of listPayment" [ngValue]="p">{{ p.value }}</option>
+                              </select>
+                            </fieldset>
+                            <div *ngIf="fs.isFormError('paymentMode')" class="text-danger">
+                              <div *ngFor="let e of fs.getFormErrors('paymentMode') | keyvalue">{{ fs.getFormErrorMessage('paymentMode', e.key) }}</div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="row mb-3" id="divQrisBank" style="display: none">
+                          <label for="qrisBank" class="col-sm-4 col-form-label" cLabel>Bank</label>
+                          <div class="col-sm-6">
+                            <select class="form-select form-select-sm" id="qrisBank" [disabled]="readOnlyBank">
+                              <option selected></option>
+                              <option value="1">Nobu</option>
+                              <option value="2">CIMB Niaga</option>
+                            </select>
+                          </div>
+                        </div>
+                        <div class="row mb-3">
+                          <label for="closingBalance" class="col-sm-4 col-form-label" cLabel>Closing Balance</label>
+                          <div class="col-sm-6">
+                            <input type="text" class="form-control form-control-sm" id="closingBalance" formControlName="closingBalance" readonly><!--value="{{payment.closing_balance| number: '.0-4'}}"-->
+                          </div>
+                        </div>
+                        <div class="row mb-3">
+                          <label for="netPayment" class="col-sm-4 col-form-label" cLabel>Net</label>
+                          <div class="col-sm-6">
+                            <input type="text" class="form-control form-control-sm" id="netPayment" formControlName="netPayment" readonly value="{{payment.net | number: '.0-4'}}">
+                          </div>
+                        </div>
+                        <div class="row mb-3">
+                          <label for="email" class="col-sm-4 col-form-label" cLabel>Email</label>
+                          <div class="col-sm-6">
+                            <input type="text" class="form-control form-control-sm" id="email" formControlName="email" readonly>
+                          </div>
+                        </div>
+                    </c-card-body>
+                  </app-card-app>
+                </c-col>
+
+                <c-col xs="6">
+                  <app-div-bank-transfer [(data)]="bankTransfer" [readOnly]="!paymentMode.bankTransfer" 
+                    [submitted]="fs.submitted" 
+                    [hidden]="!paymentMode.bankTransfer"
+                    [(formValid)]="formValid.bankTransfer">
+                  </app-div-bank-transfer>
+
+                  <app-div-cash [(data)]="cash" [readOnly]="!paymentMode.cash" 
+                    [submitted]="fs.submitted" [payment]="payment" 
+                    [hidden]="!paymentMode.cash"
+                    [(formValid)]="formValid.cash">
+                  </app-div-cash>
+
+                  <!-- <app-div-deposit-ipd [hidden]="!paymentMode.depositIpd"></app-div-deposit-ipd> -->
+                  
+                  <app-div-digital-payment [(data)]="digitalPayment" 
+                    [readOnly]="!paymentMode.digitalPayment"
+                    [(submitted)]="fs.submitted" [transactionType]="'Payment'" [patientInfo]="patientInfo" 
+                    [invoice]="invoice" [payment]="payment" [hidden]="!paymentMode.digitalPayment"
+                    [(formValid)]="formValid.digitalPayment" >
+                  </app-div-digital-payment>
+
+                  <app-div-edc [(data)]="card" [readOnly]="!paymentMode.edc"
+                     [(submitted)]="fs.submitted" [payment]="payment" 
+                    [hidden]="!paymentMode.edc"
+                    [(formValid)]="formValid.edc">
+                  </app-div-edc>
+
+                  <app-div-giro [(data)]="giro" [readOnly]="!paymentMode.giro"
+                     [submitted]="fs.submitted" 
+                    [hidden]="!paymentMode.giro"
+                    [(formValid)]="formValid.giro">
+                  </app-div-giro>
+
+                </c-col>
+              </c-row> 
+            </form>
+          </c-card-body>
+          <c-card-footer>
+            <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+              <!-- <ng-template contextDisposer let-context> -->
+                <button cButton id="btnAdd" class="btn btn-primary btn-sm" [disabled]="disabledAdd"
+                  (click)="addPaymentMode()"> <!--*ngIf="context.checkAction('0219_add_payment')"-->
+                  <svg cIcon name="cilPlus" size="sm"></svg>
+                  Add
+                </button>
+              <!-- </ng-template> -->
+              <button cButton id="btnSave" class="btn btn-primary btn-sm"
+                (click)="submitAddPayment()" [disabled]="savePaymentProgress || disabledSave">
+                <div *ngIf="!savePaymentProgress">
+                  <svg cIcon name="cilSave" size="sm"></svg> Save
+                </div>
+                <div *ngIf="savePaymentProgress">
+                  <c-spinner aria-hidden="true" size="sm" variant="grow"></c-spinner>
+                  Loading...
+                </div>
+              </button>
+              <button cButton id="btnCancel" [disabled]="disabledCancel || savePaymentProgress" class="btn btn-primary btn-sm"
+                (click)="cancelAddPaymentMode()">
+                <svg cIcon name="cilX" size="sm"></svg>
+                Cancel
+              </button>
+            </div>
+          </c-card-footer>
+
+    </app-card-app>
+  </c-row>
+  
+  <!--Deposit IPD Payment Settlement-->
+  <c-row ngPreserveWhitespaces>
+    <app-card-deposit-ipd-payment-settlement> </app-card-deposit-ipd-payment-settlement>
+  </c-row>
+  
+  <!--Action Button-->
+  <c-row ngPreserveWhitespaces>
+    <app-card-app>
+      <c-card-body>
+        <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+          <button cButton [routerLink]="['/deposit-ipd/deposit-ipd-payment']" 
+          [state]="{ fromDetail: true }" class="btn btn-primary btn-sm">
+            <svg cIcon name="cilArrowCircleLeft" size="sm"></svg> Back  
+          </button>
+        </div>
+      </c-card-body>
+    </app-card-app>
+  </c-row>
+</div>

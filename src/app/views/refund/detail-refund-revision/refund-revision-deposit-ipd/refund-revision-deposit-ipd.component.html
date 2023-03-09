@@ -1,0 +1,134 @@
+<div class='fade show' style='text-align: center; padding-top: calc(100vh / 2); height: 100vh' *ngIf="loadPage">
+    <c-spinner aria-hidden="true" size="sm" variant="grow"></c-spinner>
+    Loading...
+  </div>
+  
+  <div *ngIf="loadPage==false">
+    <c-row ngPreserveWhitespaces>
+      <app-card-patient-info-deposit></app-card-patient-info-deposit>
+    </c-row>
+    
+    <c-row ngPreserveWhitespaces>
+      <app-card-deposit-ipd-history></app-card-deposit-ipd-history>
+    </c-row>
+    
+    <c-row ngPreserveWhitespaces>
+      <app-card-document (showUploadForm)="true"></app-card-document>
+    </c-row>
+    
+    <c-row ngPreserveWhitespaces>
+        <app-card-app title='Refund Deposit IPD'>
+          <c-card-body>
+            <form [formGroup]="fs.form">
+              <c-row class="mb-3">
+                <c-col xs="6">
+                  <app-card-app title='Amount to be Settled'>
+                    <c-card-body>
+                        <div class="row mb-3">
+                          <label for="openingBalance" class="col-sm-4 col-form-label" cLabel>Opening Balance</label>
+                          <div class="col-sm-6">
+                            <input type="text" class="form-control form-control-sm" id="openingBalance"
+                              readonly>
+                          </div>
+                        </div>
+                        <div class="row mb-3">
+                          <label for="refundAmount" class="col-sm-4 col-form-label" cLabel>Refund Amount</label>
+                          <div class="col-sm-6">
+                            <input cFormControl type="text" id="refundAmount" formControlName="refundAmount" 
+                            class="form-control form-control-sm currency_input"
+                            [ngClass]="fs.isFormValid('refundAmount')"
+                            (ngModelChange)="onChangeRefundAmount($event)"
+                            numeric>
+                            <div *ngIf="fs.isFormError('refundAmount')" class="text-danger">
+                              <div *ngFor="let e of fs.getFormErrors('refundAmount') | keyvalue">{{ fs.getFormErrorMessage('refundAmount', e.key) }}</div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="row mb-3">
+                          <label for="closingBalance" class="col-sm-4 col-form-label" cLabel>Closing Balance</label>
+                          <div class="col-sm-6">
+                            <input type="text" class="form-control form-control-sm" id="closingBalance" readonly>
+                          </div>
+                        </div>
+                        <div class="row mb-3">
+                          <label for="net" class="col-sm-4 col-form-label" cLabel>Net</label>
+                          <div class="col-sm-6">
+                            <input type="text" class="form-control form-control-sm" id="net"
+                              readonly>
+                          </div>
+                        </div>
+                        <div class="row mb-3">
+                          <label for="paymentMode" class="col-sm-4 col-form-label" cLabel>Payment
+                            Mode</label>
+                          <div class="col-sm-6">
+                            <select cSelect id="paymentMode" formControlName="paymentMode" 
+                            class="form-select form-select-sm" 
+                            [ngClass]="fs.isFormValid('paymentMode')"
+                            (ngModelChange)="onChangePaymentMode($event)">
+                            <option selected="" disabled="">-- Select Payment Mode --</option>
+                            <option *ngFor="let p of paymentModeList" [ngValue]="p">{{ p.value }}</option>
+                            </select>
+                            <div *ngIf="fs.isFormError('paymentMode')" class="text-danger">
+                              <div *ngFor="let e of fs.getFormErrors('paymentMode') | keyvalue">{{ fs.getFormErrorMessage('paymentMode', e.key) }}</div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="row mb-3">
+                          <label for="reason" class="col-sm-4 col-form-label" cLabel>Reason</label>
+                          <div class="col-sm-6">
+                            <select cSelect id="reason" formControlName="paymentMode" 
+                            class="form-select form-select-sm" 
+                            [ngClass]="fs.isFormValid('reason')"
+                            (ngModelChange)="onChangeReason($event)">
+                            <option selected="" disabled="">-- Select Payment Mode --</option>
+                            <option *ngFor="let p of paymentModeList" [ngValue]="p">{{ p.value }}</option>
+                            </select>
+                            <div *ngIf="fs.isFormError('reason')" class="text-danger">
+                              <div *ngFor="let e of fs.getFormErrors('reason') | keyvalue">{{ fs.getFormErrorMessage('reason', e.key) }}</div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="row mb-3">
+                            <label for="notes" class="col-sm-4 col-form-label" cLabel>Notes</label>
+                            <div class="col-sm-6">
+                              <input type="text" class="form-control form-control-sm" id="notes">
+                            </div>
+                        </div>
+                    </c-card-body>
+                  </app-card-app>
+                </c-col>
+                <c-col xs="6">
+                  <app-div-bank-transfer [(data)]="bankTransfer" [readOnly]="!paymentMode.bankTransfer" 
+                    [(formValid)]="formValid.bankTransfer" [submitted]="fs.submitted" 
+                    [hidden]="!paymentMode.bankTransfer">
+                  </app-div-bank-transfer>
+                  <app-div-cash [(data)]="cash" [readOnly]="!paymentMode.cash" 
+                    [(formValid)]="formValid.cash" [submitted]="fs.submitted" [payment]="payment" 
+                    [hidden]="!paymentMode.cash">
+                  </app-div-cash>
+                </c-col>
+              </c-row>
+            </form>
+          </c-card-body>
+          <c-card-footer>
+            <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+              <button cButton id="btnSave" class="btn btn-primary btn-sm"
+                (click)="submitAddPayment()">
+                <div *ngIf="!savePaymentProgress">
+                  <svg cIcon name="cilReload" size="sm"></svg> Save
+                </div>
+                <div *ngIf="savePaymentProgress">
+                  <c-spinner aria-hidden="true" size="sm" variant="grow"></c-spinner>
+                  Loading...
+                </div>
+              </button>
+            </div>
+          </c-card-footer>
+        </app-card-app>
+      </c-row>
+  
+      <c-row ngPreserveWhitespaces>
+        <app-card-refund-deposit></app-card-refund-deposit>
+      </c-row>
+  </div>
+  

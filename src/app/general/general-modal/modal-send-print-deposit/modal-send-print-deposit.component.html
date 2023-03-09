@@ -1,0 +1,80 @@
+<div class="modal-header">
+    <h5 class="modal-title pull-left">Send / Print</h5>
+    <button class="btn-close close pull-right" aria-label="Close" (click)="bsModalRef.hide()"></button>
+</div>
+<div class="modal-body">
+    <c-col xs="12">
+        <form cForm [formGroup]="fs.form">
+            <c-row class="mb-2">
+                <c-row>
+                    <c-col sm="2">
+                        <label cLabel class="col-form-label" for="id-no">
+                            Action
+                        </label>
+                    </c-col>
+                    <c-col sm="2">
+                        <c-form-check>
+                            <input cFormCheckInput id="print-radioStack" formControlName="action" type="radio"
+                                [defaultChecked]="true" value="print" [ngClass]="fs.isFormValid('action')"
+                                (ngModelChange)="onChangeAction($event)" />
+                            <label cFormCheckLabel for="print-radioStack">Print</label>
+                        </c-form-check>
+                    </c-col>
+                    <c-col sm="2">
+                        <fieldset [disabled]="type == 'original'">
+                            <c-form-check>
+                                <input cFormCheckInput id="send-radioStack" formControlName="action" type="radio"
+                                    value="send" [ngClass]="fs.isFormValid('action')"
+                                    (ngModelChange)="onChangeAction($event)" />
+                                <label cFormCheckLabel for="send-radioStack">Send</label>
+                            </c-form-check>
+                        </fieldset>
+                    </c-col>
+                </c-row>
+                <c-row>
+                    <c-col sm="2"></c-col>
+                    <c-col>
+                        <div *ngIf="fs.isFormError('action')" class="text-danger">
+                            <div *ngFor="let e of fs.getFormErrors('action') | keyvalue">{{
+                                fs.getFormErrorMessage('action', e.key) }}</div>
+                        </div>
+                    </c-col>
+                </c-row>
+            </c-row>
+            <c-row class="mb-2">
+                <c-col sm="2">
+                    <label cLabel class="col-form-label" for="email">
+                        Email
+                    </label>
+                </c-col>
+                <c-col sm="4">
+                    <fieldset [disabled]="type== 'original'">
+                        <input id="email" cFormControl sizing="sm" formControlName="email" [value]="email"
+                            [ngClass]="fs.isFormValid('email')" (ngModelChange)="onChangeEmail($event)" />
+                    </fieldset>
+                    <div *ngIf="fs.isFormError('email')" class="text-danger">
+                        <div *ngFor="let e of fs.getFormErrors('email') | keyvalue">{{ fs.getFormErrorMessage('email',
+                            e.key) }}</div>
+                    </div>
+                </c-col>
+            </c-row>
+        </form>
+    </c-col>
+</div>
+<div class="modal-footer d-block">
+    <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+        <button cButton color="primary" id="sendReportButton" type="button" size="sm"
+            (click)="onValidatePrintSendReport()" [disabled]="onLoad">
+            <div *ngIf="!onLoad">
+                Ok
+            </div>
+            <div *ngIf="onLoad">
+                <c-spinner aria-hidden="true" size="sm" variant="grow"></c-spinner>
+                Loading...
+            </div>
+        </button>
+        <button cButton color="primary" id="cancelModalButton" type="button" size="sm" (click)="bsModalRef.hide()">
+            Close
+        </button>
+    </div>
+</div>

@@ -1,0 +1,97 @@
+<div *ngIf="!payment">
+  <c-row class="mb-3">
+    <c-col sm="2">
+      <label cLabel class="col-form-label-sm" for="select-patient-mr-no">
+        MR No
+      </label>
+    </c-col>
+    <c-col sm="3">
+      <c-input-group>
+        <input cFormControl id="select-patient-mr-no" name="mrNo" [(ngModel)]="patient.mr_no" sizing="sm"
+          readonly />
+        <button cButton color="primary" id="btn-search-patient" type="button" size="sm" (click)="showPatientModal()">
+          <svg cIcon name="cil-search"></svg>
+        </button>
+      </c-input-group>
+    </c-col>
+    <c-col sm="2">
+      <label cLabel class="col-form-label-sm" for="select-patient-dob">
+        Date of Birth
+      </label>
+    </c-col>
+    <c-col sm="3">
+      <input cFormControl id="select-patient-dob" name="dob" value="{{ patient.dob | date: 'dd-MMM-yyyy' }}" type="text" sizing="sm" readonly />
+    </c-col>
+  </c-row>
+  <c-row class="mb-3">
+    <c-col sm="2">
+      <label cLabel class="col-form-label-sm" for="select-patient-id-no">
+        ID No.
+      </label>
+    </c-col>
+    <c-col sm="3">
+      <input cFormControl id="select-patient-id-no" name="idNo" [(ngModel)]="patient.id_no"  sizing="sm"  readonly />
+    </c-col>
+    <c-col sm="2">
+      <label cLabel class="col-form-label-sm" for="select-patient-name">
+        Patient Name
+      </label>
+    </c-col>
+    <c-col sm="3">
+      <input cFormControl id="select-patient-name" name="patientName" [(ngModel)]="patient.patient_name" sizing="sm" readonly />
+    </c-col>
+  </c-row>
+</div>
+
+<!-- Khusus untuk menu payment, karena butuh validasi -->
+<div *ngIf="payment">
+  <form cForm [formGroup]="selectPatientForm.form">
+    <c-row class="mb-3">
+      <c-col sm="2">
+        <label cLabel class="col-form-label-sm" for="select-patient-mr-no">
+          MR No<span *ngIf="formRequired" class="text-danger">*</span>
+        </label>
+      </c-col>
+      <c-col sm="3">
+        <c-input-group>
+          <input cFormControl id="select-patient-mr-no" name="mrNo" sizing="sm"
+            readonly formControlName="mrNo" [ngClass]="selectPatientForm.isFormValid('mrNo')" />
+          <button cButton color="primary" id="btn-search-patient" type="button" size="sm" (click)="showPatientModal()">
+            <svg cIcon name="cil-search"></svg>
+          </button>
+        </c-input-group>
+        <div *ngIf="selectPatientForm.isFormError('mrNo')" class="text-danger">
+          <div *ngFor="let e of selectPatientForm.getFormErrors('mrNo') | keyvalue">
+            {{ selectPatientForm.getFormErrorMessage('mrNo', e.key) }}
+          </div>
+        </div>
+      </c-col>
+      <c-col sm="2">
+        <label cLabel class="col-form-label-sm" for="select-patient-dob">
+          Date of Birth<span *ngIf="formRequired" class="text-danger">*</span>
+        </label>
+      </c-col>
+      <c-col sm="3">
+        <input cFormControl id="select-patient-dob" name="dob" type="text" sizing="sm" readonly value="{{ patient.dob | date: 'dd-MMM-yyyy' }}" />
+      </c-col>
+    </c-row>
+    <c-row class="mb-3">
+      <c-col sm="2">
+        <label cLabel class="col-form-label-sm" for="select-patient-id-no">
+          ID No.<span *ngIf="formRequired" class="text-danger">*</span>
+        </label>
+      </c-col>
+      <c-col sm="3">
+        <input cFormControl id="select-patient-id-no" name="idNo" formControlName="idNo"  sizing="sm"  readonly />
+      </c-col>
+      <c-col sm="2">
+        <label cLabel class="col-form-label-sm" for="select-patient-name">
+          Patient Name<span *ngIf="formRequired" class="text-danger">*</span>
+        </label>
+      </c-col>
+      <c-col sm="3">
+        <input cFormControl id="select-patient-name" name="patientName" formControlName="patientName" sizing="sm" readonly />
+      </c-col>
+    </c-row>
+  </form>
+</div>

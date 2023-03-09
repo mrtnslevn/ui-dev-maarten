@@ -1,0 +1,55 @@
+<div class="modal-header">
+  <h5 class="modal-title pull-left">{{title}}</h5>
+  <button type="button" class="btn-close close pull-right" aria-label="Close" (click)="bsModalRef.hide()">
+    <span aria-hidden="true" class="visually-hidden">&times;</span>
+  </button>
+</div>
+<div class='fade show modal-body' style='text-align: center;' [hidden]="loadPage == false">
+  <c-spinner aria-hidden="true" size="sm" variant="grow"></c-spinner>
+  Loading...
+</div>
+<div class="modal-body" [hidden]="loadPage">
+  <c-row ngPreserveWhitespaces>
+    <c-col xs="12">
+      <c-card [cBorder]="{top: {color: 'primary', width: 3}}" class="mb-4">
+        <!-- <c-card-header>
+          <strong>Search Result</strong>
+        </c-card-header> -->
+        <c-card-body>
+          <table cTable id="tableSearchPatientInvoice" [responsive]="true" small>
+            <thead>
+              <tr>
+                <th scope="col">Transaction Level</th>
+                <th scope="col">Sales Item Type</th>
+                <th scope="col">Sales Item Group</th>
+                <th scope="col">Sales Item</th>
+                <th scope="col">Ordered Item</th>
+                <th scope="col">Portion Type</th>
+                <th scope="col">Disc. Type</th>
+                <th scope="col">Disc. Factor</th>
+                <th scope="col">Notes</th>
+              </tr>
+            </thead>
+            <tbody id="tbodyCustomAdditionalDiscount">
+              <tr *ngFor="let d of data">
+                <td>{{d.transaction_level_name}}</td>
+                <td>{{d.sales_item_type_name == undefined || d.sales_item_type_name == '' ? '-' : d.sales_item_type_name}}</td>
+                <td>{{d.sales_item_group_name == undefined || d.sales_item_group_name == '' ? '-' : d.sales_item_group_name}}</td>
+                <td>{{d.sales_item_name == undefined || d.sales_item_name == '' ? '-' : d.sales_item_name}}</td>
+                <td>{{d.ordered_item_name == undefined || d.ordered_item_name == '' ? '-' : d.ordered_item_name}}</td>
+                <td>{{d.portion_type_name}}</td>
+                <td>{{d.disc_type_name}}</td>
+                <td>{{d.disc_factor}}</td>
+                <td>{{d.notes == undefined || d.notes == '' ? '-' : d.notes}}</td>
+              </tr>
+            </tbody>
+          </table>
+          <pagination *ngIf="paging.total_row > 0" [boundaryLinks]="true" [totalItems]="paging.total_row"
+            [(ngModel)]="current_page" (pageChanged)="pageChanged($event)" [itemsPerPage]="paging.rows_per_page" [rotate]="false"
+            [maxSize]="paging.max_size" [disabled]="progress">
+          </pagination>
+        </c-card-body>
+      </c-card>
+    </c-col>
+  </c-row>
+</div>

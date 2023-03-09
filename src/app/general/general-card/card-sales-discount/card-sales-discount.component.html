@@ -1,0 +1,41 @@
+<app-card-app title="Sales Discount">
+  <div class='fade show modal-body' style='text-align: center;' *ngIf="loadCard">
+    <c-spinner aria-hidden="true" size="sm" variant="grow"></c-spinner>
+    Loading...
+  </div>
+  <c-card-body *ngIf="loadCard == false">
+    <div class="row mb-3">
+      <table cTable id="tableSalesDisc" [responsive]="true" small [striped]="true">
+        <!-- <table id="tableSalesDisc" class="table table-striped table-hover table-sm"
+        style="width: 100%;  white-space: nowrap; overflow-x: auto;"> -->
+        <thead>
+          <tr>
+
+            <th scope="col">Admission No</th>
+            <th scope="col">Sales Discount Type</th>
+            <th scope="col">Predefined Discount</th>
+            <th scope="col"></th>
+          </tr>
+        </thead>
+        <tbody id="tbodySalesDiscount" *ngIf="data.length>0; else no_data">
+            <tr *ngFor="let d of data">
+              <td>{{d.admission_no}}</td>
+              <td>{{d.sales_discount_type_name}}</td>
+              <td>{{d.predefined_discount_name}}</td>
+              <td ngClass="text-center">
+                <button cButton color="primary" size="sm" *ngIf="d.sales_discount_type_name=='Custom Additional Discount'"
+                  (click)="showModalCustom(d)">View</button>
+              </td>
+            </tr>
+        </tbody>
+      </table>
+      <ng-template #no_data>
+        <tr ngClass="text-center">
+          <td colspan="4">No Data</td>
+        </tr>
+      </ng-template>
+    </div>
+  </c-card-body>
+</app-card-app>
+
+<!-- <app-modal-custom-additional-discount [data]="dataModal"></app-modal-custom-additional-discount> -->

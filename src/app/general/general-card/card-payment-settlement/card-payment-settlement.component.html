@@ -1,0 +1,65 @@
+<app-card-app title="{{title}} Payment Settlement" [show]="show">
+  <div class='fade show modal-body' style='text-align: center;' *ngIf="loadPage">
+    <c-spinner aria-hidden="true" size="sm" variant="grow"></c-spinner>
+    Loading...
+  </div>
+  <c-card-body [hidden]="loadPage">
+    <table cTable id="tableSettlement"
+           class="table table-striped table-hover table-sm"
+           style="width: 100%;  white-space: nowrap; overflow-x: auto;"
+           [responsive]="true">
+      <thead>
+      <tr>
+        <th scope="col">Payment Mode</th>
+        <th scope="col">Account No</th>
+        <th scope="col">Account Name</th>
+        <th scope="col">Net</th>
+        <th scope="col">Notes</th>
+        <th scope="col">Settlement No.</th>
+        <th scope="col"></th>
+      </tr>
+      </thead>
+      <tbody id="tbodyPaymentSettlement" *ngIf="data.length>0; else no_data">
+        <tr *ngFor="let d of data">
+          <td>{{d.payment_mode_name}}</td>
+          <td>{{d.account_no}}</td>
+          <td>{{d.account_name}}</td>
+          <td>{{d.amount | number}}</td>
+          <td>{{d.notes}}</td>
+          <td>{{d.settlement_no}}</td>
+          <td>
+            <button cButton color="primary" size="sm" (click)="openDetail(d.settlement_no)">View Detail</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <ng-template #no_data>
+      <tr ngClass="text-center">
+        <td colspan="7">No data</td>
+      </tr>
+    </ng-template>
+    <pagination *ngIf="paging.total_row > 0"
+      [boundaryLinks]="true"
+      [totalItems]="paging.total_row"
+      [(ngModel)]="current_page"
+      (pageChanged)="pageChanged($event)"
+      [itemsPerPage]="paging.rows_per_page"
+      [rotate]="false"
+      [maxSize]="paging.max_size" [disabled]="loadPage">
+    </pagination>
+  </c-card-body>
+  <c-card-footer *ngIf="showFooter && loadPage == false">
+    <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+      <button cButton class="btn btn-primary btn-sm"
+              (click)="showSendPrintModal('copy');" *ngIf="showPrintCopy">
+        <svg cIcon name="cilSend" size="sm"></svg>
+        Print/Send Copy
+      </button>
+      <button cButton class="btn btn-primary btn-sm"
+              (click)="showSendPrintModal('original');" *ngIf="showPrintOri">
+        <svg cIcon name="cilPrint" size="sm"></svg>
+        Print Original
+      </button>
+    </div>
+  </c-card-footer>
+</app-card-app>

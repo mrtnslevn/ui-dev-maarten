@@ -1,0 +1,215 @@
+<div class='fade show col-md-12' style='text-align: center;' *ngIf="loadPage">
+  <c-spinner aria-hidden="true" size="sm" variant="grow"></c-spinner>
+  Loading...
+</div>
+<div class="col-md-12" id="divEdc" *ngIf="loadPage == false">
+  <app-card-app title="EDC">
+    <c-card-body class="card-body" *ngIf="_readOnly; else elseBlock">
+      <div class="row mb-3">
+        <label for="ccMerchantId"
+          class="col-sm-4 col-form-label-sm">EDC</label>
+        <div class="col-sm-6">
+          <input type="text"
+            class="form-control form-control-sm"
+            id="ccMerchantId" readonly="readonly" value="{{data.edc_name}}">
+        </div>
+      </div>
+      <div class="row mb-3">
+        <label for="ccCardNo"
+              class="col-sm-4 col-form-label-sm">Card
+          No</label>
+        <div class="col-sm-6">
+          <input type="text"
+                class="form-control form-control-sm"
+                id="ccCardNo" readonly="readonly" value="{{data.card_no}}">
+        </div>
+      </div>
+      <div class="row mb-3">
+        <label for="ccCardHolderName"
+              class="col-sm-4 col-form-label-sm">Card Holder
+          Name</label>
+        <div class="col-sm-6">
+          <input type="text"
+                class="form-control form-control-sm"
+                id="ccCardHolderName" readonly="readonly" value="{{data.card_holder_name}}">
+        </div>
+      </div>
+      <div class="row mb-3">
+        <label for="ccBank" class="col-sm-4 col-form-label-sm">Bank</label>
+        <div class="col-sm-6">
+          <input type="text"
+                class="form-control form-control-sm"
+                id="ccBank" readonly="readonly" value="{{data.bank}}">
+        </div>
+      </div>
+      <div class="row mb-3">
+        <label for="ccApprovalCode"
+              class="col-sm-4 col-form-label-sm">Approval
+          Code</label>
+        <div class="col-sm-6">
+          <input type="text" class="form-control form-control-sm"
+                id="ccApprovalCode" readonly="readonly" value="{{data.approval_code}}">
+        </div>
+      </div>
+      <div class="row mb-3">
+        <label for="ccTransactionId"
+              class="col-sm-4 col-form-label-sm">Transaction
+          ID</label>
+        <div class="col-sm-6">
+          <input type="text"
+                class="form-control form-control-sm"
+                id="ccTransactionId" readonly="readonly" value="{{data.transaction_id}}">
+        </div>
+      </div>
+      <div class="row mb-3">
+        <label for="ccCardExpiryDate"
+              class="col-sm-4 col-form-label-sm">Card Expiry
+          Date</label>
+        <div class="col-sm-6">
+          <input type="month"
+                class="form-control form-control-sm"
+                id="ccCardExpiryDate" readonly="readonly" value="{{data.card_expiry_date}}">
+        </div>
+      </div>
+      <div class="row mb-3">
+        <label for="ccReferenceNo"
+              class="col-sm-4 col-form-label-sm">Reference No</label>
+        <div class="col-sm-6">
+          <input type="text"
+                class="form-control form-control-sm"
+                id="ccReferenceNo" readonly="readonly" value="{{data.reference_no}}">
+        </div>
+      </div>
+      <div class="row mb-3">
+        <label for="ccNotes" class="col-sm-4 col-form-label-sm">Notes</label>
+        <div class="col-sm-6">
+          <input type="text"
+                class="form-control form-control-sm"
+                id="ccNotes" readonly value="{{data.notes}}">
+        </div>
+      </div>
+    </c-card-body>
+
+    <ng-template #elseBlock>
+      <c-card-body class="card-body">
+        <form [formGroup]="form">
+          <fieldset formGroupName="merchantForm">
+            <div class="row mb-3">
+              <label for="ccMerchantId" class="col-sm-4 col-form-label-sm">Merchant ID (Select EDC)</label>
+              <div class="col-sm-4">
+                <ng-select cSelect id="merchantId" formControlName="merchantId" (ngModelChange)="onChangeEdc($event)"
+                  [ngClass]="isMerchantFormValid('merchantId')" class="">
+                    <ng-option selected="" disabled="">-- Select Edc --</ng-option> 
+                    <ng-option *ngFor="let list of listEdc" [value]="list">{{list.edc_name}}</ng-option>
+                </ng-select>
+                <div *ngIf="isMerchantFormError('merchantId')" class="text-danger">
+                  <div *ngFor="let e of getMerchantFormErrors('merchantId') | keyvalue">{{ getErrorMessage('merchantId', e.key) }}</div>
+                </div>
+              </div>
+              <div class="col-sm-3">
+                <button type="button" class="btn btn-primary btn-sm" (click)="onValidateProcessEdc();"
+                [disabled]="progress || data.paid_status">
+                  <div *ngIf="!progress">
+                    <svg cIcon name="cilReload" size="sm"></svg> Process
+                  </div>
+                  <div *ngIf="progress">
+                    <c-spinner aria-hidden="true" size="sm" variant="grow"></c-spinner>
+                    Loading...
+                  </div>
+                </button>
+              </div>
+            </div>
+          </fieldset>
+          <div class="row mb-3">
+            <label for="ccCardNo" class="col-sm-4 col-form-label-sm">Card No</label>
+            <div class="col-sm-6">
+              <input cFormControl type="text" id="ccCardNo" formControlName="cardNo" 
+              class="form-control form-control-sm" [ngClass]="isFormValid('cardNo')" 
+              (ngModelChange)="onChangeCardNo($event)">
+              <div *ngIf="isFormError('cardNo')" class="text-danger">
+                <div *ngFor="let e of getErrors('cardNo') | keyvalue">{{ getErrorMessage('cardNo', e.key) }}</div>
+              </div>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label for="ccCardHolderName" class="col-sm-4 col-form-label-sm">Card Holder Name</label>
+            <div class="col-sm-6">
+              <input cFormControl type="text" id="ccCardHolderName" formControlName="cardHolderName" 
+              class="form-control form-control-sm" [ngClass]="isFormValid('cardHolderName')" 
+              (ngModelChange)="onChangeCardHolderName($event)">
+              <div *ngIf="isFormError('cardHolderName')" class="text-danger">
+                <div *ngFor="let e of getErrors('cardHolderName') | keyvalue">{{ getErrorMessage('cardHolderName', e.key) }}</div>
+              </div>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label for="ccBank" class="col-sm-4 col-form-label-sm">Bank</label>
+            <div class="col-sm-6">
+              <input cFormControl type="text" id="ccBank" formControlName="bank" 
+              class="form-control form-control-sm" [ngClass]="isFormValid('bank')" 
+              (ngModelChange)="onChangeBank($event)">
+              <div *ngIf="isFormError('bank')" class="text-danger">
+                <div *ngFor="let e of getErrors('bank') | keyvalue">{{ getErrorMessage('bank', e.key) }}</div>
+              </div>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label for="ccApprovalCode" class="col-sm-4 col-form-label-sm">Approval Code</label>
+            <div class="col-sm-6">
+              <input cFormControl type="text" id="ccApprovalCode" formControlName="approvalCode" 
+              class="form-control form-control-sm" [ngClass]="isFormValid('approvalCode')" 
+              (ngModelChange)="onChangeApprovalCode($event)">
+              <div *ngIf="isFormError('approvalCode')" class="text-danger">
+                <div *ngFor="let e of getErrors('approvalCode') | keyvalue">{{ getErrorMessage('approvalCode', e.key) }}</div>
+              </div>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label for="ccTransactionId" class="col-sm-4 col-form-label-sm">Transaction ID</label>
+            <div class="col-sm-6">
+              <input cFormControl type="text" id="ccTransactionId" formControlName="transactionId" 
+              class="form-control form-control-sm" [ngClass]="isFormValid('transactionId')"
+              (ngModelChange)="onChangeTransactionId($event)">
+              <div *ngIf="isFormError('transactionId')" class="text-danger">
+                <div *ngFor="let e of getErrors('transactionId') | keyvalue">{{ getErrorMessage('transactionId', e.key) }}</div>
+              </div>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label for="ccCardExpiryDate" class="col-sm-4 col-form-label-sm">Card Expiry Date</label>
+            <div class="col-sm-6">
+              <input cFormControl type="month" id="ccCardExpiryDate" formControlName="cardExpiryDate" 
+              [ngClass]="isFormValid('cardExpiryDate')" (ngModelChange)="onChangeCardExpiryDate($event)"
+              class="form-control form-control-sm">
+              <div *ngIf="isFormError('cardExpiryDate')" class="text-danger">
+                <div *ngFor="let e of getErrors('cardExpiryDate') | keyvalue">{{ getErrorMessage('cardExpiryDate', e.key) }}</div>
+              </div>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label for="ccReferenceNo" class="col-sm-4 col-form-label-sm">Reference No</label>
+            <div class="col-sm-6">
+              <input cFormControl type="text" id="ccReferenceNo" formControlName="referenceNo" 
+              [ngClass]="isFormValid('referenceNo')" (ngModelChange)="onChangeReferenceNo($event)"
+              class="form-control form-control-sm">
+              <div *ngIf="isFormError('referenceNo')" class="text-danger">
+                <div *ngFor="let e of getErrors('referenceNo') | keyvalue">{{ getErrorMessage('referenceNo', e.key) }}</div>
+              </div>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label for="ccNotes" class="col-sm-4 col-form-label-sm">Notes</label>
+            <div class="col-sm-6">
+              <input type="text" id="ccNotes" formControlName="notes" 
+              class="form-control form-control-sm" [ngClass]="isFormValid('notes')" 
+              (ngModelChange)="onChangeNotes($event)">
+              <div *ngIf="isFormError('notes')" class="text-danger">
+                <div *ngFor="let e of getErrors('notes') | keyvalue">{{ getErrorMessage('notes', e.key) }}</div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </c-card-body>
+    </ng-template>
+  </app-card-app>
+</div>

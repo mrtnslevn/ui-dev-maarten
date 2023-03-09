@@ -1,0 +1,269 @@
+<div class="modal-header">
+    <h5 class="modal-title pull-left">Add New {{selectedSalesItemCategory.value}}</h5>
+    <button type="button" class="btn-close close pull-right" aria-label="Close" (click)="bsModalRef.hide()"></button>
+</div>
+<div class='fade show modal-body' style='text-align: center;' [hidden]="loadPage == false">
+    <c-spinner aria-hidden="true" size="sm" variant="grow"></c-spinner>
+    Loading...
+  </div>
+<div class="modal-body" [hidden]="loadPage">
+    <c-row ngPreserveWhitespaces>
+        <c-col xs="12">
+            <form cForm [formGroup]="salesItemForm">
+                <c-row class="mb-3">
+                    <c-col sm="1">
+                        <label for="admissionNo" cLabel class="col-form-label">Admission No</label>
+                    </c-col>
+                    <c-col sm="5">
+                        <fieldset [disabled]="searchSalesItemDisabled">
+                            <select cSelect id="admissionNo" formControlName="admissionNo" (ngModelChange)="onChangeAdmissionNo($event)"
+                                [ngClass]="isSalesItemFormValid('admissionNo')" class="col-form-label-sm">
+                                <option selected="" disabled="">-- Select Admission No. --</option>
+                                <option *ngFor="let list of admissionList" [ngValue]="list">{{ list.admission_no }}</option>
+                            </select>
+                            <div *ngIf="isSalesItemFormError('admissionNo')" class="text-danger">
+                                <div *ngFor="let e of getSalesItemFormError('admissionNo') | keyvalue">{{ getErrorMessage('admissionNo', e.key) }}</div>
+                            </div>
+                        </fieldset>
+                    </c-col>
+                    <c-col sm="1">
+                        <label for="notes" cLabel class="col-form-label">Notes</label>
+                    </c-col>
+                    <c-col sm="5">
+                        <input cFormControl type="text" id="notes" formControlName="notes" sizing="sm" 
+                        [ngClass]="isSalesItemFormValid('notes')" (ngModelChange)="onChangeGeneralNotes($event)">
+                        <div *ngIf="isSalesItemFormError('notes')" class="text-danger">
+                            <div *ngFor="let e of getSalesItemFormError('notes') | keyvalue">{{ getErrorMessage('notes', e.key) }}</div>
+                        </div>
+                    </c-col>
+                </c-row>
+                <c-row class="mb-3">
+                    <c-col sm="1">
+                        <label for="doctor" cLabel class="col-form-label">Doctor Name</label>
+                    </c-col>
+                    <c-col sm="5">
+                        <ng-select cSelect id="doctor" formControlName="doctor"
+                            [ngClass]="isSalesItemFormValid('doctor')" 
+                            (ngModelChange)="onChangeDoctor($event)">
+                            <ng-option selected="" disabled="">-- Select Doctor --</ng-option>
+                            <ng-option *ngFor="let list of listDoctor" [value]="list">{{list.name}}</ng-option>
+                        </ng-select>
+                        <div *ngIf="isSalesItemFormError('doctor')" class="text-danger">
+                            <div *ngFor="let e of getSalesItemFormError('doctor') | keyvalue">{{ getErrorMessage('doctor', e.key) }}</div>
+                        </div>
+                    </c-col>
+                    <c-col sm="1">
+                        <label for="admission-no" cLabel class="col-form-label">Store</label>
+                    </c-col>
+                    <c-col sm="5">
+                        <ng-select cSelect 
+                        id="store"
+                        formControlName="store"
+                        [ngClass]="isSalesItemFormValid('store')"
+                        (ngModelChange)="onChangeStore($event)">
+                            <ng-option selected="" disabled="">-- Select Store --</ng-option>
+                            <ng-option *ngFor="let list of listStore" [value]="list">{{list.store_name}}</ng-option>
+                        </ng-select>
+                        <div *ngIf="isSalesItemFormError('store')" class="text-danger">
+                            <div *ngFor="let e of getSalesItemFormError('store') | keyvalue">{{ getErrorMessage('store', e.key) }}</div>
+                        </div>
+                    </c-col>
+                </c-row> 
+                <c-row class="mb-3">
+                    <c-col sm="1">
+                        <label for="sales-item-name" cLabel class="col-form-label">Sales Item</label>
+                    </c-col>
+                    <c-col sm="5">
+                        <fieldset [disabled]="disableSalesItem">
+                            <ng-select id="sales-item" formControlName="salesItemName"
+                                [ngClass]="isSalesItemFormValid('salesItemName')" 
+                                (ngModelChange)="onChangeSalesItem($event)"
+                                (keyup)="onKeyUpSalesItem($event)"
+                                (click)="onClickSalesItem($event)">
+                                <ng-option selected="">-- Select Sales Item --</ng-option>
+                                <ng-option *ngFor="let list of salesItemList" [value]="list">{{list.sales_item_code}}-{{list.sales_item_name}}</ng-option>
+                            </ng-select>
+                        </fieldset>
+                        <div *ngIf="isSalesItemFormError('salesItemName')" class="text-danger">
+                            <div *ngFor="let e of getSalesItemFormError('salesItemName') | keyvalue">{{ getErrorMessage('salesItemName', e.key) }}</div>
+                        </div>
+                    </c-col>
+                    <c-col sm="1" *ngIf="selectedSalesItemCategory.key=='0'">
+                        <label for="email" cLabel class="col-form-label">Email</label>
+                    </c-col>
+                    <c-col sm="5" *ngIf="selectedSalesItemCategory.key=='0'">
+                        <input cFormControl type="text" id="email" formControlName="email" sizing="sm" 
+                        [ngClass]="isSalesItemFormValid('email')" (ngModelChange)="onChangeEmail($event)">
+                        <div *ngIf="isSalesItemFormError('email')" class="text-danger">
+                            <div *ngFor="let e of getSalesItemFormError('email') | keyvalue">{{ getErrorMessage('email', e.key) }}</div>
+                        </div>
+                    </c-col>
+                </c-row>            
+            </form>
+        </c-col>
+    </c-row>
+
+    <c-row ngPreserveWhitespaces *ngIf="selectedSalesItemCategory.key=='1'">
+        <c-col xs="12">
+            <table cTable id="tableSearchItem" [responsive]="true">
+                <thead>
+                    <tr>
+                        <th scope="col" width="250">Item</th>
+                        <th scope="col" width="75">QTY</th>
+                        <th scope="col" width="100">UOM</th>
+                        <th scope="col" width="75">Stock</th>
+                        <th scope="col">Doctor</th>
+                        <th scope="col" width="75">Price</th>
+                        <th scope="col">Notes</th>
+                        <th scope="col"></th>
+                    </tr>
+                    </thead>
+                    <tbody id="tbodyAddSalesItemTable">
+                        <tr *ngFor="let d of dataTable; let i = index">
+                            <td class="text-center"><input cFormControl type="text" id="salesItemName" sizing="sm" [(ngModel)]='d.sales_item_name' readonly></td>
+                            <td class="text-center">
+                                <input cFormControl type="text" id="quantity" sizing="sm" [(ngModel)]='d.quantity'
+                                (ngModelChange)="onChangeQuantity($event)" numeric>
+                            </td>
+                            <td class="text-center">
+                                <select cSelect id="uom"
+                                    [(ngModel)]='d.uom' (ngModelChange)="onChangeUom($event, i)" class="col-form-label-sm">
+                                    <option selected="" disabled="">-- Select UOM --</option>
+                                    <option *ngFor="let u of d.uom_list" [ngValue]="u">{{u.uom_name}}</option>
+                                </select>
+                            </td>
+                            <td class="text-center"><input cFormControl type="text" id="notes" sizing="sm" value="{{ d.stock | number }}" readonly></td>
+                            <td class="text-center">
+                                <ng-select cSelect id="doctor"
+                                    [(ngModel)]="d.doctor"
+                                    class="col-form-label-sm"
+                                    sizing="sm"
+                                >
+                                    <ng-option selected="" disabled="">-- Select Doctor --</ng-option>
+                                    <ng-option *ngFor="let list of listDoctor" [value]="list">{{list.name}}</ng-option>
+                                </ng-select>
+                            </td>
+                            <td class="text-center"><input cFormControl type="text" id="notes" sizing="sm"  value="{{ d.price_per_item | number }}" readonly></td>
+                            <td class="text-center">
+                                <input cFormControl type="text" id="notes" sizing="sm" [(ngModel)]='d.notes'>
+                            </td>
+                            <td class="text-center">
+                                <button class="btn btn-link" type="button" (click)="removeSalesItem(d)">
+                                    <svg cIcon class="me-2 icon icon-lg text-primary" name="cil-delete"></svg>
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+            </table>
+        </c-col>
+    </c-row>
+    
+    <c-row ngPreserveWhitespaces *ngIf="selectedSalesItemCategory.key=='0'">
+        <c-col xs="12">
+            <table cTable id="tableSalesItem" [responsive]="true">
+                <thead>
+                    <tr>
+                        <th scope="col">Item</th>
+                        <th scope="col">Doctor</th>
+                        <th scope="col" width="100">Priority</th>
+                        <th scope="col" width="100">Price</th>
+                        <th scope="col">Start Date</th>
+                        <th scope="col">End Date</th>
+                        <th scope="col">Notes</th>
+                        <th scope="col"></th>
+                    </tr>
+                    </thead>
+                    <tbody id="tbodyAddSalesItemTable">
+                        <tr *ngFor="let d of dataTable; let i = index">
+                            <td style="word-wrap: break-word;
+                            max-width: 200px; vertical-align: middle;">
+                            {{d.sales_item_name}}
+                            <!-- <input cFormControl type="text" id="salesItemName" sizing="sm" [(ngModel)]='d.sales_item_name' readonly></td> -->
+                            <td>
+                                <ng-select cSelect id="doctor"
+                                [(ngModel)]="d.doctor"
+                                >
+                                    <ng-option selected="" disabled="">-- Select Doctor --</ng-option>
+                                    <ng-option *ngFor="let list of listDoctor" [value]="list">{{list.name}}</ng-option>
+                                </ng-select></td>
+                            <td>
+                                <div *ngIf="d.sales_item_type.sales_item_type_id!=17">
+                                    <select cSelect class="col-form-label-sm" id="isCito" [(ngModel)]="d.is_cito"
+                                    [disabled]="d.sales_item_type.sales_item_type_id==17">
+                                        <option disabled="">-- Is Cito --</option>
+                                        <option [ngValue]=0 selected>No</option>
+                                        <option [ngValue]=1>Yes</option>
+                                    </select>
+                                </div>
+                            </td>
+                            <td><input cFormControl type="text" id="notes" sizing="sm" value="{{ d.price_per_item | number }}" readonly></td>
+                            <td>
+                                <input cFormControl type="date" id="start-date" [(ngModel)]="d.start_date"
+                                sizing="sm">
+                            </td>
+                            <td>
+                                <input cFormControl type="date" id="end-date" [(ngModel)]="d.end_date"
+                                sizing="sm">
+                            </td>
+                            <td><input cFormControl type="text" id="notes" sizing="sm" [(ngModel)]='d.notes'></td>
+                            <td class="text-center">
+                                <button class="btn btn-link" type="button" (click)="removeSalesItem(d)">
+                                    <svg cIcon class="me-2 icon icon-lg text-primary" name="cil-delete"></svg>
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+            </table>
+        </c-col>
+    </c-row>
+</div>
+
+<div class="modal-footer d-block" *ngIf="selectedSalesItemCategory.key=='0'">
+    <div class="gap-2 d-md-flex justify-content-md-center">
+        <button cButton type="button" class="btn btn-primary btn-sm" (click)="showModalMedicalOrderTransaction()">
+            <svg cIcon name="cilPlus" size="sm"></svg>
+            Add From Medical Order
+        </button>
+    </div>
+</div>
+
+<div class="modal-footer d-block">
+    <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+        <button cButton color="primary" id="btn-reset-patient" type="button" size="sm" 
+            (click)="onSave()" *ngIf="dataTable.length > 0 && !loadPage" [disabled]="saveProgress">
+            <div *ngIf="!saveProgress">
+                <svg cIcon name="cilSave" size="sm"></svg> Save
+            </div>
+            <div *ngIf="saveProgress">
+                <c-spinner aria-hidden="true" size="sm" variant="grow"></c-spinner>
+                Loading...
+            </div>
+        </button>
+        <button cButton type="button" class="btn btn-primary btn-sm" (click)="reset()">
+            <svg cIcon name="cilReload" size="sm"></svg>
+            Reset
+        </button>
+        <button cButton color="primary" id="btn-reset-patient" type="button" size="sm" (click)="bsModalRef.hide()">
+            <svg cIcon class="me-2" name="cil-x"></svg> Close
+        </button>
+    </div>
+</div>
+
+<!-- <div class="modal-footer d-block">
+    <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+        <button cButton color="primary" id="btn-reset-patient" type="button" size="sm" 
+            (click)="onValidateSaveDataSalesItem()" *ngIf="dataTable.length > 0 && !loadPage" [disabled]="saveProgress">
+            <div *ngIf="!saveProgress">
+                <svg cIcon name="cilSave" size="sm"></svg> Save
+            </div>
+            <div *ngIf="saveProgress">
+                <c-spinner aria-hidden="true" size="sm" variant="grow"></c-spinner>
+                Loading...
+            </div>
+        </button>
+        <button cButton color="primary" id="btn-reset-patient" type="button" size="sm" (click)="bsModalRef.hide()">
+            <svg cIcon class="me-2" name="cil-x"></svg> Close
+        </button>
+    </div>
+</div> -->
+<!-- <app-modal-search-sales-item></app-modal-search-sales-item> -->

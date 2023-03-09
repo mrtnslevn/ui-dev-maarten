@@ -1,0 +1,185 @@
+<div class='fade show' style='text-align: center; padding-top: calc(100vh / 2); height: 100vh' *ngIf="loadPage">
+    <c-spinner aria-hidden="true" size="sm" variant="grow"></c-spinner>
+    Loading...
+</div>
+
+<div *ngIf="loadPage==false">
+    <c-row ngPreserveWhitespaces>
+        <c-col xs="12">
+          <form cForm [formGroup]="refundRevForm">
+            <app-card-app title="Search Refund Revision">
+                <c-card-body>
+                    <div class="row mb-2">
+                        <label cLabel class="col-sm-2 col-form-label-sm" for="refundType">
+                            Refund Type
+                        </label>
+                        <c-col sm="3">
+                            <select class="form-select form-select-sm" id="refundType" formControlName="refundType" 
+                            name="refundType" (ngModelChange)="onChangeRefundType($event)" [ngClass]="isFormValid('refundType')"
+                            > <!--[(ngModel)]="selectedRefundType"-->
+                                <option selected="" disabled="">--Select Refund Type--</option>
+                                <option *ngFor="let list of listRefundType" [ngValue]="list">{{list.value}}</option>
+                            </select>
+                        </c-col>
+                        <label cLabel class="col-sm-2 col-form-label-sm" for="returnedBy">
+                            Returned By
+                        </label>
+                        <c-col sm="3">
+                            <input cFormControl id="returnedBy" type="text" formControlName="returnedBy" [ngClass]="isFormValid('returnedBy')"(ngModelChange)="onChangeReturnedBy($event)" sizing="sm"/>
+                        </c-col>
+                    </div>
+                    <div class="row mb-2">
+                        <label cLabel class="col-sm-2 col-form-label-sm" for="select-patient-mr-no">
+                            MR No
+                        </label>
+                        <c-col sm="3">
+                            <input cFormControl id="select-patient-mr-no" type="text" formControlName="mrNo" [ngClass]="isFormValid('mrNo')" (ngModelChange)="onChangeMrNo($event)" sizing="sm"/>
+                        </c-col>
+                        <label cLabel class="col-sm-2 col-form-label-sm" for="select-patient-name">
+                            Patient Name
+                        </label>
+                        <c-col sm="3">
+                            <input cFormControl id="select-patient-name" type= "text" formControlName="name" [ngClass]="isFormValid('name')" (ngModelChange)="onChangePatientName($event)" sizing="sm" />
+                        </c-col>
+                    </div>
+                    <div class="row mb-2">
+                        <label cLabel class="col-sm-2 col-form-label-sm" for="bookingId">
+                            Booking ID
+                        </label>
+                        <c-col sm="3">
+                            <input cFormControl id="bookingId" type="text" [ngClass]="isFormValid('bookingId')" (ngModelChange)="onChangeBookingId($event)" sizing="sm"/>
+                        </c-col>
+                        <label cLabel class="col-sm-2 col-form-label-sm" for="refundBy">
+                            Refund By
+                        </label>
+                        <c-col sm="3">
+                            <input cFormControl id="refundBy" type= "text" formControlName="refundBy" [ngClass]="isFormValid('refundBy')"(ngModelChange)="onChangeRefundBy($event)" sizing="sm" />
+                        </c-col>
+                    </div>
+                    <div class="row mb-3">
+                        <label cLabel class="col-sm-2 col-form-label-sm" for="paymentMode">
+                          Payment Mode
+                        </label>
+                      <c-col sm="3">
+                        <select class="form-select form-select-sm" id="paymentMode" formControlName="paymentMode" [ngClass]="isFormValid('refundType')"
+                        name="refundType" (ngModelChange)="onChangePaymentMode($event)"
+                        ><!--[(ngModel)]="selectedRefundType"-->
+                            <option selected="" disabled="">--Select Payment Mode--</option>
+                            <option *ngFor="let list of listPaymentModeList" [ngValue]="list">{{list.value}}</option>
+                        </select>
+                      </c-col>
+                        <label cLabel class="col-sm-2 col-form-label-sm" for="refundDate">
+                            Refund Date
+                        </label>
+                        <c-col sm="3">
+                            <input type="date" id="refundDate" class="form-control form-control-sm" formControlName="refundDate" [ngClass]="isFormValid('refundDate')" (ngModelChange)="onChangeRefundDate($event)">
+                        </c-col>
+                    </div>
+                </c-card-body>
+                <c-card-footer>
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+                        <button cButton color="primary" id="btn-get-invoice" type="button" size="sm" (click)="onValidate()"
+                            [disabled]="progress">
+                            <div *ngIf="!progress">
+                            <svg cIcon class="me-2" name="cil-search"></svg> Search
+                            </div>
+                            <div *ngIf="progress">
+                            <c-spinner aria-hidden="true" size="sm" variant="grow"></c-spinner>
+                            Loading...
+                            </div>
+                        </button>
+                        <button cButton color="primary" id="btn-reset" type="button" size="sm" (click)="reset()">
+                            <svg cIcon class="me-2" name="cil-reload" size="sm"></svg> Reset
+                        </button>
+                    </div>
+                </c-card-footer>
+            </app-card-app>
+          </form>
+        </c-col>
+    </c-row>
+
+    <c-row ngPreserveWhitespaces>
+        <c-col xs="12">
+            <app-card-app title="Search Result" *ngIf="searched">
+              <div class='fade show modal-body' style='text-align: center;' *ngIf="progress">
+                <c-spinner aria-hidden="true" size="sm" variant="grow"></c-spinner>
+                Loading...
+              </div>
+              <c-card-body [hidden]="progress">
+                <table cTable id="tableSearchRefundRevision" [responsive]="true">
+                  <thead>
+                    <tr>
+                        <th scope="col">Refund Type</th>
+                        <th scope="col">Refund ID</th>
+                        <th scope="col">Refund Date</th>
+                        <th scope="col">Booking ID</th>
+                        <th scope="col">Payment Mode</th>
+                        <th scope="col">Mr No</th>
+                        <th scope="col">Patient Name</th>
+                        <th scope="col">Amount</th>
+                        <th scope="col"></th>
+                    </tr>
+                  </thead>
+                  <tbody id="tbodySearchPatientInvoice" *ngIf="refundRevisionList.length > 0; else no_data">
+                    <tr *ngFor="let r of refundRevisionList">
+                      <td>{{r.refund_type}}</td>
+                      <td>{{r.refund_id}}</td>
+                      <td>{{r.refund_date}}</td>
+                      <td>{{r.booking_id}}</td>
+                      <td>{{r.payment_mode}}</td>
+                      <td>{{r.mr_no}}</td>
+                      <td>{{r.patient_name}}</td>
+                      <td>{{r.amount | number}}</td>
+                      <td>
+                        <ng-template contextDisposer let-context>
+                          <div style="display: flex" class="gap-1">
+                            <button cButton type="button" size="sm" (click)="navigateToDetailRefundRevision()">
+                              <svg cIcon class="me-2" name="cil-external-link"></svg>
+                            </button>
+                          </div>
+                        </ng-template>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+                <ng-template #no_data>
+                  <tr ngClass="text-center">
+                    <td colspan="9">No Data</td>
+                  </tr>
+                </ng-template>
+                <pagination *ngIf="paging.total_row > 0"
+                  [boundaryLinks]="true"
+                  [totalItems]="paging.total_row"
+                  [(ngModel)]="current_page"
+                  (pageChanged)="pageChanged($event)"
+                  [itemsPerPage]="paging.rows_per_page"
+                  [rotate]="false"
+                  [maxSize]="paging.max_size" [disabled]="progress">
+                </pagination>
+              </c-card-body>
+              <c-card-footer footer class="text-center" [hidden]="progress">
+                <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+                  <ng-template contextDisposer let-context>
+                    <button cButton color="primary" id="btn-export" type="button" size="sm"
+                    [disabled]="progressExport" (click)="exportRefundRevision()">
+                      <div *ngIf="!progressExport">
+                        <svg cIcon class="me-2" name="cil-file" size="sm"></svg> Export
+                      </div>
+                      <div *ngIf="progressExport">
+                        <c-spinner aria-hidden="true" size="sm" variant="grow"></c-spinner>
+                        Loading...
+                      </div>
+                    </button>
+                  </ng-template>
+                  <button cButton type="button" size="sm" (click)="navigateToRefundDepositIpdDetail()">
+                    <svg cIcon class="me-2" name="cil-external-link">Deposit</svg>
+                  </button>
+                  <button cButton type="button" size="sm" (click)="navigateToRefundPrepaidDetail()">
+                    <svg cIcon class="me-2" name="cil-external-link">Prepaid</svg>
+                  </button>
+                </div>
+              </c-card-footer>
+            </app-card-app>
+        </c-col>
+    </c-row>
+</div>

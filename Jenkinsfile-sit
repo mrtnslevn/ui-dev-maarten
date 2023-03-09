@@ -1,0 +1,54 @@
+node {
+    def dockerImage = ''
+	def containerName = 'paymentsystem-ui'
+    def registry = 'dev-registry.nds.co.id/paymentsystem-ui'
+    def posisi = ''
+	def jobName = 'Payment System UI'
+	def dockerfile = 'Dockerfile'
+	def port = '-p 8888:80'
+	def host = '--add-host localhost.docker:10.85.143.3'
+    try {
+		stage ('Jenkins Jobs Triggered'){
+			echo "Pipeline Start ..."
+		}
+		
+		stage('Get Source from SCM') {
+			posisi = 'Get Source from SCM'
+			echo "Get Source from SCM Start ..."
+			git branch: "sit",
+			credentialsId: '387fe156-2a7b-41fe-aa96-ebba59942763',
+			url: 'https://gitlab.nds.co.id/siloam-payment-system/ui.git'
+		}
+
+		stage('Remove Unused docker image') {
+		    posisi = 'Remove Unused docker image'
+		    echo "Remove Unused docker image ..."
+		    sh "docker rmi $registry || true"
+        }
+		
+		stage('Building Image') {
+		    posisi = 'Building Image'
+			echo "Building Image Start ..."
+			dockerImage = docker.build("$registry:$BUILD_NUMBER", "-f $dockerfile .")
+		}
+		
+		stage ('Run Container') {
+		    posisi = 'Run Container'
+			echo "Run Container ..."
+			try {
+				sh "docker stop $containerName || true && docker container rm $containerName || true && docker image rm $registry || true"		    
+			} finally {
+				sh "docker run -d --name $containerName $port $host $registry:$BUILD_NUMBER"
+			}
+		}
+		
+		stage ('Notification') {
+		    posisi = 'Notification'
+			echo "Notif ..."
+			
+        }
+	}	
+	catch (e) {
+		echo "Exception ..."
+	}
+}

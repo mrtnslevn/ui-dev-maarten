@@ -1,0 +1,163 @@
+<!--main-->
+<div class="wrapper d-flex flex-column min-vh-100 bg-light dark:bg-transparent">
+
+  <!--app-body-->
+  <div class="body flex-grow-1 px-3">
+    <c-container breakpoint="lg" class="h-auto">
+      <div class="col-md-12" id="divEdc">
+        <app-card-app title="EDC">
+          <c-card-body class="card-body">
+            <form action="" [formGroup]="form">
+              <div class="row mb-3">
+                <label for="amount" class="col-sm-4 col-form-label-sm">Amount</label>
+                <div class="col-sm-6">
+                  <input cFormControl type="text" id="amount" formControlName="amount" 
+                  class="form-control form-control-sm" [ngClass]="isFormValid('amount')" 
+                  (ngModelChange)="onChangeAmount($event)">
+                  <div *ngIf="isFormError('amount')" class="text-danger">
+                    <div *ngFor="let e of getErrors('amount') | keyvalue">{{ getErrorMessage('amount', e.key) }}</div>
+                  </div>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label for="amount" class="col-sm-4 col-form-label-sm">Card Type</label>
+                <div class="col-sm-6">
+                  <select cSelect id="cardType" class="form-select form-select-sm ng-select" 
+                  formControlName="cardType" [ngClass]="isFormValid('cardType')" 
+                  (ngModelChange)="onChangeCardType($event)">
+                      <option selected="" disabled="">-- Select Card Type --</option> 
+                      <option *ngFor="let card of listCardType" [ngValue]="card">{{card.value}}</option>
+                  </select>
+                  <div *ngIf="isFormError('cardType')" class="text-danger">
+                    <div *ngFor="let e of getErrors('cardType') | keyvalue">{{ getErrorMessage('cardType', e.key) }}</div>
+                  </div>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label for="ccMerchantId" class="col-sm-4 col-form-label-sm">Merchant ID (Select EDC)</label>
+                <div class="col-sm-4">
+                  <select cSelect id="merchantId" class="form-select form-select-sm ng-select" 
+                  formControlName="edc" [ngClass]="isFormValid('edc')"
+                  (ngModelChange)="onChangeEdc($event)">
+                      <option selected="" disabled="">-- Select Edc --</option> 
+                      <option *ngFor="let edc of listEdc" [ngValue]="edc">{{edc.edc_name}}</option>
+                  </select>
+                  <div *ngIf="isFormError('edc')" class="text-danger">
+                    <div *ngFor="let e of getErrors('edc') | keyvalue">{{ getErrorMessage('edc', e.key) }}</div>
+                  </div>
+                </div>
+                <div class="col-sm-3">
+                  <button type="button" class="btn btn-primary btn-sm" (click)="onValidateProcess()"
+                  [disabled]="progress">
+                    <div *ngIf="!progress">
+                      <svg cIcon name="cilReload" size="sm"></svg> Process
+                    </div>
+                    <div *ngIf="progress">
+                      <c-spinner aria-hidden="true" size="sm" variant="grow"></c-spinner>
+                      Loading...
+                    </div>
+                  </button>
+                </div>
+              </div>
+            </form>
+          </c-card-body>
+        </app-card-app>
+        <app-card-app title='Edc Request'>
+          <c-card-body>
+            <table cTable id="tableCombinedBill"
+                   class="table table-striped table-hover table-sm"
+                   style="width: 100%; white-space: nowrap; overflow-x: auto;"
+                   [responsive]="true">
+              <thead>
+                <tr>
+                  <th scope="col">Request</th>
+                </tr>
+              </thead>
+              <tbody id="tbodyCombinedBill">
+                <tr *ngFor="let e of edcMessage">
+                  <td>{{clean(e)}}</td>
+                </tr>
+              </tbody>
+            </table>
+            <ng-template #no_data>
+              <tr ngClass="text-center">
+                <td colspan="9">No Data</td>
+              </tr>
+            </ng-template>
+          </c-card-body>
+          <c-card-footer>
+          </c-card-footer>
+        </app-card-app>
+        <app-card-app title='Edc Response'>
+          <c-card-body>
+            <table cTable id="tableCombinedBill"
+                   class="table table-striped table-hover table-sm"
+                   style="width: 100%; white-space: nowrap; overflow-x: auto;"
+                   [responsive]="true">
+              <thead>
+                <tr>
+                  <th scope="col">Response</th>
+                </tr>
+              </thead>
+              <tbody id="tbodyCombinedBill">
+                <tr *ngFor="let e of edcResponse">
+                  <td>{{clean(e)}}</td>
+                </tr>
+              </tbody>
+            </table>
+            <ng-template #no_data>
+              <tr ngClass="text-center">
+                <td colspan="9">No Data</td>
+              </tr>
+            </ng-template>
+          </c-card-body>
+          <c-card-footer>
+          </c-card-footer>
+        </app-card-app>
+        <app-card-app title='Full Edc Response'>
+          <c-card-body>
+            <table cTable id="tableCombinedBill"
+                   class="table table-striped table-hover table-sm"
+                   style="width: 100%; white-space: nowrap; overflow-x: auto;"
+                   [responsive]="true">
+              <thead>
+                <tr>
+                  <th scope="col">Response</th>
+                </tr>
+              </thead>
+              <tbody id="tbodyCombinedBill">
+                <tr *ngIf="edcResult.response_code != ''">
+                  <td>{{clean(edcResult.response_code)}}</td>
+                </tr>
+                <tr *ngIf="edcResult.response_desc != ''">
+                  <td>{{clean(edcResult.response_desc)}}</td>
+                </tr>
+              </tbody>
+            </table>
+            <ng-template #no_data>
+              <tr ngClass="text-center">
+                <td colspan="9">No Data</td>
+              </tr>
+            </ng-template>
+          </c-card-body>
+          <c-card-footer>
+          </c-card-footer>
+        </app-card-app>
+      </div>
+    </c-container>
+  </div>
+  <!--app footer-->
+  <!--<c-footer>-->
+    <div>
+      <a href="https://coreui.io/pro/angular/" target="_blank"></a>
+      <!-- <span> &copy; 2021 creativeLabs</span> -->
+    </div>
+    <div class="ms-auto">
+      <!-- Powered by -->
+      <a href="https://coreui.io/pro/angular" target="_blank">
+        <!-- <span> CoreUI v4 for Angular</span> -->
+      </a>
+    </div>
+  <!--</c-footer>-->
+  
+</div>

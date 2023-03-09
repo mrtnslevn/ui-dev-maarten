@@ -1,0 +1,103 @@
+<div class="col-md-12" id="divCheque">
+  <app-card-app title="Cheque/Giro">
+    <div class='fade show modal-body' style='text-align: center;' *ngIf="loadCard">
+      <c-spinner aria-hidden="true" size="sm" variant="grow"></c-spinner>
+      Loading...
+    </div>
+    <c-card-body class="card-body" *ngIf="_readOnly; else elseBlock" [hidden]="loadCard">
+      <div class="row mb-3">
+        <label for="chequeBank"
+               class="col-sm-4 col-form-label-sm">Bank</label>
+        <div class="col-sm-6">
+          <input type="text"
+            class="form-control form-control-sm"
+            id="chequeBank" readonly value="{{data.bank_name}}">
+        </div>
+      </div>
+      <div class="row mb-3">
+        <label for="chequeNo"
+               class="col-sm-4 col-form-label-sm">Cheque/Giro
+          No.</label>
+        <div class="col-sm-6">
+          <input type="text"
+                 class="form-control form-control-sm"
+                 id="chequeNo" readonly value="{{data.cheque_no}}">
+        </div>
+      </div>
+      <div class="row mb-3">
+        <label for="chequeDate"
+               class="col-sm-4 col-form-label-sm">Cheque/Giro
+          Date</label>
+        <div class="col-sm-6">
+          <input type="date"
+                 class="form-control form-control-sm"
+                 id="chequeDate" readonly value="{{data.cheque_date | date:'dd-MMM-yyyy HH:mm'}}">
+        </div>
+      </div>
+      <div class="row mb-3">
+        <label for="chequeNotes"
+               class="col-sm-4 col-form-label-sm">Notes</label>
+        <div class="col-sm-6">
+          <input type="text"
+                 class="form-control form-control-sm"
+                 id="chequeNotes" readonly value="{{data.notes}}">
+        </div>
+      </div>
+    </c-card-body>
+
+    <ng-template #elseBlock>
+      <c-card-body>
+        <form [formGroup]="form">
+          <c-row class="mb-3">
+            <label cLabel for="chequeBank"
+                   class="col-sm-4 col-form-label">Bank</label>
+            <c-col class="col-sm-6">
+              <ng-select cSelect
+                id="chequeBank"
+                formControlName="bank_id"
+                [ngClass]="isFormValid('bank_id')"
+                (ngModelChange)="onChangeBank($event)">
+                <ng-option selected="" disabled="">--Select Bank--</ng-option>
+                <ng-option *ngFor="let list of bankList" [value]="list">{{list.value}}</ng-option>
+              </ng-select>
+              <div *ngIf="isFormError('bank_id')" class="text-danger">
+                <div *ngFor="let e of getErrors('bank_id') | keyvalue">{{ getErrorMessage('bank_id', e.key) }}</div>
+              </div>
+            </c-col>
+          </c-row>
+          <div class="row mb-3">
+            <label for="chequeNo" class="col-sm-4 col-form-label-sm">Cheque/Giro No.</label>
+            <div class="col-sm-6">
+              <input type="text" class="form-control form-control-sm" id="chequeNo" 
+              formControlName="cheque_no" [ngClass]="isFormValid('cheque_no')" 
+              (ngModelChange)="onChangeChequeNumber($event)">
+              <div *ngIf="isFormError('cheque_no')" class="text-danger">
+                <div *ngFor="let e of getErrors('cheque_no') | keyvalue">{{ getErrorMessage('cheque_no', e.key) }}</div>
+              </div>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label for="chequeDate" class="col-sm-4 col-form-label-sm">Cheque/Giro Date</label>
+            <div class="col-sm-6">
+              <input type="date" class="form-control form-control-sm" id="chequeDate" 
+              formControlName="cheque_date" [ngClass]="isFormValid('cheque_date')" 
+              (ngModelChange)="onChangeChequeDates($event)">
+              <div *ngIf="isFormError('cheque_date')" class="text-danger">
+                <div *ngFor="let e of getErrors('cheque_date') | keyvalue">{{ getErrorMessage('cheque_date', e.key) }}</div>
+              </div>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label for="chequeNotes"
+                class="col-sm-4 col-form-label-sm">Notes</label>
+            <div class="col-sm-6">
+              <input type="text"
+                class="form-control form-control-sm"
+                id="chequeNotes" formControlName="notes" (ngModelChange)="onChangeNotes($event)">
+            </div>
+          </div>
+        </form>
+      </c-card-body>
+    </ng-template>
+  </app-card-app>
+</div>

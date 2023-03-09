@@ -1,0 +1,42 @@
+<div class="col-md-12" id="divSettlementCash">
+  <app-card-app title="Cash">
+    <c-card-body class="card-body" *ngIf="_readOnly; else elseBlock">
+      <div class="row mb-3">
+        <label class="col-sm-4 col-form-label-sm">Cash</label>
+        <div class="col-sm-6">
+          <input type="text" class="form-control form-control-sm" readonly="readonly" value="{{data.cash_amount | number}}">
+        </div>
+      </div>
+    </c-card-body>
+
+    <ng-template #elseBlock>
+      <c-card-body class="card-body">
+        <form [formGroup]="form">
+          <div class="row mb-3">
+            <label class="col-sm-4 col-form-label-sm" for="cash">Cash</label>
+            <div class="col-sm-6">
+              <input cFormControl type="text" id="cash" formControlName="cashAmount" 
+              class="form-control form-control-sm" numeric
+              [ngClass]="isFormValid('cashAmount')"
+              (ngModelChange)="onChangeCash($event)">
+              <div *ngIf="isFormError('cashAmount')" class="text-danger">
+                <div *ngFor="let e of getErrors('cashAmount') | keyvalue">{{ getErrorMessage('cashAmount', e.key) }}</div>
+              </div>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label class="col-sm-4 col-form-label-sm" for="change">Change</label>
+            <div class="col-sm-6">
+              <input id="change" formControlName="change" type="text" 
+              class="form-control form-control-sm" readonly numeric
+              [ngClass]="isFormValid('change')">
+              <div *ngIf="isFormError('change')" class="text-danger">
+                <div *ngFor="let e of getErrors('change') | keyvalue">{{ getErrorMessage('change', e.key) }}</div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </c-card-body>
+    </ng-template>
+  </app-card-app>
+</div>

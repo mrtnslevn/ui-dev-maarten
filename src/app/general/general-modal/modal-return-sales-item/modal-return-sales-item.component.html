@@ -1,0 +1,123 @@
+<div class="modal-header">
+    <h5 class="modal-title pull-left">Return Sales Item</h5>
+    <button type="button" class="btn-close close pull-right" aria-label="Close" (click)="bsModalRef.hide()">
+      <span aria-hidden="true" class="visually-hidden">&times;</span>
+    </button>
+  </div>
+  <div class='fade show modal-body' style='text-align: center;' *ngIf="loadPage">
+    <c-spinner aria-hidden="true" size="sm" variant="grow"></c-spinner>
+    Loading...
+  </div>
+  <div class="modal-body" *ngIf="loadPage == false">
+    <c-row ngPreserveWhitespaces>
+      <c-col xs="8">
+        <form cForm [formGroup]="form">
+          <c-row class="mb-3">
+            <c-col col="2">
+              <label cLabel class="col-form-label" for="admissionNo">Admission No</label>
+            </c-col>
+            <c-col col="4">
+                <input type="text" class="form-control form-control-sm" id="admissionNo" readonly value={{itemToReturn.admission_no}}/>
+            </c-col>
+          </c-row>
+          <c-row class="mb-3">
+            <c-col col="2">
+                <label cLabel class="col-form-label" for="salesItemType">Sales Item Type</label>
+              </c-col>
+              <c-col col="4">
+                  <input type="text" class="form-control form-control-sm" id="salesItemType" readonly value={{salesItemType}}/>
+              </c-col>
+          </c-row>
+          <c-row class="mb-3">
+            <c-col col="2">
+                <label cLabel class="col-form-label" for="store">Store</label>
+              </c-col>
+              <c-col col="4">
+                  <input type="text" class="form-control form-control-sm" id="store" readonly value={{store}}/>
+              </c-col>
+          </c-row>
+          <c-row class="mb-3">
+            <c-col col="2">
+                <label cLabel class="col-form-label" for="salesItem">Sales Item</label>
+              </c-col>
+              <c-col col="4">
+                  <input type="text" class="form-control form-control-sm" id="salesItem" readonly value={{itemToReturn.sales_item_name}}/>
+              </c-col>
+          </c-row>
+          <c-row class="mb-3">
+            <c-col col="2">
+                <label cLabel class="col-form-label" for="qty">Quantity</label>
+              </c-col>
+              <c-col col="4">
+                  <input cFormControl type="text" id="qty" formControlName="qty" class="form-control form-control-sm currency_input"
+                  [ngClass]="isFormValid('qty')"
+                  (ngModelChange)="onChangeQty($event)">
+                  <div *ngIf="isFormError('qty')" class="text-danger">
+                    <div *ngFor="let e of getErrors('qty') | keyvalue">{{ getErrorMessage('qty', e.key) }}</div>
+                  </div>
+              </c-col>
+          </c-row>
+          <c-row class="mb-3">
+            <c-col col="2">
+                <label cLabel class="col-form-label" for="uom">UOM</label>
+              </c-col>
+              <c-col col="4">
+                <select cSelect id="uom" formControlName="uom" 
+                  class="form-select form-select-sm" 
+                  [ngClass]="isFormValid('uom')"
+                  (ngModelChange)="onChangeUom($event)">
+                  <option selected="" disabled="">-- Select UOM --</option>
+                  <option *ngFor="let uom of itemToReturn.uom_list" [ngValue]="uom">{{uom.uom_name}}</option>
+                </select>
+                <div *ngIf="isFormError('uom')" class="text-danger">
+                  <div *ngFor="let e of getErrors('uom') | keyvalue">{{ getErrorMessage('uom', e.key) }}</div>
+                </div>
+              </c-col>
+          </c-row>
+          <c-row class="mb-3">
+            <c-col col="2">
+                <label cLabel class="col-form-label" for="price">Price Per Item</label>
+              </c-col>
+              <c-col col="4">
+                <input type="text" class="form-control form-control-sm" id="price" readonly value="{{pricePerItem | number}}" />
+              </c-col>
+          </c-row>
+          <c-row class="mb-3">
+            <c-col col="2">
+                <label cLabel class="col-form-label" for="doctorName">Doctor Name</label>
+              </c-col>
+              <c-col col="4">
+                <input type="text" class="form-control form-control-sm" id="doctorName" readonly value={{itemToReturn.doctor}}/>
+              </c-col>
+          </c-row>
+          <c-row class="mb-3">
+            <c-col col="2">
+                <label cLabel class="col-form-label" for="notes">Notes</label>
+              </c-col>
+              <c-col col="4">
+                <input type="text" class="form-control form-control-sm" id="notes" 
+                formControlName="notes" (ngModelChange)="onChangeNotes($event)" />
+              </c-col>
+          </c-row>
+        </form>
+      </c-col>
+    </c-row>
+  </div>
+  <div class="modal-footer d-block">
+    <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+      <button cButton color="primary" size="sm" (click)="onValidateSave()" *ngIf="loadPage == false"
+      [disabled]="progress">
+        <div *ngIf="!progress">
+          <svg cIcon name="cilSave" size="sm"></svg> Save
+        </div>
+        <div *ngIf="progress">
+          <c-spinner aria-hidden="true" size="sm" variant="grow"></c-spinner>
+          Loading...
+        </div>
+      </button>
+      <button cButton color="primary" size="sm" (click)="bsModalRef.hide()">
+        <svg cIcon class="me-2" name="cil-x"></svg> Close
+      </button>
+    </div>
+  </div>
+  

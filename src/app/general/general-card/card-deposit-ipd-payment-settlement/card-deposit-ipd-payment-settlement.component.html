@@ -1,0 +1,53 @@
+<app-card-app title="Deposit IPD Payment Settlement" [show]="show">
+    <c-card-body>
+      <table cTable id="tableDepositIpdPaymentSettlement" [responsive]="true" small>
+        <thead style="font-size: 14px">
+          <tr>
+            <th scope="col">Deposit No</th>
+            <th scope="col">Payment Mode</th>
+            <th scope="col">Account No</th>
+            <th scope="col">Account Name</th>
+            <th scope="col">Net</th>
+            <th scope="col">Notes</th>
+            <th scope="col">Deposit By</th>
+            <th scope="col"></th>
+          </tr>
+        </thead>
+        <tbody id="tbodySearchPatientInvoice" *ngIf="settlementList.length > 0; else no_data">
+          <tr *ngFor="let settlement of settlementList">
+            <td>{{settlement.deposit_no}}</td>
+            <td>{{settlement.payment_mode}}</td>
+            <td>{{settlement.acc_no}}</td>
+            <td>{{settlement.acc_name}}</td>
+            <td>{{settlement.net}}</td>
+            <td>{{settlement.notes}}</td>
+            <td>{{settlement.deposit_by}}</td>
+            <td>
+              <div style="display: flex" class="gap-1">
+                <button cButton class="btn btn-primary btn-sm">
+                  <svg cIcon name="cilPrint" size="sm"></svg> Print/Send Receipt Copy     
+                </button>
+                <button cButton class="btn btn-primary btn-sm">
+                  <svg cIcon name="cilPrint" size="sm"></svg> Print/Send Receipt Copy     
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <ng-template #no_data>
+        <tr ngClass="text-center">
+          <td colspan="8">No Data</td>
+        </tr>
+      </ng-template>
+      <!-- <pagination *ngIf="paging.total_row > 0"
+        [boundaryLinks]="true"
+        [totalItems]="paging.total_row"
+        [(ngModel)]="current_page"
+        (pageChanged)="pageChanged($event)"
+        [itemsPerPage]="paging.rows_per_page"
+        [rotate]="false"
+        [maxSize]="paging.max_size" [disabled]="progress">
+      </pagination> -->
+    </c-card-body>
+  </app-card-app>

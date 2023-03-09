@@ -1,0 +1,175 @@
+<app-card-app title="Deposit By">
+    <div class='fade show modal-body' style='text-align: center;' [hidden]="loadPage == false">
+        <c-spinner aria-hidden="true" size="sm" variant="grow"></c-spinner>
+        Loading...
+      </div>
+    <c-card-body *ngIf="readOnly; else elseBlock">
+        <c-row class="mb-2">
+            <label cLabel class="col-sm-2 col-form-label" for="deposit-identity-type">
+                Identity Type
+            </label>
+            <c-col sm="2">
+                <input cFormControl type="text" sizing="sm" readonly/>
+            </c-col>
+            <label cLabel class="col-sm-2 col-form-label" for="search-patient-mr-no">
+                Identity No
+            </label>
+            <c-col sm="2">
+                <input cFormControl type="text" sizing="sm" readonly/>
+            </c-col>
+            <label cLabel class="col-sm-2 col-form-label" for="search-patient-mr-no">
+                Address
+            </label>
+            <c-col sm="2">
+                <input cFormControl type="text" sizing="sm" readonly/>
+            </c-col>
+        </c-row>
+
+        <c-row class="mb-2">
+            <label cLabel class="col-sm-2 col-form-label" for="search-patient-mr-no">
+                Name
+            </label>
+            <c-col sm="2">
+            <input cFormControl type="text" sizing="sm" readonly/>
+            </c-col>        
+            <label cLabel class="col-sm-2 col-form-label" for="search-patient-mr-no">
+                Date of Birth
+            </label>
+            <c-col sm="2">
+            <input cFormControl type="date" sizing="sm" readonly/>
+            </c-col>        
+            <label cLabel class="col-sm-2 col-form-label" for="search-patient-mr-no">
+                Relationship with Patient
+            </label>
+            <c-col sm="2">
+            <input cFormControl type="text" sizing="sm" readonly/>
+            </c-col>
+        </c-row>
+
+        <c-row class="mb-2">
+            <label cLabel class="col-sm-2 col-form-label" for="search-patient-mr-no">
+                Email
+            </label>
+            <c-col sm="2">
+            <input cFormControl type="text" sizing="sm" readonly/>
+            </c-col>        
+            <label cLabel class="col-sm-2 col-form-label" for="search-patient-mr-no">
+                Handphone
+            </label>
+            <c-col sm="2">
+            <input cFormControl type="text" sizing="sm" readonly/>
+            </c-col>
+        </c-row>
+
+        <c-row class="mb-2">
+            <label cLabel class="col-sm-2 col-form-label" for="search-patient-mr-no">
+                Identity Document<span class="text-danger">*</span>
+            </label>
+            <c-col sm="2">
+                <input cFormControl id="patientMrNo" type="text" sizing="sm" readonly/>
+            </c-col>
+            <c-col sm="2">
+                <button cButton color="primary" id="btn-view" size="sm">
+                  View
+                </button>
+            </c-col>
+            <c-col sm="7"></c-col>
+        </c-row>
+    </c-card-body>
+
+<!--ELSE-->
+    <ng-template #elseBlock>
+        <c-card-body [hidden]="loadPage == true">
+            <form [formGroup]="depositorForm">
+            <c-row class="mb-2">
+                <c-col sm="6">
+                    <input cFormCheckInput type="checkbox" class="col-sm-2 form-check-input" style="border-color: black; margin-right: 5px" (change)="onChangeSameWithPatient($event)"/>
+                    <label cLabel class="col-sm-8 col-form-label">Same With Patient</label>
+                </c-col>
+            </c-row>
+
+            <c-row class="mb-2">
+                    <label cLabel class="col-sm-2 col-form-label" for="deposit-identity-type">
+                        Identity Type<span class="text-danger">*</span>
+                    </label>
+                <c-col sm="2">
+                    <select class="form-select form-select-sm" formControlName="identityType" (ngModelChange)="onChangeIdentityType($event)">
+                        <option *ngFor="let list of listNationalityType" [ngValue]="list">{{list.value}}</option>
+                    </select>
+                </c-col>
+                    <label cLabel class="col-sm-2 col-form-label" for="search-patient-mr-no">
+                    Identity No.<span class="text-danger">*</span>
+                    </label>
+                <c-col sm="2">
+                    <input cFormControl type="text" sizing="sm" formControlName="identityNo"(ngModelChange)="onChangeIdentityNo($event)"/>
+                </c-col>
+                <c-col sm="2">
+                    <button cButton color="primary" id="btn-search" size="sm" [disabled]="isReadonly" (click)="getIdentityInfo()">
+                        <svg cIcon class="me-2" name="cil-search"></svg> Search
+                    </button>
+                </c-col>
+            </c-row>
+
+            <c-row class="mb-2">
+                    <label cLabel class="col-sm-2 col-form-label" for="search-patient-mr-no">
+                    Name<span class="text-danger">*</span>
+                    </label>
+                <c-col sm="2">
+                    <input cFormControl type="text" sizing="sm" [readonly]="isReadonly" formControlName="depositorName"(ngModelChange)="onChangeName($event)"/>
+                </c-col>        
+                    <label cLabel class="col-sm-2 col-form-label" for="search-patient-mr-no">
+                    Date of Birth<span class="text-danger">*</span>
+                    </label>
+                <c-col sm="2">
+                    <input cFormControl type="date" sizing="sm" [readonly]="isReadonly" formControlName="depositorDob"(ngModelChange)="onChangeDob($event)"/>
+                </c-col>        
+                    <label cLabel class="col-sm-2 col-form-label" for="search-patient-mr-no">
+                    Address<span class="text-danger">*</span>
+                    </label>
+                <c-col sm="2">
+                    <input cFormControl type="text" sizing="sm" [readonly]="isReadonly" formControlName="depositorAddress"(ngModelChange)="onChangeAddress($event)"/>
+                </c-col>
+            </c-row>
+
+            <c-row class="mb-2">
+                    <label cLabel class="col-sm-2 col-form-label" for="search-patient-mr-no">
+                    Email<span class="text-danger">*</span>
+                    </label>
+                <c-col sm="2">
+                    <input cFormControl type="text" sizing="sm" [readonly]="isReadonly" formControlName="depositorEmail"(ngModelChange)="onChangeEmail($event)"/>
+                </c-col>        
+                    <label cLabel class="col-sm-2 col-form-label" for="search-patient-mr-no">
+                    Handphone<span class="text-danger">*</span>
+                    </label>
+                <c-col sm="2">
+                    <input cFormControl type="text" sizing="sm" [readonly]="isReadonly" formControlName="depositorPhone"(ngModelChange)="onChangePhone($event)"/>
+                </c-col>        
+                    <label cLabel class="col-sm-2 col-form-label" for="search-patient-mr-no">
+                    Relationship with Patient<span class="text-danger">*</span>
+                </label>
+                <c-col sm="2">
+                    <select class="form-select form-select-sm" id="relationWithPatient"[disabled]="isReadonly" formControlName="depositorRelation"(ngModelChange)="onChangeRelation($event)">
+                        <option *ngFor="let list of listRelationship" [ngValue]="list.key">{{list.value}}</option>
+                    </select>
+                </c-col>
+            </c-row>
+
+            <c-row class="mb-2">
+                <label cLabel class="col-sm-2 col-form-label" for="search-patient-mr-no">
+                Upload Identity Document<span class="text-danger">*</span>
+                </label>
+                <c-col sm="2">
+                    <input cFormControl id="depositorFile" type="file" sizing="sm" [readonly]="isReadonly" formControlName="depositorFile"(change)="onChangeFile($event)"/>
+                </c-col>
+                <c-col sm="2">
+                    <button cButton color="primary" id="btnSearchBill" type="button" size="sm">
+                        <div>
+                            <svg cIcon class="me-2" name="cil-search"></svg> View
+                        </div>
+                    </button>
+                </c-col>
+            </c-row>
+        </form>
+        </c-card-body>
+    </ng-template>
+</app-card-app>

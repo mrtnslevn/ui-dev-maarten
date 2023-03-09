@@ -1,0 +1,70 @@
+<div class='fade show' style='text-align: center; padding-top: calc(100vh / 2); height: 100vh' *ngIf="loadPage">
+  <c-spinner aria-hidden="true" size="sm" variant="grow"></c-spinner>
+  Loading...
+</div>
+<div [hidden]="loadPage">
+  <c-row ngPreserveWhitespaces>
+    <c-col xs="12">
+      <form cForm>
+        <app-card-app title="Interface Log">
+          <c-card-body>
+            <c-row class="mb-3">
+              <label for="interfaceType" class="col-sm-3 col-form-label-sm">Interface Type</label>
+              <c-col sm="3">
+                <input type="text" class="form-control form-control-sm" id="interfaceType" disabled [value]="interfaceLog.interface_type">
+              </c-col>
+            </c-row>
+            <c-row class="mb-3">
+              <label for="processDate" class="col-sm-3 col-form-label-sm">Process Date</label>
+              <c-col sm="3">
+                <input type="text" class="form-control form-control-sm" id="processDate" disabled [value]="interfaceLog.process_date">
+              </c-col>
+            </c-row>
+            <c-row class="mb-3">
+              <label for="status" class="col-sm-3 col-form-label-sm">Status</label>
+              <c-col sm="3">
+                <input type="text" class="form-control form-control-sm" id="status" disabled [value]="interfaceLog.status">
+              </c-col>
+            </c-row>
+          </c-card-body>
+        </app-card-app>
+      </form>
+    </c-col>
+  </c-row>
+  <c-row ngPreserveWhitespaces>
+    <c-col xs="12">
+      <form cForm>
+        <app-card-app title="Interface Log">
+          <c-card-body>
+            <c-row>
+              <label for="request" class="col-sm-6 col-form-label-sm">Request</label>
+              <label for="response" class="col-sm-6 col-form-label-sm">Response</label>
+            </c-row>
+            <c-row class="mb-3">
+              <c-col sm="6">
+                <textarea class="form-control" id="request" rows="10" disabled [value]="interfaceLog.request_message"></textarea>
+              </c-col>
+              <c-col sm="6">
+                <textarea class="form-control" id="response" rows="10" disabled [value]="interfaceLog.response_message"></textarea>
+              </c-col>
+            </c-row>
+          </c-card-body>
+          <c-card-footer footer class="text-center">
+            <a [routerLink]="['/interface-log']" [state]="{ fromDetail: true }" id="back" type="button" class="btn btn-primary btn-sm" size="sm">
+              <svg cIcon class="icon me-2" name="cil-arrow-left"></svg> Back
+            </a>
+            <button cButton color="primary" id="reprocess" type="button" size="sm" *ngIf="interfaceLog.status=='FAILED'" (click)="onClickReprocess()">
+              <div *ngIf="!loadReprocessButton">
+                <svg cIcon class="icon me-2" name="cil-reload"></svg> Reprocess
+              </div>
+              <div *ngIf="loadReprocessButton">
+                <c-spinner aria-hidden="true" size="sm" variant="grow"></c-spinner>
+                Loading...
+              </div>
+            </button>
+          </c-card-footer>
+        </app-card-app>
+      </form>
+    </c-col>
+  </c-row>
+</div>

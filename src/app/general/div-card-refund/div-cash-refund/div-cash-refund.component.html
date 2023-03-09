@@ -1,0 +1,68 @@
+<div class="col-md-12" id="divSettlementCash">
+    <app-card-app title="Cash">
+      <c-card-body class="card-body" *ngIf="_readOnly; else elseBlock">
+        <div class="row mb-3">
+          <label class="col-sm-4 col-form-label-sm">Cash</label>
+          <div class="col-sm-6">
+            <input type="text" class="form-control form-control-sm" readonly="readonly">
+          </div>
+        </div>
+      </c-card-body>
+  
+      <ng-template #elseBlock>
+        <c-card-body class="card-body">
+          <form [formGroup]="vf.form">
+            <div class="row mb-3">
+              <label class="col-sm-4 col-form-label-sm" for="receivedBy">Received By<span class="text-danger">*</span></label>
+              <div class="col-sm-6">
+                <input cFormControl type="text" id="receivedBy" name="receivedBy" formControlName="receivedBy" 
+                class="form-control form-control-sm"
+                [ngClass]="vf.isFormValid('receivedBy')"
+                (ngModelChange)="onChangeReceivedBy($event)">
+                <div *ngIf="vf.isFormError('receivedBy')" class="text-danger">
+                  <div *ngFor="let e of vf.getErrors('receivedBy') | keyvalue">{{ vf.getErrorMessage('receivedBy', e.key) }}</div>
+                </div>
+              </div>
+            </div>
+            <div class="row mb-3">
+              <label class="col-sm-4 col-form-label-sm" for="identityType">Identity Type<span class="text-danger">*</span></label>
+              <div class="col-sm-6">
+                <select cSelect id="identityType" formControlName="identityType" 
+                class="form-select form-select-sm" 
+                [ngClass]="vf.isFormValid('identityType')"
+                (ngModelChange)="onChangeIdentityType($event)">
+                  <option selected="" disabled="">-- Select Identity Type --</option>
+                  <option *ngFor="let p of identityTypeList" [ngValue]="p">{{ p.value }}</option>
+                </select>
+                <div *ngIf="vf.isFormError('identityType')" class="text-danger">
+                  <div *ngFor="let e of vf.getErrors('identityType') | keyvalue">{{ vf.getErrorMessage('identityType', e.key) }}</div>
+                </div>
+              </div>
+            </div>
+            <div class="row mb-3">
+                <label class="col-sm-4 col-form-label-sm" for="identityNo">Identity No<span class="text-danger">*</span></label>
+                <div class="col-sm-6">
+                  <input id="change" formControlName="identityNo" type="text" 
+                  class="form-control form-control-sm"
+                  [ngClass]="vf.isFormValid('identityNo')" (ngModelChange)="onChangeIdentityNo($event)">
+                  <div *ngIf="vf.isFormError('identityNo')" class="text-danger">
+                    <div *ngFor="let e of vf.getErrors('identityNo') | keyvalue">{{ vf.getErrorMessage('identityNo', e.key) }}</div>
+                  </div>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <label class="col-sm-4 col-form-label-sm" for="handphone">Handphone<span class="text-danger">*</span></label>
+                <div class="col-sm-6">
+                  <input id="change" formControlName="handphone" type="text" 
+                  class="form-control form-control-sm"
+                  [ngClass]="vf.isFormValid('handphone')" (ngModelChange)="onChangeHandphone($event)">
+                  <div *ngIf="vf.isFormError('handphone')" class="text-danger">
+                    <div *ngFor="let e of vf.getErrors('handphone') | keyvalue">{{ vf.getErrorMessage('handphone', e.key) }}</div>
+                  </div>
+                </div>
+            </div>
+          </form>
+        </c-card-body>
+      </ng-template>
+    </app-card-app>
+  </div>

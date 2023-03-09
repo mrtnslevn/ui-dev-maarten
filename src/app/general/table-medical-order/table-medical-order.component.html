@@ -1,0 +1,35 @@
+<table cTable id="tableMedicalORder" [responsive]="true">
+   <thead>
+      <tr>
+         <th scope="col">Admission No</th>
+         <th scope="col">Order Type</th>
+         <th scope="col">Order Item</th>
+         <th scope="col">Qty</th>
+         <th scope="col">Doctor</th>
+         <th scope="col">Appointment Date</th>
+         <th scope="col">Appointment Time</th>
+         <th scope="col"></th>
+      </tr>
+      </thead>
+      <tbody id="tbodyMedicalOrderTable" *ngIf="dataMedicalOrder.length>0; else noData">
+         <tr *ngFor="let d of dataMedicalOrder">
+               <td>{{d.admission_no}}</td>
+               <td>{{d.sales_item_type}}</td>
+               <td>{{d.sales_item_name}}</td>
+               <td>{{d.quantity}}</td>
+               <td>{{d.doctor_name}}</td>
+               <td>{{d.future_order_date}}</td>
+               <td>{{d.future_order_time}}</td>
+               <td><button *ngIf="status=='prepaid' || status=='booking'" cButton color="primary" id="btn-add" type="button" size="sm" (click)="onAddData(d)">Add</button></td>
+         </tr>
+      </tbody>
+      <ng-template #noData>
+         <tr ngClass="text-center" *ngIf="loadData">
+            <c-spinner aria-hidden="true" size="sm" variant="grow"></c-spinner>
+            Loading...
+          </tr>
+           <tr ngClass="text-center" *ngIf="loadData==false">
+             <td colspan="8">No data</td>
+           </tr>
+      </ng-template>
+</table>

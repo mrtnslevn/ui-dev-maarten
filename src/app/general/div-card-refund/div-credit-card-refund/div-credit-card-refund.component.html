@@ -1,0 +1,99 @@
+<div class="col-md-12" id="divSettlementCreditCard">
+    <app-card-app title='Credit Card'>
+      <c-card-body *ngIf="_readOnly; else elseBlock">
+        <div class="row mb-3">
+          <label class="col-sm-4 col-form-label-sm">Card No.</label>
+          <div class="col-sm-6">
+            <input type="text" class="form-control form-control-sm" readonly="readonly">
+          </div>
+        </div>
+        <div class="row mb-3">
+          <label class="col-sm-4 col-form-label-sm">Card Holder Name</label>
+          <div class="col-sm-6">
+            <input type="text" class="form-control form-control-sm" readonly="readonly">
+          </div>
+        </div>
+        <div class="row mb-3">
+          <label class="col-sm-4 col-form-label-sm">Reference No.</label>
+          <div class="col-sm-6">
+            <input type="text" class="form-control form-control-sm" readonly="readonly">
+          </div>
+        </div>
+        <div class="row mb-3">
+          <label class="col-sm-4 col-form-label-sm">Approval Code</label>
+          <div class="col-sm-6">
+            <input type="text" class="form-control form-control-sm" readonly="readonly">
+          </div>
+        </div>
+        <div class="row mb-3">
+            <label class="col-sm-4 col-form-label-sm">Merchant ID</label>
+            <div class="col-sm-6">
+              <input type="text" class="form-control form-control-sm" readonly="readonly">
+            </div>
+          </div>
+      </c-card-body>
+  
+      <ng-template #elseBlock>
+        <c-card-body>
+          <form [formGroup]="vf.form">
+            <div class="row mb-3">
+              <label class="col-sm-4 col-form-label-sm" for="cardNo">Card No<span class="text-danger">*</span></label>
+              <div class="col-sm-6">
+                <input type="text" id="cardNo" formControlName="cardNo" 
+                class="form-control form-control-sm" [ngClass]="vf.isFormValid('cardNo')"
+                (ngModelChange)="onChangeCardNo($event)">
+                <div *ngIf="vf.isFormError('cardNo')" class="text-danger">
+                  <div *ngFor="let e of vf.getErrors('cardNo') | keyvalue">{{ vf.getErrorMessage('cardNo', e.key) }}</div>
+                </div>
+              </div>
+            </div>
+            <div class="row mb-3">
+              <label class="col-sm-4 col-form-label-sm" for="cardHolderName">Card Holder Name<span class="text-danger">*</span></label>
+              <div class="col-sm-6">
+                <input type="text" id="cardHolderName" formControlName="cardHolderName" 
+                class="form-control form-control-sm" [ngClass]="vf.isFormValid('cardHolderName')"
+                (ngModelChange)="onChangeCardHolderName($event)">
+                <div *ngIf="vf.isFormError('cardHolderName')" class="text-danger">
+                  <div *ngFor="let e of vf.getErrors('cardHolderName') | keyvalue">{{ vf.getErrorMessage('cardHolderName', e.key) }}</div>
+                </div>
+              </div>
+            </div>
+            <div class="row mb-3">
+              <label class="col-sm-4 col-form-label-sm" for="referenceNo">Reference No.<span class="text-danger">*</span></label>
+              <div class="col-sm-6">
+                <input type="text" id="referenceNo" formControlName="referenceNo" 
+                class="form-control form-control-sm" [ngClass]="vf.isFormValid('referenceNo')"
+                (ngModelChange)="onChangeReferenceNo($event)">
+                <div *ngIf="vf.isFormError('referenceNo')" class="text-danger">
+                  <div *ngFor="let e of vf.getErrors('referenceNo') | keyvalue">{{ vf.getErrorMessage('referenceNo', e.key) }}</div>
+                </div>
+              </div>
+            </div>
+            <div class="row mb-3">
+                <label class="col-sm-4 col-form-label-sm" for="approvalCode">Approval Code<span class="text-danger">*</span></label>
+                <div class="col-sm-6">
+                  <input type="text" id="approvalCode" formControlName="approvalCode" 
+                  class="form-control form-control-sm" [ngClass]="vf.isFormValid('approvalCode')"
+                  (ngModelChange)="onChangeApprovalCode($event)">
+                  <div *ngIf="vf.isFormError('approvalCode')" class="text-danger">
+                    <div *ngFor="let e of vf.getErrors('approvalCode') | keyvalue">{{ vf.getErrorMessage('approvalCode', e.key) }}</div>
+                  </div>
+                </div>
+              </div>
+            <div class="row mb-3">
+              <label class="col-sm-4 col-form-label-sm" for="merchantId">Merchant ID<span class="text-danger">*</span></label>
+              <div class="col-sm-6">
+                <input type="text" id="merchantId" formControlName="merchantId" 
+                  class="form-control form-control-sm" [ngClass]="vf.isFormValid('merchantId')"
+                  (ngModelChange)="onChangeMerchantId($event)">
+                <div *ngIf="vf.isFormError('merchantId')" class="text-danger">
+                    <div *ngFor="let e of vf.getErrors('merchantId') | keyvalue">{{ vf.getErrorMessage('merchantId', e.key) }}</div>
+                  </div>
+              </div>
+            </div>
+          </form>
+        </c-card-body>
+      </ng-template>
+    </app-card-app>
+  </div>
+  

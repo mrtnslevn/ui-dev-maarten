@@ -1,0 +1,88 @@
+<div class="col-md-12" id="divSettlementBankTransfer">
+    <app-card-app title='Bank Transfer'>
+      <c-card-body *ngIf="_readOnly; else elseBlock">
+        <div class="row mb-3">
+          <label class="col-sm-4 col-form-label-sm">Bank Name</label>
+          <div class="col-sm-6">
+            <input type="text" class="form-control form-control-sm" readonly="readonly">
+          </div>
+        </div>
+        <div class="row mb-3">
+          <label class="col-sm-4 col-form-label-sm">Account No.</label>
+          <div class="col-sm-6">
+            <input type="text" class="form-control form-control-sm" readonly="readonly">
+          </div>
+        </div>
+        <div class="row mb-3">
+          <label class="col-sm-4 col-form-label-sm">Account Name</label>
+          <div class="col-sm-6">
+            <input type="text" class="form-control form-control-sm" readonly="readonly">
+          </div>
+        </div>
+        <div class="row mb-3">
+          <label class="col-sm-4 col-form-label-sm">Refund Source Amount</label>
+          <div class="col-sm-6">
+            <input type="text" class="form-control form-control-sm" readonly="readonly">
+          </div>
+        </div>
+      </c-card-body>
+  
+      <ng-template #elseBlock>
+        <c-card-body>
+          <form [formGroup]="vf.form">
+            <div class="row mb-3">
+              <label class="col-sm-4 col-form-label-sm" for="bankName">Bank Name<span class="text-danger">*</span></label>
+              <div class="col-sm-6">
+                <ng-select id="search-lob" formControlName="bankName"
+                [ngClass]="vf.isFormValid('bankName')"
+                (ngModelChange)="onChangeBank($event)">
+                  <ng-option selected="" disabled="">-- Select Bank --</ng-option>
+                  <ng-option *ngFor="let bank of bankList" [value]="bank">{{bank.value}}</ng-option>
+                </ng-select>
+                <div *ngIf="vf.isFormError('bankName')" class="text-danger">
+                  <div *ngFor="let e of vf.getErrors('bankName') | keyvalue">{{ vf.getErrorMessage('bankName', e.key) }}</div>
+                </div>
+              </div>
+            </div>
+            <div class="row mb-3">
+              <label class="col-sm-4 col-form-label-sm" for="account-no">Account No.<span class="text-danger">*</span></label>
+              <div class="col-sm-6">
+                <input type="text" id="account-no" formControlName="accountNo" 
+                class="form-control form-control-sm" [ngClass]="vf.isFormValid('accountNo')"
+                (ngModelChange)="onChangeAccountNo($event)">
+                <div *ngIf="vf.isFormError('accountNo')" class="text-danger">
+                  <div *ngFor="let e of vf.getErrors('accountNo') | keyvalue">{{ vf.getErrorMessage('accountNo', e.key) }}</div>
+                </div>
+              </div>
+            </div>
+            <div class="row mb-3">
+              <label class="col-sm-4 col-form-label-sm" for="account-name">Account Name<span class="text-danger">*</span></label>
+              <div class="col-sm-6">
+                <input type="text" id="account_name" formControlName="accountName" 
+                class="form-control form-control-sm" [ngClass]="vf.isFormValid('accountName')"
+                (ngModelChange)="onChangeAccountName($event)">
+                <div *ngIf="vf.isFormError('accountName')" class="text-danger">
+                  <div *ngFor="let e of vf.getErrors('accountName') | keyvalue">{{ vf.getErrorMessage('accountName', e.key) }}</div>
+                </div>
+              </div>
+            </div>
+            <div class="row mb-3">
+              <label class="col-sm-4 col-form-label-sm" for="refundSourceAcc">Refund Source Amount<span class="text-danger">*</span></label>
+              <div class="col-sm-6">
+                <ng-select id="search-lob" formControlName="refundSourceAcc"
+                [ngClass]="vf.isFormValid('refundSourceAcc')"
+                (ngModelChange)="onChangeRefundSourceAcc($event)">
+                  <ng-option selected="" disabled="">-- Select Bank --</ng-option>
+                  <ng-option *ngFor="let bank of refundSourceAccountList" [value]="bank">{{bank.value}}</ng-option>
+                </ng-select>
+                <div *ngIf="vf.isFormError('refundSourceAcc')" class="text-danger">
+                    <div *ngFor="let e of vf.getErrors('refundSourceAcc') | keyvalue">{{ vf.getErrorMessage('refundSourceAcc', e.key) }}</div>
+                  </div>
+              </div>
+            </div>
+          </form>
+        </c-card-body>
+      </ng-template>
+    </app-card-app>
+  </div>
+  

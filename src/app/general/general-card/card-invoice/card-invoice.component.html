@@ -1,0 +1,410 @@
+<app-card-app title="Invoice" [show]="show">
+  <div class='fade show modal-body' style='text-align: center;' *ngIf="loadPage">
+    <c-spinner aria-hidden="true" size="sm" variant="grow"></c-spinner>
+    Loading...
+  </div>
+  <c-card-body [hidden]="loadPage">
+    <form [formGroup]="fs.form">
+      <div class="row mb-3" id="invoiceDiv" >
+        <label cLabel for="invoiceNo" class="col-sm-2 col-form-label"><strong>Invoice
+          No.</strong></label>
+        <div class="col-sm-2">
+          <input type="text" class="form-control form-control-sm"
+                 id="invoiceNo" value="{{data.invoice_no}}" readonly>
+        </div>
+        <label cLabel for="invoiceDate" class="col-sm-2 col-form-label"><strong>Invoice
+          Date</strong></label>
+        <div class="col-sm-2">
+          <input type="text" class="form-control form-control-sm"
+                 id="invoiceDate" value="{{data.invoice_date | date: 'dd-MMM-yyyy HH:mm'}}" readonly>
+        </div>
+      </div>
+      <div class="row mb-3">
+  
+        <div class="col-md-4">
+          <div class="card-header" id="headingTwo">
+            Payer Total
+          </div>
+          <div id="collapseTwo" class="collapse show"
+               aria-labelledby="headingTwo" data-parent="#accordionExample">
+            <div class="card-body">
+              <div class="row mb-3">
+                <label for="grossPayer" cLabel
+                       class="col-sm-4 col-form-label">Gross</label>
+                <div class="col-sm-6">
+                  <input type="text"
+                         class="form-control form-control-sm"
+                         id="grossPayer" readonly="readonly" value="{{data.payer_gross | number}}">
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label for="adminPayer"
+                       class="col-sm-4 col-form-label" cLabel>Admin</label>
+                <div class="col-sm-6">
+                  <input type="text"
+                         class="form-control form-control-sm"
+                         id="adminPayer" readonly="readonly" value="{{data.payer_admin | number}}">
+                </div>
+              </div>
+  
+              <div class="row mb-3">
+                <label for="limitTypePayer" class="col-sm-4 col-form-label" cLabel>Limit Type</label>
+                <div class="col-sm-6">
+                  <select id="limitType" formControlName="limitTypePayer"
+                    class="form-select form-select-sm"
+                    [ngClass]="fs.isFormValid('limitTypePayer')"
+                    (ngModelChange)="onChangePayerLimitType($event)" *ngIf="!disabledForm">
+                      <option *ngFor="let list of listLimitType" [ngValue]="list">{{list.value}}</option>
+                  </select>
+
+                  <input type="text" class="form-control form-control-sm" id="limitTypePayer" 
+                  value="{{data.payer_limit_type}}" *ngIf="disabledForm" readonly="readonly">
+                  
+                  <div *ngIf="fs.isFormError('limitTypePayer')" class="text-danger">
+                    <div *ngFor="let e of fs.getFormErrors('limitTypePayer') | keyvalue">
+                      {{ fs.getFormErrorMessage('limitTypePayer', e.key) }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label for="limitFactorPayer" class="col-sm-4 col-form-label" cLabel>Limit Factor</label>
+                <div class="col-sm-6">
+                  <input type="text" class="form-control form-control-sm" 
+                  formControlName="limitFactorPayer" id="limitFactorPayer" 
+                  (ngModelChange)="onChangePayerLimitFactor($event)"
+                  [ngClass]="fs.isFormValid('limitFactorPayer')" *ngIf="!disabledForm" numeric>
+
+                  <input type="text" class="form-control form-control-sm" 
+                  id="limitFactorPayer" *ngIf="disabledForm" 
+                  readonly="readonly" value="{{ data.payer_limit_factor | number }}">
+
+                  <div *ngIf="fs.isFormError('limitFactorPayer')" class="text-danger">
+                    <div *ngFor="let e of fs.getFormErrors('limitFactorPayer') | keyvalue">
+                      {{ fs.getFormErrorMessage('limitFactorPayer', e.key) }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label for="limitPayer"
+                       class="col-sm-4 col-form-label" cLabel>Limit</label>
+                <div class="col-sm-6">
+                  <input type="text" readonly="readonly"
+                         class="form-control form-control-sm"
+                         id="limitPayer" readonly="readonly"
+                         value="{{data.payer_limit | number}}">
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label for="discountTypePayer"
+                       class="col-sm-4 col-form-label" cLabel>Discount Type</label>
+                <div class="col-sm-6">
+                  <fieldset [disabled]="!disableDiscount">
+                    <select id="discountTypePayer" formControlName="discountTypePayer"
+                    class="form-select form-select-sm"
+                    [ngClass]="fs.isFormValid('discountTypePayer')"
+                    (ngModelChange)="onChangePayerDiscountType($event)" *ngIf="!disabledForm">
+                      <option *ngFor="let list of listDiscountType" [ngValue]="list" [selected]="list.key === data.payer_discount_type">{{list.value}}</option>
+                    </select>
+
+                    <input type="text" class="form-control form-control-sm" id="discountTypePayer" 
+                    readonly="readonly" value="{{data.payer_discount_type}}" *ngIf="disabledForm">
+                    
+                    <div *ngIf="fs.isFormError('discountTypePayer')" class="text-danger">
+                      <div *ngFor="let e of fs.getFormErrors('discountTypePayer') | keyvalue">
+                        {{ fs.getFormErrorMessage('discountTypePayer', e.key) }}
+                      </div>
+                    </div>
+                  </fieldset>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label for="discountFactorPayer" class="col-sm-4 col-form-label" cLabel>Discount Factor</label>
+                <div class="col-sm-6">
+                  <input type="text" class="form-control form-control-sm currency_input" 
+                  formControlName="discountFactorPayer" id="discountFactorPayer" 
+                  (ngModelChange)="onChangePayerDiscountFactor($event)" 
+                  [ngClass]="fs.isFormValid('discountFactorPayer')"
+                  *ngIf="!disabledForm" numeric>
+
+                  <input type="text" class="form-control form-control-sm currency_input" 
+                  id="discountFactorPayer" value="{{ data.payer_discount_factor | number }}"
+                  *ngIf="disabledForm" readonly="readonly">
+
+                  <div *ngIf="fs.isFormError('discountFactorPayer')" class="text-danger">
+                    <div *ngFor="let e of fs.getFormErrors('discountFactorPayer') | keyvalue">
+                      {{ fs.getFormErrorMessage('discountFactorPayer', e.key) }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label for="discountPayer"
+                       class="col-sm-4 col-form-label" cLabel>Discount</label>
+                <div class="col-sm-6">
+                  <input type="text"
+                         class="form-control form-control-sm"
+                         id="discountPayer" readonly="readonly" value="{{data.payer_discount | number}}">
+                </div>
+              </div>
+  
+              <div class="row mb-3">
+                <label for="netPayer"
+                       class="col-sm-4 col-form-label" cLabel>Net</label>
+                <div class="col-sm-6">
+                  <input type="text"
+                         class="form-control form-control-sm"
+                         id="netPayer" readonly="readonly" value="{{data.payer_net | number}}">
+                </div>
+              </div>
+  
+              <div class="row mb-3">
+                <label for="balancePayer"
+                       class="col-sm-4 col-form-label" cLabel>Balance</label>
+                <div class="col-sm-6">
+                  <input type="text"
+                         class="form-control form-control-sm"
+                         id="balancePayer" readonly="readonly" value="{{data.payer_balance | number}}">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card-header" id="headingTwo">
+            Patient Total
+          </div>
+          <div id="collapseTwo" class="collapse show"
+               aria-labelledby="headingTwo" data-parent="#accordionExample">
+            <div class="card-body">
+  
+              <div class="row mb-3">
+                <label for="grossPatient"
+                       class="col-sm-4 col-form-label" cLabel>Gross</label>
+                <div class="col-sm-6">
+                  <input type="text"
+                         class="form-control form-control-sm"
+                         id="grossPatient" readonly="readonly" value="{{data.patient_gross | number}}">
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label for="adminPatient"
+                       class="col-sm-4 col-form-label" cLabel>Admin</label>
+                <div class="col-sm-6">
+                  <input type="text"
+                         class="form-control form-control-sm"
+                         id="adminPatient" readonly="readonly" value="{{data.patient_admin | number}}">
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label for="limitPatient"
+                       class="col-sm-4 col-form-label" cLabel>Limit</label>
+                <div class="col-sm-6">
+                  <input type="text"
+                         class="form-control form-control-sm"
+                         id="limitPatient" readonly="readonly"
+                         value="{{data.patient_limit | number}}">
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label for="discountTypePatient"
+                       class="col-sm-4 col-form-label" cLabel>Discount
+                  Type</label>
+                <div class="col-sm-6">
+                  <fieldset [disabled]="!disableDiscount">
+                    <select id="discountTypePatient" formControlName="discountTypePatient"
+                    class="form-select form-select-sm"
+                    [ngClass]="fs.isFormValid('discountTypePatient')"
+                    (ngModelChange)="onChangePatientDiscountType($event)" *ngIf="!disabledForm">
+                      <option *ngFor="let list of listDiscountType" [ngValue]="list" [selected]="list.key === data.patient_discount_type">{{list.value}}</option>
+                    </select>
+                    <input type="text"
+                         class="form-control form-control-sm"
+                         id="discountTypePatient" readonly="readonly"
+                         value="{{data.patient_discount_type}}" *ngIf="disabledForm">
+                    <div *ngIf="fs.isFormError('discountTypePatient')" class="text-danger">
+                      <div *ngFor="let e of fs.getFormErrors('discountTypePatient') | keyvalue">
+                        {{ fs.getFormErrorMessage('discountTypePatient', e.key) }}
+                      </div>
+                    </div>
+                  </fieldset>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label for="discountFactorPatient" class="col-sm-4 col-form-label" cLabel>Discount Factor</label>
+                <div class="col-sm-6">
+                  <input type="text" class="form-control form-control-sm currency_input" 
+                  formControlName="discountFactorPatient" id="discountFactorPatient" 
+                  (ngModelChange)="onChangePatientDiscountFactor($event)"
+                  [ngClass]="fs.isFormValid('discountFactorPatient')" *ngIf="!disabledForm">
+
+                  <input type="text" class="form-control form-control-sm currency_input" 
+                  id="discountFactorPatient" *ngIf="disabledForm" value="{{ data.patient_discount_factor | number }}"
+                  readonly="readonly">
+
+                  <div *ngIf="fs.isFormError('discountFactorPatient')" class="text-danger">
+                    <div *ngFor="let e of fs.getFormErrors('discountFactorPatient') | keyvalue">
+                      {{ fs.getFormErrorMessage('discountFactorPatient', e.key) }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label for="discountPatient"
+                       class="col-sm-4 col-form-label" cLabel>Discount</label>
+                <div class="col-sm-6">
+                  <input type="text"
+                         class="form-control form-control-sm"
+                         id="discountPatient" readonly="readonly" value="{{data.patient_discount | number}}">
+                </div>
+              </div>
+  
+              <!-- <div class="row mb-3" [hidden]="!payment">
+                <label for="promotionCode"
+                       class="col-sm-4 col-form-label-sm">Promotion
+                  Code</label>
+                <div class="col-sm-6">
+                  <input type="text"
+                         class="form-control form-control-sm"
+                         id="promotionCode" value="{{data.promotion_code}}">
+                </div>
+              </div>
+              <div class="row mb-3" [hidden]="!payment">
+                <label class="col-sm-4 col-form-label-sm"></label>
+                <div class="col-sm-6">
+                  <button type="button" class="col-sm-12 btn btn-primary btn-sm">
+                    <svg cIcon name="cilReload" size="sm"></svg> Apply
+                  </button>
+                </div>
+              </div> -->
+              <div class="row mb-3">
+                <label for="netPatient"
+                       class="col-sm-4 col-form-label" cLabel>Net</label>
+                <div class="col-sm-6">
+                  <input type="text"
+                         class="form-control form-control-sm"
+                         id="netPatient" readonly="readonly" value="{{data.patient_net | number}}">
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label for="balancePatient"
+                       class="col-sm-4 col-form-label" cLabel>Balance</label>
+                <div class="col-sm-6">
+                  <input type="text"
+                         class="form-control form-control-sm"
+                         id="balancePatient" readonly="readonly" value="{{data.patient_balance | number}}">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+  
+        <div class="col-md-4">
+          <div class="card-header" id="headingTwo">
+            Invoice Total
+          </div>
+          <div id="collapseTwo" class="collapse show"
+               aria-labelledby="headingTwo" data-parent="#accordionExample">
+            <div class="card-body">
+  
+              <div class="row mb-3">
+                <label for="grossTotal"
+                       class="col-sm-4 col-form-label" cLabel>Gross</label>
+                <div class="col-sm-6">
+                  <input type="text"
+                         class="form-control form-control-sm"
+                         id="grossTotal" readonly="readonly" value="{{data.total_gross | number}}">
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label for="discountTotal"
+                       class="col-sm-4 col-form-label" cLabel>Discount</label>
+                <div class="col-sm-6">
+                  <input type="text"
+                         class="form-control form-control-sm"
+                         id="discountTotal" readonly="readonly" value="{{data.total_discount | number}}">
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label for="adminTotal"
+                       class="col-sm-4 col-form-label" cLabel>Admin</label>
+                <div class="col-sm-6">
+                  <input type="text"
+                         class="form-control form-control-sm"
+                         id="adminTotal" readonly="readonly" value="{{data.total_admin | number}}">
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label for="roundingTotal"
+                       class="col-sm-4 col-form-label" cLabel>Rounding</label>
+                <div class="col-sm-6">
+                  <input type="text"
+                         class="form-control form-control-sm"
+                         id="roundingTotal" readonly="readonly" value="{{data.total_rounding | number}}">
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label for="netTotal"
+                       class="col-sm-4 col-form-label" cLabel>Net</label>
+                <div class="col-sm-6">
+                  <input type="text"
+                         class="form-control form-control-sm"
+                         id="netTotal" readonly="readonly" value="{{data.total_net | number}}">
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label for="balanceTotal"
+                       class="col-sm-4 col-form-label" cLabel>Balance</label>
+                <div class="col-sm-6">
+                  <input type="text"
+                         class="form-control form-control-sm"
+                         id="balanceTotal" readonly="readonly" value="{{data.total_balance | number}}">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </c-card-body>
+  <c-card-footer [hidden]="!showFooter || (loadPage && !recalculatingProgress)">
+    <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+      
+      <ng-template contextDisposer let-context>
+        <button cButton id="btnPayment" data-click="false" 
+        class="btn btn-primary btn-sm" [hidden]="!disabledForm" 
+        *ngIf="data.patient_balance != 0"
+        (click)="loadPayment()">
+          <svg cIcon name="cilCash" size="sm"></svg>
+          Payment
+        </button>
+        <button cButton id="btnRecalculation" class="btn btn-primary btn-sm"
+        *ngIf="context.checkAction('0217_recalculating')"
+          [hidden]="disabledForm" (click)="recalculating()" [disabled]="recalculatingProgress || saveInvoiceProgress || printInvoiceProgress || invoiceSaved">
+          <div *ngIf="!recalculatingProgress">
+            <svg cIcon name="cilCalculator" size="sm"></svg> Recalculating
+          </div>
+          <div *ngIf="recalculatingProgress">
+            <c-spinner aria-hidden="true" size="sm" variant="grow"></c-spinner>
+            Loading...
+          </div>
+        </button>
+        <button cButton id="btnSave" class="btn btn-primary btn-sm"
+        *ngIf="context.checkAction('0218_save_invoice')"
+        [hidden]="disabledForm" (click)="onValidateSaveInvoice()" [disabled]="recalculatingProgress || saveInvoiceProgress || printInvoiceProgress || invoiceSaved">
+        <div *ngIf="!saveInvoiceProgress">
+          <svg cIcon name="cilSave" size="sm"></svg> Save
+        </div>
+        <div *ngIf="saveInvoiceProgress">
+          <c-spinner aria-hidden="true" size="sm" variant="grow"></c-spinner>
+          Loading...
+        </div>
+        </button>
+        <button id="btnPrint" class="btn btn-primary btn-sm" (click)="showSendPrintModal()" *ngIf="showPrintButton">
+          <svg cIcon name="cilSend" size="sm"></svg> Print/Send Invoice Sementara
+        </button>
+      </ng-template>
+    </div>
+  </c-card-footer>
+</app-card-app>

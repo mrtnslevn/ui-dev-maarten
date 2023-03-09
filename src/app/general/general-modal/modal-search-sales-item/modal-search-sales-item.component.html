@@ -1,0 +1,100 @@
+<div class="modal-header">
+    <h5 class="modal-title pull-left">Sales Item</h5>
+    <button type="button" class="btn-close close pull-right" aria-label="Close" (click)="bsModalRef.hide()"></button>
+</div>
+<div class="modal-body">
+    <c-row ngPreserveWhitespaces>
+        <c-col xs="12">
+                <app-card-app title="Search Sales Item">
+                    <c-card-body>
+                        <c-row class="mb-3">
+                            <c-col sm="3">
+                                <label for="salesItemName" cLabel class="col-form-label">Sales Item Name</label>
+                            </c-col>
+                            <c-col sm="4">
+                                <input cFormControl id="salesItemName" type="text" sizing="sm" name="salesItemName" [(ngModel)]="salesItemName"
+                                (ngModelChange)="onChangeSalesItemName($event)" />
+                            </c-col>
+                        </c-row>
+                        <c-row class="mb-3">
+                            <c-col sm="3">
+                                <label for="salesItemCode" cLabel class="col-form-label">Sales Item Code</label>
+                            </c-col>
+                            <c-col sm="4">
+                                <input cFormControl id="salesItemCode" type="text" sizing="sm" name="salesItemCode" [(ngModel)]="salesItemCode"
+                                (ngModelChange)="onChangeSalesItemCode($event)" />
+                            </c-col>
+                        </c-row>
+                    </c-card-body>
+                    <c-card-footer footer class="text-center">
+                        <button cButton color="primary" id="btnSearchBill" type="button" size="sm" (click)="searchSalesItem()"
+                            [disabled]="progress">
+                            <div *ngIf="!progress">
+                            <svg cIcon class="me-2" name="cil-search"></svg> Search
+                            </div>
+                            <div *ngIf="progress">
+                            <c-spinner aria-hidden="true" size="sm" variant="grow"></c-spinner>
+                            Loading...
+                            </div>
+                        </button>
+                        <button cButton color="primary" id="btn-reset-sales-item" type="button" size="sm" (click)="onReset()">
+                            <svg cIcon class="me-2" name="cil-reload"></svg> Reset
+                        </button>
+                    </c-card-footer>
+                </app-card-app>
+        </c-col>
+    </c-row>
+    <c-row ngPreserveWhitespaces *ngIf="search">
+        <c-col xs="12">
+                <app-card-app title="Search Result">
+                    <div class='fade show modal-body' style='text-align: center;' *ngIf="progress">
+                        <c-spinner aria-hidden="true" size="sm" variant="grow"></c-spinner>
+                        Loading...
+                    </div>
+                    <c-card-body [hidden]="progress">
+                        <table cTable id="tableCombinedBill" [responsive]="true">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Sales Item Code</th>
+                                    <th scope="col">Sales Item Name</th>
+                                    <th scope="col"></th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbodyCombinedBill" *ngIf="data.length>0; else no_data">
+                                <tr *ngFor="let d of data">
+                                    <td>{{d.sales_item_code}}</td>
+                                    <td>{{d.sales_item_name}}</td>
+                                    <td>
+                                        <button cButton color="primary" id="btn-select-sales-item" type="button" size="sm" (click)="selectItem(d)">
+                                            <svg cIcon class="me-2" name="cil-check"></svg> Select
+                                        </button> 
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <ng-template #no_data>
+                            <tr ngClass="text-center">
+                              <td colspan="3">No Data</td>
+                            </tr>
+                          </ng-template>
+                        <pagination *ngIf="paging.total_row > 0"
+                            [boundaryLinks]="true"
+                            [totalItems]="paging.total_row"
+                            [(ngModel)]="current_page"
+                            (pageChanged)="pageChanged($event)"
+                            [itemsPerPage]="paging.rows_per_page"
+                            [rotate]="false"
+                            [maxSize]="paging.max_size" [disabled]="progress">
+                          </pagination>
+                    </c-card-body>
+                </app-card-app>
+        </c-col>
+    </c-row>
+</div>
+<div class="modal-footer d-block">
+    <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+        <button cButton color="primary" id="btn-close-search-modal" type="button" size="sm" (click)="bsModalRef.hide()">
+            <svg cIcon class="me-2" name="cil-x"></svg> Close
+        </button>
+    </div>
+</div>

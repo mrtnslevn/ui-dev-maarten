@@ -1,0 +1,130 @@
+<app-card-app title="Ordered Item" [show]="show">
+  <div class='fade show modal-body' style='text-align: center;' *ngIf="loadPage">
+    <c-spinner aria-hidden="true" size="sm" variant="grow"></c-spinner>
+    Loading...
+  </div>
+  <c-card-body [hidden]="loadPage">
+    <table cTable id="tableSalesItemNew" class="table table-striped table-hover table-sm" style="width: 100%;  white-space: nowrap; overflow-x: auto;" [responsive]="true">
+      <thead>
+      <tr>
+        <th scope="col">
+          <input cFormCheckInput id="checkAllCombinedBill" type="checkbox" (change)="salesItemSelectAll($event)" *ngIf="!readOnly">
+        </th>
+        <th scope="col">Sales Item</th>
+        <th scope="col">Qty</th>
+        <th scope="col">UOM</th>
+        <th scope="col">Doctor</th>
+        <th scope="col">Price</th>
+        <th scope="col">Amount</th>
+        <th scope="col">Discount</th>
+        <th scope="col">Patient Net</th>
+        <th scope="col">Payer Net</th>
+        <th scope="col">Package</th>
+        <th scope="col">Note</th>
+        <th scope="col"></th>
+      </tr>
+      </thead>
+      <tbody id="tbodySalesItemNew" *ngIf="data.length > 0; else no_data">
+        <ng-container *ngFor="let d of data">
+          <tr>
+            <td>
+              <div class="text-center" *ngIf="d.is_item_issue=='0'">
+                <input *ngIf="!readOnly" id="checkAllSalesItem" data-check="false" class="form-check-" style="border-color: black;" type="checkbox" (change)="salesItemTypeSelectAll($event, d)" />
+              </div>
+            </td>
+            <td>
+              <b>{{d.sales_item_type_name}}</b>
+            </td>
+            <td colspan="2" *ngIf="d.sales_item_type_id == 2 || d.sales_item_type_id == 3">
+              <b>Email to</b>
+            </td>
+            <td colspan="4" *ngIf="d.sales_item_type_id == 2 || d.sales_item_type_id == 3">
+              <input type="text" class="form-control form-control-sm" id="cancel-reason" [(ngModel)]="d.email_to" [disabled]="true">
+            </td>
+            <td [colSpan]="d.sales_item_type_id == 2 ? 5 : 11"></td>
+          </tr>
+          <tr *ngFor="let item of d.sales_item_list" style="font-size: 13px">
+            <td></td>
+            <td>
+              <div [ngStyle]="{'display': (!readOnly) ? 'flex' : ''}">
+                <div *ngIf="!readOnly">
+                  <input cFormCheckInput data-check="false" class="form-check-input" style="border-color: black; margin-right: 5px" type="checkbox" *ngIf="d.is_item_issue=='0'" (change)="salesItemListChangeRadio(d, item, $event)" [checked]=item.checked />
+                </div>
+                {{item.sales_item_name}}
+              </div>
+            </td>
+            <td>{{item.qty}}</td>
+            <td>{{item.uom}}</td>
+            <td>{{item.doctor}}</td>
+            <td>{{item.price | number}}</td>
+            <td>{{item.amount | number}}</td>
+            <td>{{item.discount | number}}</td>
+            <td>{{item.patient_net | number}}</td>
+            <td>{{item.payer_net | number}}</td>
+            <td>{{item.package_name}}</td>
+            <td>{{item.notes}}</td>
+            <td>
+              <ng-template contextDisposer let-context>
+                <div *ngIf="!readOnly && context.checkAction('0214_return_sales_item')"><button *ngIf="d.is_item_issue=='1'" cButton size="sm" (click)="openModalReturnSalesItem(item, d.sales_item_type_name)">Return Item</button></div>
+              </ng-template>
+            </td>
+          </tr>
+        </ng-container>
+      </tbody>
+    </table>
+    <ng-template #no_data>
+      <tr ngClass="text-center">
+        <td colspan="12">No data</td>
+      </tr>
+    </ng-template>
+  </c-card-body>
+  <c-card-footer [hidden]="!footer || loadPage">
+    <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+      <ng-template contextDisposer let-context>
+        <button cButton id="btnRemove" class="btn btn-primary btn-sm" (click)="removeOrderedItem()"
+        [disabled]="progress"
+        *ngIf="context.checkAction('0213_remove_sales_item')">
+          <div *ngIf="!progress">
+            <svg cIcon name="cilDelete" size="sm"></svg>
+            Remove
+          </div>
+          <div *ngIf="progress">
+            <c-spinner aria-hidden="true" size="sm" variant="grow"></c-spinner>
+            Loading...
+          </div>       
+        </button>
+      </ng-template>
+      <ng-template contextDisposer let-context2>
+        <button cButton id="btnAddSalesItem"
+                class="btn btn-primary btn-sm" (click)="openModalAddItemIssueCategory()"
+                *ngIf="context2.checkAction('0212_add_sales_item')">
+          <svg cIcon name="cilPlus" size="sm"></svg>
+          Add Item Issue
+        </button>
+      </ng-template>
+      <ng-template contextDisposer let-context2>
+        <button cButton id="btnAddSalesItem"
+                class="btn btn-primary btn-sm" (click)="openModalAddTransactionCategory()"
+                *ngIf="context2.checkAction('0212_add_sales_item')">
+          <svg cIcon name="cilPlus" size="sm"></svg>
+          Add Transaction
+        </button>
+      </ng-template>
+      <!-- <button cButton id="btnMedicalOrder"
+              class="btn btn-primary btn-sm" (click)="openModalMedicalOrder()">
+        <svg cIcon name="cilCash" size="sm"></svg>
+        List Medical Order
+      </button> -->
+      <button cButton id="btn-export-ordered-item" class="btn btn-primary btn-sm" 
+        (click)="exportOrderedItem()" [disabled]="exporting">
+        <div *ngIf="!exporting">
+          <svg cIcon name="cilFile" size="sm"></svg> Export
+        </div>
+        <div *ngIf="exporting">
+          <c-spinner aria-hidden="true" size="sm" variant="grow"></c-spinner>
+          Loading...
+        </div>
+      </button>
+    </div>
+  </c-card-footer>
+</app-card-app>

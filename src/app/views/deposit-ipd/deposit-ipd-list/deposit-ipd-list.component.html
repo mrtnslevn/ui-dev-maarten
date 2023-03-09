@@ -1,0 +1,139 @@
+<c-row ngPreserveWhitespaces>
+  <c-col xs="12">
+    <form cForm>
+      <app-card-app title="Deposit IPD List"  >
+        <c-card-body>
+          <c-row class="mb-3">
+            <c-col sm="2">
+              <label cLabel class="col-form-label" for="lob">
+                Last Transaction Date From
+              </label>
+            </c-col>
+            <c-col sm="2">
+              <input cFormControl sizing="sm" id="lastTransactionDateFrom" type="date" name="lastTransactionDateFrom"
+                [(ngModel)]="lastTransactionDateFrom" (ngModelChange)="onChangeLastTransactionDateFrom($event)" />
+            </c-col>
+            <c-col sm="2">
+              <label cLabel class="col-form-label" for="lob">
+                Last Transaction Date To
+              </label>
+            </c-col>
+            <c-col sm="2">
+              <input cFormControl sizing="sm" id="lastTransactionDateTo" type="date" name="lastTransactionDateTo" 
+                [(ngModel)]="lastTransactionDateTo" (ngModelChange)="onChangeLastTransactionDateTo($event)" />
+            </c-col>
+          </c-row>
+          <c-row class="mb-3">
+            <c-col sm="2">
+              <label cLabel class="col-form-label-sm" for="select-patient-mr-no">
+                MR No
+              </label>
+            </c-col>
+            <c-col sm="2">
+              <c-input-group>
+                <input cFormControl id="select-patient-mr-no" name="mrNo" sizing="sm"
+                  (ngModelChange)="onChangeMrNo($event)" [(ngModel)]="mrNo" />
+              </c-input-group>
+            </c-col>
+            <c-col sm="2">
+              <label cLabel class="col-form-label-sm" for="select-patient-name">
+                Patient Name
+              </label>
+            </c-col>
+            <c-col sm="2">
+              <input cFormControl id="select-patient-name" name="patientName" sizing="sm"
+                (ngModelChange)="onChangePatientName($event)" [(ngModel)]="patientName" />
+            </c-col>
+            <c-col sm="2">
+              <label cLabel class="col-form-label-sm" for="select-patient-dob">
+                Date of Birth
+              </label>
+            </c-col>
+            <c-col sm="2">
+              <input cFormControl id="select-patient-dob" name="dob" type="date" sizing="sm"
+                (ngModelChange)="onChangeDateOfBirth($event)" [(ngModel)]="dateOfBirth" />
+            </c-col>
+          </c-row>
+
+        </c-card-body>
+        <c-card-footer footer class="text-center">
+          <button cButton color="primary" id="btn-search-patient" type="button" size="sm"
+            (click)="getDepositIpdList(1)" [disabled]="progress">
+            <div *ngIf="!progress">
+              <svg cIcon class="me-2" name="cil-search"></svg> Search
+            </div>
+            <div *ngIf="progress">
+              <c-spinner aria-hidden="true" size="sm" variant="grow"></c-spinner>
+              Loading...
+            </div>
+          </button>
+          <button cButton color="primary" id="btn-reset" type="button" size="sm" (click)="onClickReset()">
+            <svg cIcon class="me-2" name="cil-reload" size="sm"></svg> Reset
+          </button>
+        </c-card-footer>
+      </app-card-app>
+    </form>
+    <app-card-app title="Search Result" *ngIf="searched">
+      <div class='fade show modal-body' style='text-align: center;' *ngIf="progress">
+        <c-spinner aria-hidden="true" size="sm" variant="grow"></c-spinner>
+        Loading...
+      </div>
+      <c-card-body [hidden]="progress">
+        <table cTable id="tableSearchPatientInvoice" class="table table-striped table-hover table-sm"
+          style="width: 100%;  white-space: nowrap; overflow-x: auto;" [responsive]="true">
+          <thead>
+            <tr>
+              <th scope="col">MR No</th>
+              <th scope="col">Amount</th>
+              <th scope="col">Note</th>
+              <th scope="col">Last Transaction Date</th>
+              <th scope="col">Patient Name</th>
+              <th scope="col"></th>
+            </tr>
+          </thead>
+          <tbody id="tbodySearchPatientInvoice" *ngIf="depositIpdList.length > 0 else no_data">
+            <tr *ngFor="let depositIpd of depositIpdList">
+              <td scope="col">{{depositIpd.mr_no}}</td>
+              <td scope="col">{{depositIpd.deposit_amount | number}}</td>
+              <td scope="col">{{depositIpd.notes}}</td>
+              <td scope="col">{{depositIpd.last_deposit_date | date: 'dd-MMM-yyyy HH:mm'}}</td>
+              <td scope="col">{{depositIpd.patient_name}}</td>
+              <td scope="col">
+                <ng-template contextDisposer let-context>
+                  <button cButton type="button" size="sm" color="primary"
+                    *ngIf="context.checkAction('0421_view_detail')" (click)="navigateToDetails(depositIpd.mr_no, depositIpd.patient_name)">
+                    <svg cIcon class="me-2" name="cil-external-link"></svg>
+                  </button>
+                </ng-template>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <ng-template #no_data>
+          <tr ngClass="text-center">
+            <td colspan="18">No Data</td>
+          </tr>
+        </ng-template>
+        <pagination *ngIf="paging.total_row > 0" [boundaryLinks]="true" [totalItems]="paging.total_row"
+          [(ngModel)]="page" (pageChanged)="onChangePage($event)" [itemsPerPage]="paging.rows_per_page"
+          [rotate]="false" [maxSize]="paging.max_size" [disabled]="progress"></pagination>
+      </c-card-body>
+      <c-card-footer footer>
+        <div class="text-center">
+            <ng-template contextDisposer let-context>
+                <button cButton color="primary" id="btn-export" type="button" size="sm"
+                [disabled]="loadExportDepositIpdList" *ngIf="context.checkAction('0221_export')" (click)="onClickExport()">
+                  <div *ngIf="!loadExportDepositIpdList">
+                    <svg cIcon class="me-2" name="cil-file" size="sm"></svg> Export
+                  </div>
+                  <div *ngIf="loadExportDepositIpdList">
+                    <c-spinner aria-hidden="true" size="sm" variant="grow"></c-spinner>
+                    Loading...
+                  </div>
+                </button>
+              </ng-template>
+        </div>
+    </c-card-footer>
+    </app-card-app>
+  </c-col>
+</c-row>

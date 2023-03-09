@@ -1,0 +1,61 @@
+<c-row ngPreserveWhitespaces>
+  <c-col xs="12">
+    <app-card-app title="To Do">
+      <c-card-body>
+        <c-col xs="4">
+          <!-- <div class="progress-group mb-2">
+            <div class="progress-group-header">
+              <svg cIcon class="icon icon-lg me-2" name="cilUser"></svg>
+              <span>Refund Approval</span>
+              <c-badge class="ms-2 float-end" color="secondary">
+                6
+              </c-badge>
+            </div>
+          </div>
+          <div class="progress-group mb-2">
+            <div class="progress-group-header">
+              <svg cIcon class="icon icon-lg me-2" name="cilUser"></svg>
+              <span>Refund Revision</span>
+              <c-badge class="ms-2 float-end" color="secondary">
+                4
+              </c-badge>
+            </div>
+          </div> -->
+          <ng-template contextDisposer let-context>
+            <div class="progress-group mb-2" style="cursor: pointer;" *ngIf="checkUrl(context.privilege, '0_2_5cancel_payment_appr')"
+            (click)="onClickAppPaymentCancellation()"
+            >
+              <div class="progress-group-header">
+                <svg cIcon class="icon icon-lg me-2" name="cilUser"></svg>
+                <span>Approval for Payment Cancellation</span>
+                <c-badge class="ms-2 float-end" color="secondary">
+                  {{approval_for_payment_cancellation}}
+                </c-badge>
+              </div>
+            </div>
+            <div class="progress-group mb-2" style="cursor: pointer;" *ngIf="checkUrl(context.privilege, '0_2_4cancel_invoice_appr')"
+            (click)="onClickAppInvoiceCancellation()">
+              <div class="progress-group-header">
+                <svg cIcon class="icon icon-lg me-2" name="cilUser"></svg>
+                <span>Approval for Invoice Cancellation</span>
+                <c-badge class="ms-2 float-end" color="secondary">
+                  {{approval_for_invoice_cancellation}}
+                </c-badge>
+              </div>
+            </div>
+            <div class="progress-group mb-2" style="cursor: pointer;" *ngIf="checkUrl(context.privilege, '0_2_2invoice_list')"
+            (click)="onClickAppPendingInvoice()">
+              <div class="progress-group-header">
+                <svg cIcon class="icon icon-lg me-2" name="cilUser"></svg>
+                <span>Pending Invoice</span>
+                <c-badge class="ms-2 float-end" color="secondary">
+                  {{pending_invoice}}
+                </c-badge>
+              </div>
+            </div>
+          </ng-template>
+        </c-col>
+      </c-card-body>
+    </app-card-app>
+  </c-col>
+</c-row>

@@ -1,0 +1,31 @@
+<div class="col-md-12" id="divSettlementDeposit">
+  <app-card-app title="Deposit IPD">
+    <c-card-body class="card-body">
+      <div class="row mb-3" *ngIf="readOnly; else elseBlock">
+        <label class="col-sm-4 col-form-label-sm">Amount</label>
+        <div class="col-sm-8" >
+          <input type="text" class="form-control form-control-sm" readonly value="{{data.amount}}">
+        </div>
+      </div>
+      <ng-template #elseBlock>
+        <div class="row mb-3">
+          <label class="col-sm-4 col-form-label-sm" for="remaining">Remaining</label>
+          <div class="col-sm-8" >
+            <input type="text" id="remaining" class="form-control form-control-sm" readonly value="{{data.remaining}}">
+          </div>
+        </div>
+        <div class="row mb-3">
+          <div class="col-sm-4"></div>
+          <div class="col-sm-8">
+            <button id="btnRefundDeposit" type="button" class="btn btn-primary btn-sm" onclick="location.href = './refund/refund-deposit-detail.html';">
+              <svg class="icon me-2">
+                <use xlink:href="vendors/@coreui/icons/svg/free.svg#cil-reload"></use>
+              </svg>
+              Refund Deposit
+            </button>
+          </div>
+        </div>
+      </ng-template>
+    </c-card-body>
+  </app-card-app>
+</div>

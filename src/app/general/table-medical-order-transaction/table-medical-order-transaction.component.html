@@ -1,0 +1,44 @@
+<table cTable id="tableMedicalOrderTransaction" [responsive]="true">
+   <thead>
+      <tr>
+         <th scope="col">
+            <input cFormCheckInput id="checkAllCombinedBill" type="checkbox" 
+            (change)="medicalOrderTransactionSelectAll($event)">
+          </th>
+         <th scope="col">Admission No</th>
+         <th scope="col">Order Type</th>
+         <th scope="col">Order Date</th>
+         <th scope="col">Order Item</th>
+         <th scope="col">Qty</th>
+         <th scope="col">Doctor</th>
+         <th scope="col">Start Date</th>
+         <th scope="col">End Date</th>
+      </tr>
+      </thead>
+      <tbody id="tbodyMedicalOrderTransactionTable" *ngIf="dataMedicalOrderTransaction.length>0; else noData">
+         <tr *ngFor="let d of dataMedicalOrderTransaction">
+            <td>
+               <input cFormCheckInput type="checkbox" [checked]="d.checked"
+               [disabled]="d.sales_item_id==0"
+                (change)="medicalOrderTransactionListChangeRadio(d, $event)">
+             </td>
+               <td>{{d.admission_no}}</td>
+               <td>{{d.sales_item_type}}</td>
+               <td>{{d.order_date | date: 'dd-MMM-yyyy'}}</td>
+               <td>{{d.sales_item_name}}</td>
+               <td>{{d.quantity}}</td>
+               <td>{{d.doctor_name}}</td>
+               <td>{{d.order_date | date: 'dd-MMM-yyyy'}}</td>
+               <td>{{d.end_date}}</td>
+         </tr>
+      </tbody>
+      <ng-template #noData>
+         <!-- <tr ngClass="text-center" *ngIf="loadData">
+            <c-spinner aria-hidden="true" size="sm" variant="grow"></c-spinner>
+            Loading...
+          </tr> -->
+           <!-- <tr ngClass="text-center" *ngIf="loadData==false">
+             <td colspan="8">No data</td>
+           </tr> -->
+      </ng-template>
+</table>

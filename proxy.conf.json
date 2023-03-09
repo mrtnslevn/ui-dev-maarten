@@ -1,0 +1,9 @@
+{
+   "/api/*": {
+     "target": "https://development.nds.co.id",
+     "changeOrigin": true,
+     "secure": false,
+     "pathRewrite": {"^/api" : ""}
+   }
+ }
+ 

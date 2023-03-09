@@ -1,0 +1,156 @@
+<div class='fade show' style='text-align: center; padding-top: calc(100vh / 2); height: 100vh' *ngIf="loadPage">
+    <c-spinner aria-hidden="true" size="sm" variant="grow"></c-spinner>
+    Loading...
+</div>
+
+<!--Patient Information-->
+<c-row ngPreserveWhitespaces>
+    <app-card-patient-info-deposit></app-card-patient-info-deposit>
+</c-row>
+
+<!--Deposit History-->
+<c-row ngPreserveWhitespaces>
+    <app-card-deposit-ipd-history></app-card-deposit-ipd-history>
+</c-row>
+
+<!--Refund Prepaid-->
+<c-row ngPreserveWhitespaces>
+    <app-card-app title="Refund Prepaid">
+        <c-card-body>
+              <!-- <form [formGroup]="fs.form"> -->
+                <c-row class="mb-3">
+                  <c-col xs="6">
+                    <app-card-app title='Refund Prepaid'>
+                      <c-card-body>
+                          <div class="row mb-3">
+                            <label for="refundID" class="col-sm-4 col-form-label" cLabel>Refund ID</label>
+                            <div class="col-sm-6">
+                              <input type="text" class="form-control form-control-sm" id="refundID"
+                                value="" readonly>
+                            </div>
+                          </div>
+                          <div class="row mb-3">
+                            <label for="openingBalance" class="col-sm-4 col-form-label" cLabel>Opening Balance</label>
+                            <div class="col-sm-6">
+                              <input type="text" class="form-control form-control-sm" id="openingBalance"
+                                value="" readonly>
+                            </div>
+                          </div>
+                          <div class="row mb-3">
+                            <label for="refundAmout" class="col-sm-4 col-form-label" cLabel>Refund Amount</label>
+                            <div class="col-sm-6">
+                              <input type="text" class="form-control form-control-sm" id="refundAmount"
+                              value="" readonly>
+                            </div>
+                          </div>
+                          <div class="row mb-3">
+                            <label for="closingBalance" class="col-sm-4 col-form-label" cLabel>Closing
+                              Balance</label>
+                            <div class="col-sm-6">
+                              <input type="text" class="form-control form-control-sm" id="closingBalance"
+                                value="" readonly>
+                            </div>
+                          </div>
+                          <div class="row mb-3">
+                            <label for="paymentMode" class="col-sm-4 col-form-label" cLabel>Payment
+                              Mode</label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control form-control-sm" id="paymentAmount"
+                                value="" readonly>
+                            </div>
+                          </div>
+                          <div class="row mb-3">
+                            <label for="netPayment" class="col-sm-4 col-form-label" cLabel>Net</label>
+                            <div class="col-sm-6">
+                              <input type="text" class="form-control form-control-sm" id="netPayment" value="" readonly>
+                            </div>
+                          </div>
+                          <div class="row mb-3">
+                            <label for="reasonDeposit" class="col-sm-4 col-form-label" cLabel>Reason</label>
+                            <div class="col-sm-6">
+                              <input type="text" class="form-control form-control-sm" id="reasonDeposit" value="" readonly>
+                            </div>
+                          </div>
+                        
+                      </c-card-body>
+                    </app-card-app>
+                  </c-col>
+                  <!-- <c-col xs="6">
+                    <app-div-bank-transfer [(data)]="bankTransfer" [readOnly]="!paymentMode.bankTransfer" 
+                      [(formValid)]="formValid.bankTransfer" [submitted]="fs.submitted" 
+                      [hidden]="!paymentMode.bankTransfer">
+                    </app-div-bank-transfer>
+                    <app-div-cash [(data)]="cash" [readOnly]="!paymentMode.cash" 
+                      [(formValid)]="formValid.cash" [submitted]="fs.submitted" [payment]="payment" 
+                      [hidden]="!paymentMode.cash">
+                    </app-div-cash>
+                    <app-div-deposit-ipd [hidden]="!paymentMode.depositIpd"></app-div-deposit-ipd>
+                    <app-div-digital-payment [(data)]="digitalPayment" 
+                      [readOnly]="!paymentMode.digitalPayment" [(formValid)]="formValid.digitalPayment" 
+                      [(submitted)]="fs.submitted" [transactionType]="'Payment'" [patientInfo]="patientInfo" 
+                      [invoice]="invoice" [payment]="payment" [hidden]="!paymentMode.digitalPayment" 
+                      [paymentFormValid]="fs.valid">
+                    </app-div-digital-payment>
+                    <app-div-edc [(data)]="card" [readOnly]="!paymentMode.edc" [paymentFormValid]="fs.valid" 
+                      [(formValid)]="formValid.edc" [(submitted)]="fs.submitted" [payment]="payment" 
+                      [hidden]="!paymentMode.edc">
+                    </app-div-edc>
+                    <app-div-giro [(data)]="giro" [readOnly]="!paymentMode.giro"
+                      [(formValid)]="formValid.giro" [submitted]="fs.submitted" 
+                      [hidden]="!paymentMode.giro"></app-div-giro>
+                    <app-div-payer [(data)]="payer" [readOnly]="!paymentMode.payer"
+                      [(formValid)]="formValid.payer" [submitted]="fs.submitted" 
+                      [hidden]="!paymentMode.payer">
+                    </app-div-payer>
+                    <app-div-prepaid [(data)]="prepaid" [readOnly]="!paymentMode.prepaid" 
+                      [(formValid)]="formValid.prepaid" [submitted]="fs.submitted" 
+                      [patientInfo]="patientInfo" [hidden]="!paymentMode.prepaid" (dataChange)="updateAmountFromPrepaid()">
+                    </app-div-prepaid>
+                    <app-div-qris [hidden]="!paymentMode.qris"></app-div-qris>
+                    <app-div-voucher [hidden]="!paymentMode.voucher"></app-div-voucher>
+                  </c-col> -->
+                </c-row>
+              <!--</form>-->
+        </c-card-body>
+      </app-card-app>
+    </c-row>
+
+<!--Document-->
+<c-row ngPreserveWhitespaces>
+    <app-card-document [showUploadForm]="false"></app-card-document>
+</c-row>
+
+<!--Refund Approval History-->
+<c-row ngPreserveWhitespaces>
+    <app-card-refund-deposit-approval-detail></app-card-refund-deposit-approval-detail>
+</c-row>
+
+<!--Button Action-->
+<c-row ngPreserveWhitespaces>
+  <app-card-app>
+    <c-card-body class="">
+      <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+          <button cButton  [routerLink]="['/refund/approval-for-refund-request']" 
+          [state]="{ fromDetail: true }"color="primary" id="btn-reset" type="button" size="sm">
+              <svg cIcon class="me-2" name="cilArrowLeft" size="sm"></svg> Back
+          </button>
+          <button cButton color="primary" id="btn-get-invoice" type="button" size="sm"
+              [disabled]="progress">
+              <div *ngIf="!progress">
+              <svg cIcon class="me-2" name="cilCheckAlt"></svg> Approve
+              </div>
+              <div *ngIf="progress">
+              <c-spinner aria-hidden="true" size="sm" variant="grow"></c-spinner>
+              Loading...
+              </div>
+          </button>
+          <button cButton color="primary" id="btn-reset" type="button" size="sm">
+              <svg cIcon class="me-2" name="cilPencil" size="sm"></svg> Revision
+          </button>
+          <button cButton color="primary" id="btn-dummy-ipd" type="button" size="sm" >
+            <svg cIcon class="me-2" name="cilX" size="sm"></svg> Reject
+        </button>
+      </div>
+    </c-card-body>
+  </app-card-app>
+</c-row>

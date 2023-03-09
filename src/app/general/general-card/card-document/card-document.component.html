@@ -1,0 +1,61 @@
+<app-card-app title="Document">
+    <c-card-body class="px-2 py-1">
+        <form cForm *ngIf="showUploadForm">
+            <c-row class="mb-3">
+                <c-col sm="6">
+                    <label cLabel class="col-form-label" for="uploadDocument">
+                        Upload Document
+                    </label>
+                </c-col>
+                <c-col sm="6">
+                    <input cFormControl sizing="sm" id="uploadDocument" type="file" name="uploadDocument" (input)="onUpload($event)" accept=".pdf" required />
+                </c-col>
+            </c-row>
+        </form>
+        <table cTable id="tableDocument" class="table table-striped table-hover table-sm"
+            style="width: 100%;  white-space: nowrap; overflow-x: auto;" [responsive]="true">
+            <thead>
+                <tr>
+                    <th scope="col">
+                        Document Name</th>
+                    <th scope="col"></th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody id="tableDocument" *ngIf="documents.length > 0 else no_data">
+                <tr *ngFor="let document of documents">
+                    <td scope="col">{{document.name}}</td>
+                    <td scope="col">
+                        <button cButton color="primary" id="btn-view-document" (click)="onView(document)" type="button"
+                            size="sm">
+                            <div>
+                                <svg cIcon class="me-2" name="cil-search"></svg> View
+                            </div>
+                        </button>
+                    </td>
+                    <td scope="col">
+                        <button cButton color="danger" id="btn-delete-document" (click)="onDelete(document)"
+                            type="button" size="sm">
+                            <div>
+                                <svg cIcon class="me-2" name="cil-trash"></svg> delete
+                            </div>
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <ng-template #no_data>
+            <tr ngClass="text-center">
+              <td colspan="13">No Data</td>
+            </tr>
+          </ng-template>
+    </c-card-body>
+    <c-card-footer footer>
+        <div class="text-center">
+            <!-- <a [routerLink]="['/deposit-ipd/deposit-ipd-list']" [state]="{ fromDetail: true }" id="btnCancel" class="btn btn-primary btn-sm">
+                <svg cIcon name="cilArrowLeft" size="sm"></svg>
+                Back
+            </a> -->
+        </div>
+    </c-card-footer>
+</app-card-app>

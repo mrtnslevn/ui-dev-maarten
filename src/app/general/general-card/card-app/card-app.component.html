@@ -1,0 +1,8 @@
+<c-card [cBorder]="{top: {color: 'primary', width: 3}}" class="mb-4">
+  <c-card-header>
+    <span (click)="showContent()" class="btn-expand-card"><svg cIcon class="me-2"
+        name="{{nameIcon}}"></svg></span><strong>{{title}}</strong>
+  </c-card-header>
+  <ng-content *ngIf="show"></ng-content>
+  <ng-content *ngIf="show" select="[footer]"></ng-content>
+</c-card>

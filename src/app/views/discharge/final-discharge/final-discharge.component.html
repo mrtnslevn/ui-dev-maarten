@@ -1,0 +1,44 @@
+<c-row ngPreserveWhitespaces>
+  <c-col xs="12">
+    <form cForm>
+      <app-card-app title="Search Addmision">
+        <c-card-body>
+          <c-row class="mb-2">
+            <label cLabel class="col-sm-3 col-form-label" for="lob">
+              LOB
+            </label>
+            <c-col sm="3">
+              <input cFormControl id="lob" type="text" sizing="sm" />
+            </c-col>
+            <label cLabel class="col-sm-3 col-form-label" for="admission-no">
+              Admission No.
+            </label>
+            <c-col sm="3">
+              <input cFormControl id="admission-no" type="text" sizing="sm" />
+            </c-col>
+          </c-row>
+          <app-select-patient></app-select-patient>
+          <c-row class="mb-2">
+            <label cLabel class="col-sm-3 col-form-label" for="request-from">
+              Request Discharge Date From
+            </label>
+            <c-col sm="3">
+              <input cFormControl id="request-from" type="email" sizing="sm" />
+            </c-col>
+            <label cLabel class="col-sm-3 col-form-label" for="request-to">
+              Request Discharge Date To
+            </label>
+            <c-col sm="3">
+              <input cFormControl id="request-to" type="email" sizing="sm" />
+            </c-col>
+          </c-row>
+        </c-card-body>
+        <c-card-footer footer class="text-center">
+          <button cButton color="primary" id="btn-search-mr" type="button" size="sm">
+            <svg cIcon class="me-2" name="cil-align-right" size="sm"></svg>
+          </button>
+        </c-card-footer>
+      </app-card-app>
+    </form>
+  </c-col>
+</c-row>

@@ -1,0 +1,168 @@
+<div class='fade show' style='text-align: center; padding-top: calc(100vh / 2); height: 100vh' *ngIf="loadPage">
+    <c-spinner aria-hidden="true" size="sm" variant="grow"></c-spinner>
+    Loading...
+</div>
+<div *ngIf="loadPage==false">
+<c-row ngPreserveWhitespaces>
+    <c-col xs="12">
+        <form cForm>
+            <app-card-app title="Search Approval for Invoice Cancellation">
+                <c-card-body>
+                    <c-row class="mb-3">
+                        <c-col sm="2">
+                            <label cLabel class="col-form-label" for="lob">LOB</label>
+                        </c-col>
+                        <c-col sm="3">
+                            <select class="form-select form-select-sm" id="lob" name="lob" [ngModel]="selectedLob" (ngModelChange)="onChangeLob($event)">
+                                <option selected="" disabled="">-- Select Lob --</option> 
+                                <option *ngFor="let list of listLob" [ngValue]="list">{{list.value}}</option>
+                            </select>
+                        </c-col>
+                        <c-col sm="2">
+                            <label cLabel class="col-form-label" for="invoiceno">Invoice No</label>
+                        </c-col>
+                        <c-col sm="3">
+                            <input type="text" class="form-control form-control-sm" id="invoiceno" name="invoiceno" [(ngModel)]="invoice_no"
+                            (ngModelChange)="onChangeInvoiceNo($event)">
+                        </c-col>
+                    </c-row>
+                    <c-row class="mb-3">
+                        <c-col sm="2">
+                            <label cLabel class="col-form-label" for="invoiceFrom">Invoice Date From</label>
+                        </c-col>
+                        <c-col sm="3">
+                            <input cFormControl id="invoice-date-from" type="date" sizing="sm" name="invoiceFrom" [(ngModel)]="invoice_date_from"
+                            (ngModelChange)="onChangeInvoiceDateFrom($event)"/>
+                        </c-col>
+                        <c-col sm="2">
+                            <label cLabel class="col-form-label" for="invoiceTo">Invoice Date To</label>
+                        </c-col>
+                        <c-col sm="3">
+                            <input cFormControl id="invoice-date-to" type="date" sizing="sm" name="invoiceTo" [(ngModel)]="invoice_date_to"
+                            (ngModelChange)="onChangeInvoiceDateTo($event)" />
+                        </c-col>
+                    </c-row>
+                    <c-row class="mb-3">
+                        <c-col sm="2">
+                            <label cLabel class="col-form-label" for="cancelFrom">Cancel Request Date From</label>
+                        </c-col>
+                        <c-col sm="3">
+                            <input cFormControl id="cancel-date-from" type="date" sizing="sm" name="cancelFrom" [(ngModel)]="cancel_date_from"
+                            (ngModelChange)="onChangeCancelDateFrom($event)"/>
+                        </c-col>
+                        <c-col sm="2">
+                            <label cLabel class="col-form-label" for="cancelTo">Cancel Request Date To</label>
+                        </c-col>
+                        <c-col sm="3">
+                            <input cFormControl id="cancel-date-to" type="date" sizing="sm" name="cancelTo" [(ngModel)]="cancel_date_to"
+                            (ngModelChange)="onChangeCancelDateTo($event)"/>
+                        </c-col>
+                    </c-row>
+                    <c-row class="mb-3">
+                        <c-col sm="2">
+                        <label cLabel class="col-form-label-sm" for="select-patient-mr-no">
+                          MR No
+                        </label>
+                      </c-col>
+                      <c-col sm="3">
+                          <input cFormControl id="select-patient-mr-no" type="text" name="mrNo" [(ngModel)]="mr_no" (ngModelChange)="onChangeMrNo($event)" sizing="sm"
+                            />
+                      </c-col>
+                      <c-col sm="2">
+                        <label cLabel class="col-form-label-sm" for="select-patient-name">
+                          Patient Name
+                        </label>
+                      </c-col>
+                      <c-col sm="3">
+                        <input cFormControl id="select-patient-name" type="text" name="patientName" [(ngModel)]="patientName" (ngModelChange)="onChangePatientName($event)" sizing="sm" />
+                      </c-col>
+                    </c-row>
+                </c-card-body>
+                <c-card-footer footer class="text-center">
+                    <button cButton color="primary" id="btn-search-patient" type="button" size="sm" (click)="searchInvoiceList()" [disabled]="progress">
+                        <div *ngIf="!progress">
+                            <svg cIcon class="me-2" name="cil-search"></svg> Search
+                        </div>
+                        <div *ngIf="progress">
+                            <c-spinner aria-hidden="true" size="sm" variant="grow"></c-spinner>
+                            Loading...
+                        </div>
+                    </button>
+                    <button cButton color="primary" id="btn-reset-patient" type="button" size="sm" (click)="onReset()">
+                        <svg cIcon class="me-2" name="cil-reload"></svg> Reset
+                    </button>
+                </c-card-footer>
+            </app-card-app>
+        </form>
+    </c-col>    
+</c-row>
+
+<c-row ngPreserveWhitespaces>
+    <c-col xs="12">
+            <app-card-app title="Search Result" *ngIf="searched">
+                <div class='fade show modal-body' style='text-align: center;' *ngIf="progress">
+                    <c-spinner aria-hidden="true" size="sm" variant="grow"></c-spinner>
+                    Loading...
+                </div>
+                <c-card-body [hidden]="progress">
+                    <table cTable id="tableSearchPatientInvoice" [responsive]="true">
+                        <thead>
+                            <tr>
+                                <th scope="col">Invoice Type</th>
+                                <th scope="col">Invoice No</th>
+                                <th scope="col">Invoice Date</th>
+                                <th scope="col">Admission No</th>
+                                <th scope="col">Admission Date</th>
+                                <th scope="col">MR No</th>
+                                <th scope="col">Name</th>
+                                <th scope="col">Create User</th>
+                                <th scope="col">Cancel Date</th>
+                                <th scope="col">Cancel User</th>
+                                <th scope="col">Cancel Notes</th>
+                                <th scope="col"></th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbodySearchPatientInvoice" *ngIf="listInvoice.length > 0 else no_data">
+                            <tr *ngFor="let i of listInvoice">
+                                <td>{{i.invoice_type}}</td>
+                                <td>{{i.invoice_no}}</td>
+                                <td>{{i.invoice_date | date: 'dd-MMM-yyyy HH:mm'}}</td>
+                                <td>{{i.admission_no}}</td>
+                                <td>{{i.admission_date | date: 'dd-MMM-yyyy HH:mm'}}</td>
+                                <td>{{i.mr_no}}</td>
+                                <td>{{i.patient_name}}</td>
+                                <td>{{i.invoice_by}}</td>
+                                <td>{{i.cancelled_date ? (i.cancelled_date | date: 'dd-MMM-yyyy HH:mm') : '-'}}</td>
+                                <td>{{i.cancelled_by ? i.cancelled_by : '-'}}</td>
+                                <td>{{i.cancel_notes ? i.cancel_notes : '-'}}</td>
+                                <td>
+                                    <ng-template contextDisposer let-context>
+                                        <button cButton type="button" size="sm"
+                                        *ngIf="context.checkAction('0232_view_detail')"
+                                        (click)="navigateToDetail(i.invoice_no, i.inv_cancellation_id)">
+                                            <svg cIcon class="me-2" name="cil-external-link"></svg>
+                                        </button>
+                                    </ng-template>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <ng-template #no_data>
+                        <tr ngClass="text-center">
+                          <td colspan="12">No Data</td>
+                        </tr>
+                      </ng-template>
+                    <pagination *ngIf="paging.total_row > 0"
+                        [boundaryLinks]="true"
+                        [totalItems]="paging.total_row"
+                        [(ngModel)]="current_page"
+                        (pageChanged)="pageChanged($event)"
+                        [itemsPerPage]="paging.rows_per_page"
+                        [rotate]="false"
+                        [maxSize]="paging.max_size" [disabled]="progress">
+                      </pagination>
+                </c-card-body>
+            </app-card-app>
+    </c-col>
+</c-row>
+</div>

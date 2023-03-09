@@ -1,0 +1,134 @@
+<c-row ngPreserveWhitespaces>
+    <c-col xs="12">
+        <form cForm>
+            <app-card-app title="Patient Information">
+                <div class='fade show modal-body' style='text-align: center;' *ngIf="loadPatient">
+                    <c-spinner aria-hidden="true" size="sm" variant="grow"></c-spinner>
+                    Loading...
+                  </div>
+                <c-card-body *ngIf="!loadPatient">
+                    <c-row class="mb-3">
+                        <c-col sm="2">
+                            <label cLabel class="col-form-label" for="mrNo">
+                                MR No.
+                            </label>
+                        </c-col>
+                        <c-col sm="2">
+                            <input cFormControl readonly sizing="sm" id="mrNo" type="text" name="mrNo" [ngModel]="patient.mr_no" />
+                        </c-col>
+                        <c-col sm="2">
+                            <label cLabel class="col-form-label" for="birthDate">
+                                Birth Date
+                            </label>
+                        </c-col>
+                        <c-col sm="2">
+                            <input cFormControl readonly sizing="sm" id="birthDate" type="date" name="birthDate"  [ngModel]="patient.dob?formatDate(patient.dob):patient.dob"/>
+                        </c-col>
+                        <c-col sm="2">
+                            <label cLabel class="col-form-label" for="sex">
+                                Sex
+                            </label>
+                        </c-col>
+                        <c-col sm="2">
+                            <input cFormControl readonly sizing="sm" id="sex" type="text" name="sex" [ngModel]="patient.sex" />
+                        </c-col>
+                    </c-row>
+                    <c-row class="mb-3">
+                        <c-col sm="2">
+                            <label cLabel class="col-form-label" for="name">
+                                Name
+                            </label>
+                        </c-col>
+                        <c-col sm="2">
+                            <input cFormControl readonly sizing="sm" id="name" type="text" name="name" [ngModel]="patient.patient_name" />
+                        </c-col>
+                        <c-col sm="2">
+                            <label cLabel class="col-form-label" for="age">
+                                Age
+                            </label>
+                        </c-col>
+                        <c-col sm="2">
+                            <input cFormControl readonly sizing="sm" id="age" type="text" name="age" [ngModel]="patient.age" />
+                        </c-col>
+                        <c-col sm="2">
+                            <label cLabel class="col-form-label" for="email">
+                                Email
+                            </label>
+                        </c-col>
+                        <c-col sm="2">
+                            <input cFormControl readonly sizing="sm" id="email" type="text" name="email" [ngModel]="patient.email" />
+                        </c-col>
+                    </c-row>
+                    <c-row class="mb-3">
+                        <c-col sm="2">
+                            <label cLabel class="col-form-label" for="idNo">
+                                ID No.
+                            </label>
+                        </c-col>
+                        <c-col sm="2">
+                            <input cFormControl readonly sizing="sm" id="idNo" type="text" name="idNo" [ngModel]="patient.id_no" />
+                        </c-col>
+                        <c-col sm="2">
+                            <label cLabel class="col-form-label" for="depositBalance">
+                                Deposit Balance
+                            </label>
+                        </c-col>
+                        <c-col sm="2">
+                            <input cFormControl readonly sizing="sm" id="depositBalance" type="text" name="depositBalance" [ngModel]="patient.deposit_amount" />
+                        </c-col>
+
+                    </c-row>
+                </c-card-body>
+            </app-card-app>
+            <app-card-app title="Deposit IPD List" >
+                <c-card-body>
+                    <c-row class="mb-3">
+                        <c-col sm="2">
+                            <label cLabel class="col-form-label" for="fromDate">
+                                From Date
+                            </label>
+                        </c-col>
+                        <c-col sm="2">
+                            <input cFormControl sizing="sm" id="fromDate" type="date" name="fromDate" (ngModelChange)="onChangeFromDate($event)" [(ngModel)]="fromDate"/>
+                        </c-col>
+                        <c-col sm="2">
+                            <label cLabel class="col-form-label" for="toDate">
+                                To Date
+                            </label>
+                        </c-col>
+                        <c-col sm="2">
+                            <input cFormControl sizing="sm" id="toDate" type="date" name="toDate" (ngModelChange)="onchangeToDate($event)" [(ngModel)]="toDate" />
+                        </c-col>
+                    </c-row>
+                </c-card-body>
+                <c-card-footer footer class="text-center">
+                    <button cButton color="primary" id="btn-get-invoice" type="button" size="sm" (click)="onClickSearch()" [disabled]="loadPatient || progress">
+                        <div *ngIf=" !progress">
+                            <svg cIcon class="me-2" name="cil-search"></svg> Search
+                          </div>
+                          <div *ngIf=" progress">
+                            <c-spinner aria-hidden="true" size="sm" variant="grow"></c-spinner>
+                            Loading...
+                          </div>
+                    </button>
+                    <button cButton color="primary" id="btn-reset" type="button" size="sm" (click)="onClickReset()">
+                        <svg cIcon class="me-2" name="cil-reload" size="sm"></svg> Reset
+                    </button>
+                </c-card-footer>
+            </app-card-app>
+        </form>
+        <app-card-deposit-ipd-history *ngIf="searched" title="Deposit IPD History" [hide]="['created_by','national_id_type_name']" [depositHistoryList]="depositIpdHistories" onload="progress" (onExport)="onClickExportDepositHistory()" oncha ></app-card-deposit-ipd-history>
+    </c-col>
+    <c-col>
+    <c-card [cBorder]="{top: {color: 'primary', width: 3}}">
+            <c-card-body class="px-0">
+                <div class="text-center">
+                    <a [routerLink]="['/deposit-ipd/deposit-ipd-list']" [state]="{ fromDetail: true }" id="btnCancel" class="btn btn-primary btn-sm">
+                        <svg cIcon name="cilArrowLeft" size="sm"></svg>
+                        Back
+                    </a>
+                </div>
+            </c-card-body>
+    </c-card>
+    </c-col>
+</c-row>

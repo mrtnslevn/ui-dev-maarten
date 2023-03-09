@@ -1,0 +1,96 @@
+<app-card-app title="{{title}} History">
+    <div class='fade show modal-body' style='text-align: center;' *ngIf="onLoad">
+        <c-spinner aria-hidden="true" size="sm" variant="grow"></c-spinner>
+        Loading...
+      </div>
+    <c-card-body class="px-0" *ngIf="!onLoad">
+        <table cTable id="tableDeposit" class="table table-striped table-hover table-sm"
+            style="width: 100%;  white-space: nowrap; overflow-x: auto;" [responsive]="true">
+            <thead>
+                <tr>
+                    <th scope="col">Type</th>
+                    <th scope="col">Transaction No.</th>
+                    <th scope="col">Transaction Date</th>
+                    <th scope="col">Payment Mode</th>
+                    <th scope="col">Account No.</th>
+                    <th scope="col">Approval Code</th>
+                    <th scope="col">Merchant ID</th>
+                    <th scope="col">Account Name</th>
+                    <th scope="col">Amount</th>
+                    <th scope="col">Balance</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Invoice No.</th>
+                    <th scope="col">Notes</th>
+                    <th *ngIf="!hide.includes('deposit_by')" scope="col">Deposit By</th>
+                    <th *ngIf="!hide.includes('created_by')" scope="col">Created By</th>
+                    <!-- <th *ngIf="!hide.includes('national_id_type_id')" scope="col">ID</th> -->
+                    <th *ngIf="!hide.includes('national_id_type_name')" scope="col">ID Type</th>
+                    <th *ngIf="!hide.includes('national_id')" scope="col">ID No</th>
+                    <th *ngIf="!hide.includes('relationship_with_patient')" scope="col">Relationship with Patient</th>
+                </tr>
+            </thead>
+            <tbody id="tableDeposit" *ngIf="depositHistoryList.length > 0 else no_data">
+                <tr *ngFor="let d of depositHistoryList">
+                    <td scope="col">{{d.transaction_type}}</td>
+                    <td scope="col">{{d.transaction_no}}</td>
+                    <td scope="col">{{d.transaction_date | date: 'dd-MMM-yyyy HH:mm'}}</td>
+                    <td scope="col">{{d.payment_mode}}</td>
+                    <td scope="col">{{d.account_no}}</td>
+                    <td scope="col">{{d.approval_code}}</td>
+                    <td scope="col">{{d.merchant_id}}</td>
+                    <td scope="col">{{d.account_name}}</td>
+                    <td scope="col">{{d.amount | number}}</td>
+                    <td scope="col">{{d.balance | number}}</td>
+                    <td scope="col">{{d.status}}</td>
+                    <td scope="col">{{d.invoice_no}}</td>
+                    <td scope="col">{{d.notes}}</td>
+                    <td *ngIf="!hide.includes('deposit_by')" scope="col">{{d.deposit_by}}</td>
+                    <td *ngIf="!hide.includes('created_by')" scope="col">{{d.created_by}}</td>
+                    <!-- <td *ngIf="!hide.includes('national_id_type_id')" scope="col">{{d.national_id_type_id}}</td> -->
+                    <td *ngIf="!hide.includes('national_id_type_name')" scope="col">{{d.national_id_type_name}}</td>
+                    <td *ngIf="!hide.includes('national_id_no')" scope="col">{{d.national_id_no}}</td>
+                    <td *ngIf="!hide.includes('relationship_with_patient')" scope="col">{{d.relationship_with_patient}}
+                    </td>
+                    <td scope="col" *ngIf="showNavigateButton">
+                        <ng-template contextDisposer let-context>
+                          <button cButton type="button" size="sm" color="primary" (click)="navigateToDetails(d.transaction_no)"
+                            *ngIf="context.checkAction('0421_view_detail')" >
+                            <svg cIcon class="me-2" name="cil-external-link"></svg>
+                          </button>
+                        </ng-template>
+                      </td>
+                </tr>
+            </tbody>
+        </table>
+        <ng-template #no_data>
+            <tr ngClass="text-center">
+              <td colspan="13">No Data</td>
+            </tr>
+          </ng-template>
+          <!-- <pagination *ngIf="paging.total_row > 0"
+            [boundaryLinks]="true"
+            [totalItems]="paging.total_row"
+            [(ngModel)]="current_page"
+            (pageChanged)="pageChanged($event)"
+            [itemsPerPage]="paging.rows_per_page"
+            [rotate]="false"
+            [maxSize]="paging.max_size" [disabled]="progress">
+          </pagination> -->
+    </c-card-body>
+    <c-card-footer footer>
+        <div class="text-center">
+            <!-- <ng-template contextDisposer let-context> -->
+                <button cButton color="primary" id="btn-export" type="button" size="sm"
+                [disabled]="progressExport" (click)="exportDepositIpdHistory()">
+                  <div *ngIf="!progressExport">
+                    <svg cIcon class="me-2" name="cil-file" size="sm"></svg> Export
+                  </div>
+                  <div *ngIf="progressExport">
+                    <c-spinner aria-hidden="true" size="sm" variant="grow"></c-spinner>
+                    Loading...
+                  </div>
+                </button>
+              <!-- </ng-template> -->
+        </div>
+    </c-card-footer>
+</app-card-app>

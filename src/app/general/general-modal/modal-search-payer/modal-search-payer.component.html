@@ -1,0 +1,88 @@
+<div class="modal-header">
+  <h5 class="modal-title pull-left">Search Payer</h5>
+  <button type="button" class="btn-close close pull-right" aria-label="Close" (click)="bsModalRef.hide()">
+    <span aria-hidden="true" class="visually-hidden">&times;</span>
+  </button>
+</div>
+<div class="modal-body">
+  <c-row ngPreserveWhitespaces>
+    <c-col xs="12">
+      <c-card [cBorder]="{top: {color: 'primary', width: 3}}" class="mb-4">
+        <c-card-body>
+          <c-row class="mb-3">
+            <c-col sm="2">
+              <label for="payerName" class="col-form-label">Payer Name</label>
+            </c-col>
+            <c-col sm="2">
+              <input cFormControl type="text" id="payerName" sizing="sm" name="payerName" 
+              [(ngModel)]="payerName" (ngModelChange)="onChangePayerName($event)">
+            </c-col>
+          </c-row>
+        </c-card-body>
+        <c-card-footer footer class="text-center">
+          <button cButton color="primary" id="btn-search-patient" type="button" size="sm" (click)="searchPayer()"
+              [disabled]="progress">
+              <div *ngIf="!progress">
+                <svg cIcon class="me-2" name="cil-search"></svg> Search
+              </div>
+              <div *ngIf="progress">
+                <c-spinner aria-hidden="true" size="sm" variant="grow"></c-spinner>
+                Loading...
+              </div>
+            </button>
+          <button cButton color="primary" id="btn-reset-patient" type="button" size="sm" (click)="onReset()">
+            <svg cIcon class="me-2" name="cil-reload"></svg> Reset
+          </button>
+        </c-card-footer>
+      </c-card>
+    </c-col>
+  </c-row>
+  <c-row ngPreserveWhitespaces *ngIf="search">
+    <c-col xs="12">
+      <c-card [cBorder]="{top: {color: 'primary', width: 3}}" class="mb-4">
+        <c-card-header>
+          <strong>Search Result</strong>
+        </c-card-header>
+          <c-card-body>
+            <table cTable id="tableCombinedBill" [responsive]="true">
+              <thead>
+                <tr>
+                  <th scope="col">Payer Code</th>
+                  <th scope="col">Payer Name</th>
+                  <th scope="col"></th>
+                </tr>
+              </thead>
+              <tbody id="tbodyCombinedBill">
+                <tr *ngFor="let d of data">
+                  <td>{{d.payer_code}}</td>
+                  <td>{{d.payer_name}}</td>
+                  <td>
+                    <button cButton color="primary" id="btn-reset-patient" type="button" size="sm" (click)="sendData(d)">
+                      <svg cIcon class="me-2" name="cil-check"></svg> Select
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <pagination *ngIf="paging.total_row > 0"
+              [boundaryLinks]="true"
+              [totalItems]="paging.total_row"
+              [(ngModel)]="current_page"
+              [itemsPerPage]="paging.rows_per_page"
+              (pageChanged)="pageChanged($event)"
+              [rotate]="false"
+              [maxSize]="paging.max_size" [disabled]="progress">
+            </pagination>
+        </c-card-body>
+      </c-card>
+    </c-col>
+  </c-row>
+</div>
+<div class="modal-footer d-block" >
+  <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+    <button cButton color="primary" type="button" size="sm" (click)="bsModalRef.hide()">
+      <svg cIcon class="me-2" name="cil-x"></svg> Close
+    </button>
+  </div>
+</div>
+

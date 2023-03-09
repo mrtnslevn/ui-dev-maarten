@@ -1,0 +1,166 @@
+<div class='fade show' style='text-align: center; padding-top: calc(100vh / 2); height: 100vh' *ngIf="loadPage">
+    <c-spinner aria-hidden="true" size="sm" variant="grow"></c-spinner>
+    Loading...
+</div>
+
+<div *ngIf="!loadPage">
+    <c-row ngPreserveWhitespaces>
+      <c-col xs="12">
+        <app-card-app title="Patient Information">
+            <c-card-body>
+                <c-row class="mb-2">
+                    <label cLabel class="col-sm-2 col-form-label" for="mrNo">
+                        MR No
+                    </label>
+                    <c-col sm="2">
+                        <input cFormControl type="text" sizing="sm" id="mrNo" readonly value="{{getAdmissionDetailResponse.mr_no}}"/>
+                    </c-col>
+                    <label cLabel class="col-sm-2 col-form-label" for="admissionDate">
+                        Admission Date
+                    </label>
+                    <c-col sm="2">
+                        <input cFormControl type="text" sizing="sm" id="admissionDate" readonly value="{{admissionDate}}"/>
+                    </c-col>
+                    <label cLabel class="col-sm-2 col-form-label" for="name">
+                        Name
+                    </label>
+                    <c-col sm="2">
+                        <input cFormControl type="text" sizing="sm" id="name" readonly value="{{getAdmissionDetailResponse.patient_name}}"/>
+                    </c-col>
+                </c-row>
+                <c-row class="mb-2">
+                    <label cLabel class="col-sm-2 col-form-label" for="admissionNo">
+                        Admission No.
+                    </label>
+                    <c-col sm="2">
+                        <input cFormControl type="text" sizing="sm" id="admissionNo" readonly value="{{getAdmissionDetailResponse.admission_no}}"/>
+                    </c-col>
+                    <label cLabel class="col-sm-2 col-form-label" for="payer">
+                        Payer
+                    </label>
+                    <c-col sm="2">
+                        <input cFormControl type="text" sizing="sm" id="payer" readonly value="{{getAdmissionDetailResponse.payer_name}}"/>
+                    </c-col>
+                    <label cLabel class="col-sm-2 col-form-label" for="dob">
+                        Birth Date
+                    </label>
+                    <c-col sm="2">
+                        <input cFormControl type="text" sizing="sm" id="dob" readonly value="{{dob}}"/>
+                    </c-col>
+                </c-row>
+                <c-row class="mb-2">
+                    <c-col sm="4"></c-col>
+                    <label cLabel class="col-sm-2 col-form-label" for="doctor">
+                        Primary Doctor
+                    </label>
+                    <c-col sm="2">
+                        <input cFormControl type="text" sizing="sm" id="doctor" readonly value="{{getAdmissionDetailResponse.primary_doctor}}"/>
+                    </c-col>
+                    <label cLabel class="col-sm-2 col-form-label" for="age">
+                        Age
+                    </label>
+                    <c-col sm="2">
+                        <input cFormControl type="text" sizing="sm" id="age" readonly value="{{getAdmissionDetailResponse.age}}"/>
+                    </c-col>
+                </c-row>
+                <c-row class="mb-2">
+                    <c-col sm="4"></c-col>
+                    <label cLabel class="col-sm-2 col-form-label" for="bed">
+                        Bed
+                    </label>
+                    <c-col sm="2">
+                        <input cFormControl type="text" sizing="sm" id="bed" readonly value="{{getAdmissionDetailResponse.bed}}"/>
+                    </c-col>
+                    <label cLabel class="col-sm-2 col-form-label" for="sex">
+                        Sex
+                    </label>
+                    <c-col sm="2">
+                        <input cFormControl type="text" sizing="sm" id="sex" readonly value="{{getAdmissionDetailResponse.sex}}"/>
+                    </c-col>
+                </c-row>
+            </c-card-body>
+        </app-card-app>
+      </c-col>
+    </c-row>
+
+    <c-row ngPreserveWhitespaces>
+        <c-col xs="12">
+            <app-card-app title="Final Discharge">
+                <c-card-body>
+                    <c-row class="mb-2">
+                        <label cLabel class="col-sm-2 col-form-label" for="dischargeType">
+                            Discharge Type
+                        </label>
+                        <c-col sm="2">
+                            <input cFormControl type="text" sizing="sm" id="dischargeType" readonly value="{{getAdmissionDetailResponse.discharge_type_name}}"/>
+                        </c-col>
+                        <label cLabel class="col-sm-2 col-form-label" for="dischargeDate">
+                            Discharge Date
+                        </label>
+                        <c-col sm="2">
+                            <input cFormControl type="text" sizing="sm" id="dischargeDate" readonly value="{{dischargeDate}}"/>
+                        </c-col>
+                        <label cLabel class="col-sm-2 col-form-label" for="triageType">
+                            Triage Type
+                        </label>
+                        <c-col sm="2">
+                            <input cFormControl type="text" sizing="sm" id="triageType" readonly value="{{getAdmissionDetailResponse.discharge_type_name}}"/>
+                        </c-col>
+                    </c-row>
+                    <c-row class="mb-2">
+                        <label cLabel class="col-sm-2 col-form-label" for="condition">
+                            Condition
+                        </label>
+                        <c-col sm="2">
+                            <input cFormControl type="text" sizing="sm" id="condition" readonly value="{{getAdmissionDetailResponse.discharge_condition_name}}"/>
+                        </c-col>
+                        <label cLabel class="col-sm-2 col-form-label" for="createUser">
+                            Create User
+                        </label>
+                        <c-col sm="2">
+                            <input cFormControl type="text" sizing="sm" id="createUser" readonly value="{{getAdmissionDetailResponse.discharge_user_name}}"/>
+                        </c-col>
+                        <label cLabel class="col-sm-2 col-form-label" for="planType">
+                            Plan Type
+                        </label>
+                        <c-col sm="2">
+                            <input cFormControl type="text" sizing="sm" id="planType" readonly value="{{getAdmissionDetailResponse.discharge_plan_type_name}}"/>
+                        </c-col>
+                    </c-row>
+                    <c-row class="mb-2">
+                        <label cLabel class="col-sm-2 col-form-label" for="bed">
+                            Notes
+                        </label>
+                        <c-col sm="2">
+                            <input cFormControl type="text" sizing="sm" id="bed" readonly value="{{getAdmissionDetailResponse.bed}}"/>
+                        </c-col>
+                        <label cLabel class="col-sm-2 col-form-label" for="itemToReturn">
+                            Item to Return Exist
+                        </label>
+                        <c-col sm="2">
+                            <input cFormControl type="text" sizing="sm" id="itemToReturn" readonly value="{{getAdmissionDetailResponse.is_item_to_return_exist ? 'Yes' : 'No'}}"/>
+                        </c-col>
+                        <label cLabel class="col-sm-2 col-form-label" for="dischargePrescription">
+                            Discharge Prescription Exist
+                        </label>
+                        <c-col sm="2">
+                            <input cFormControl type="text" sizing="sm" id="dischargePrescription" readonly value="{{getAdmissionDetailResponse.is_discharge_prescription_exist ? 'Yes' : 'No'}}"/>
+                        </c-col>
+                    </c-row>
+                </c-card-body>
+                <c-card-footer footer class="text-center">
+                    <a [routerLink]="['/discharge/discharge-list']" [state]="{ fromDetail: true }" id="btnCancel"
+                        class="btn btn-primary btn-sm">
+                        <svg cIcon name="cilArrowLeft" size="sm"></svg>
+                        Back
+                    </a>
+                    <a [routerLink]="['/payment/payment']" [state]="{ admissionNo: this.admissionNo }" id="btnCancel"
+                        class="btn btn-primary btn-sm">
+                        <svg cIcon name="cilMoney" size="sm"></svg>
+                        Payment
+                    </a>
+                  </c-card-footer>
+            </app-card-app>
+        </c-col>
+    </c-row>
+</div>

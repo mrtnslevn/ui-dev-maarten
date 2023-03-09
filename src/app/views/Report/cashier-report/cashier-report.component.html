@@ -1,0 +1,180 @@
+<div class='fade show' style='text-align: center; padding-top: calc(100vh / 2); height: 100vh' *ngIf="loadPage">
+  <c-spinner aria-hidden="true" size="sm" variant="grow"></c-spinner>
+  Loading...
+</div>
+
+<div [hidden]="loadPage" #appReport>
+  <c-row ngPreserveWhitespaces>
+    <c-container class="mb-3">
+      <c-row class="mb-4">
+        <c-col><label cLabel class="col-form-label" for="from_date">
+          From Date
+        </label>
+          <input cFormControl sizing="sm" id="from_date" type="date" name="reportCashierForm" />
+        </c-col>
+        <c-col><label cLabel class="col-form-label" for="from_date">
+          To Date
+        </label>
+        <input cFormControl sizing="sm" id="to_date" type="date" name="reportCashierForm" />
+        </c-col>
+        <c-col><label cLabel class="col-form-label" for="name">
+          Name
+        </label>
+          <input cFormControl type="text" sizing="sm" id="name" name="name" placeholder="Input name here..."/>
+        </c-col>
+      </c-row>
+      <c-row class="justify-content-center">
+        <c-col xs="2">
+          <button cButton color="primary" id="btn-search-bill" type="button" size="sm">
+            <svg cIcon class="me-2" name="cil-search"></svg> Search
+          </button>
+        </c-col>
+      </c-row>
+    </c-container>
+    <c-row class="p-2">
+      <!--summary-->
+      <c-nav variant="tabs" class="justify-content-center" >
+          <a [active]="true" [cTabContent]="tabContent"  [routerLink] [tabPaneIdx]="0" cNavLink>
+            Summary
+          </a>
+          <a  [cTabContent]="tabContent"  [routerLink] [tabPaneIdx]="1" cNavLink>
+            Bill
+          </a>
+          <a [cTabContent]="tabContent" [routerLink] [tabPaneIdx]="2" cNavLink>
+            Payment
+          </a>
+      </c-nav>
+      <c-tab-content #tabContent="cTabContent">
+        <c-tab-pane class="p-3 active">
+          <form>
+            <app-card-app title="Summary" id="Summary" [show]="showSummaryCard">
+              <c-card-body>
+                <form>
+                  <table cTable id="Summary1" class="table table-striped table-hover table-sm" style="width: 100%;  white-space: nowrap; overflow-x: auto;" [responsive]="true">
+                    <thead>
+                    <tr>
+                      <th scope="col">
+                        Description
+                      </th>
+                      <th scope="col">
+                        Count
+                      </th>
+                      <th scope="col">
+                        Amount
+                      </th>
+                    </tr>
+                    </thead>
+                    <tbody *ngFor="let row of data">
+                    <tr>
+                      <td colspan="3" (click)="row.isExpand = !row.isExpand"><strong class="ml-2">{{row.headname}}</strong></td>
+                    </tr>
+                    <ng-container *ngIf="row.isExpand">
+                      <tr *ngFor="let row2 of row.details">
+                        <td><span></span>{{row2.desc}}</td>
+                        <td>{{row2.count}}</td>
+                        <td>{{row2.amount}}</td>
+                      </tr>
+                    </ng-container>
+                    </tbody>
+                  </table>
+                </form>
+              </c-card-body>
+            </app-card-app>
+          </form>
+        </c-tab-pane>
+        <c-tab-pane class="p-3">
+          <form>
+            <app-card-app title="Billing" id="Billing">
+              <c-card-body>
+                <table cTable id="Billing" class="table table-striped table-hover table-sm" style="width: 100%;  white-space: nowrap; overflow-x: auto;" [responsive]="true">
+                  <thead>
+                  <tr>
+                    <th>Admission Type</th>
+                    <th>Invoice No</th>
+                    <th>Invoice Date</th>
+                    <th>Cashier</th>
+                    <th>Cancel Date</th>
+                    <th>MR No.</th>
+                    <th>Name</th>
+                    <th>Patient Type</th>
+                    <th>Payer</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  <tr>
+                    <td>Outpatient</td>
+                    <td>CIV1234y5756</td>
+                    <td>30-Jan-2023 09:31</td>
+                    <td>Maria Andreatea Ottemusu</td>
+                    <td></td>
+                    <td>00-26-04-34</td>
+                    <td>ANA MARIA PINGKA P OTTEMUSU</td>
+                    <td>Private</td>
+                    <td>LIPPO GENERAL INSURANCE PT</td>
+                  </tr>
+                  </tbody>
+                </table>
+              </c-card-body>
+            </app-card-app>
+          </form>
+        </c-tab-pane>
+        <c-tab-pane class="p-3">
+          <form>
+            <app-card-app title="Payment" id="Payment">
+              <c-card-body>
+                <table cTable id="Payment" class="table table-striped table-hover table-sm" style="width: 100%;  white-space: nowrap; overflow-x: auto;" [responsive]="true">
+                  <thead>
+                  <tr>
+                    <th>Type</th>
+                    <th>Invoice No</th>
+                    <th>Invoice Date</th>
+                    <th>Transaction No</th>
+                    <th>Settlement Date</th>
+                    <th>Cashier</th>
+                    <th>Cancel Date</th>
+                    <th>Cancel Cashier</th>
+                    <th>MR No.</th>
+                    <th>Name</th>
+                    <th>Net Amount</th>
+                  </tr>
+                  </thead>
+                  <tbody *ngFor="let payments of dataPayment">
+                  <tr>
+                    <td colspan="11" (click)="payments.isExpand = !payments.isExpand"><strong class="ml-2">User: {{payments.user}}</strong></td>
+                  </tr>
+                  <ng-container *ngIf="payments.isExpand">
+                    <ng-container *ngFor="let payments2 of payments.payment">
+                      <tr >
+                        <td style="padding-left: 13px" colspan="11" (click)="payments2.isExpand=!payments2.isExpand"><strong>Method: {{payments2.method}}</strong></td>
+                      </tr>
+                      <ng-container *ngIf="payments2.isExpand">
+                        <tr *ngFor="let detail of payments2.detail">
+                          <td style="padding-left: 15px">{{detail.type}}</td>
+                          <td>{{detail.invoice_no}}</td>
+                          <td>{{detail.invoice_date}}</td>
+                          <td>{{detail.transaction_no}}</td>
+                          <td>{{detail.settlement_date}}</td>
+                          <td>{{detail.cashier}}</td>
+                          <td>{{detail.cancel_date}}</td>
+                          <td>{{detail.cancel_cashier}}</td>
+                          <td>{{detail.MR_no}}</td>
+                          <td>{{detail.name}}</td>
+                          <td>{{detail.net_amount}}</td>
+                        </tr>
+                      </ng-container>
+                    </ng-container>
+                  </ng-container>
+                  </tbody>
+                </table>
+              </c-card-body>
+            </app-card-app>
+          </form>
+        </c-tab-pane>
+      </c-tab-content>
+
+      <!--summary-->
+
+    </c-row>
+  </c-row>
+
+</div>

@@ -1,0 +1,105 @@
+<app-card-patient-info-deposit></app-card-patient-info-deposit>
+<app-card-deposit-ipd-history title="Deposit History"></app-card-deposit-ipd-history>
+<app-card-app title='Refund Deposit'>
+    <c-card-body>
+        <c-row class="mb-3">
+            <c-col xs="6">
+                <c-card-header style="font-size: 1rem;" class="p-3">Refund Deposit</c-card-header>
+                <c-card>
+                    <c-card-body>
+                        <div class="row mb-3">
+                            <label for="refundId" class="col-sm-4 col-form-label" cLabel>Refund ID</label>
+                            <div class="col-sm-6">
+                                <input type="text" readonly class="form-control form-control-sm" id="refundId">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <label for="bookingId" class="col-sm-4 col-form-label" cLabel>Booking ID</label>
+                            <div class="col-sm-6">
+                                <input type="text" readonly class="form-control form-control-sm" id="bookingId">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <label for="openingBalance" class="col-sm-4 col-form-label" cLabel>Opening Balance</label>
+                            <div class="col-sm-6">
+                                <input type="text" readonly class="form-control form-control-sm" id="openingBalance">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <label for="refundAmount" class="col-sm-4 col-form-label" cLabel>Refund Amount</label>
+                            <div class="col-sm-6">
+                                <input type="text" readonly class="form-control form-control-sm" id="refundAmount">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <label for="closingBalance" class="col-sm-4 col-form-label" cLabel>Closing Balance</label>
+                            <div class="col-sm-6">
+                                <input type="text" readonly class="form-control form-control-sm" id="closingBalance">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <label for="paymentMode" class="col-sm-4 col-form-label" cLabel>Payment Mode</label>
+                            <div class="col-sm-6">
+                                <input type="text" readonly class="form-control form-control-sm" id="paymentMode">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <label for="net" class="col-sm-4 col-form-label" cLabel>Net</label>
+                            <div class="col-sm-6">
+                                <input type="text" readonly class="form-control form-control-sm" id="net">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <label for="reason" class="col-sm-4 col-form-label" cLabel>Reason</label>
+                            <div class="col-sm-6">
+                                <input type="text" readonly class="form-control form-control-sm" id="reason">
+                            </div>
+                        </div>
+   
+                    </c-card-body>
+                </c-card>
+            </c-col>
+            <c-col xs="6">
+                <c-card-header style="font-size: 1rem;" class="p-3">Refund Prepaid</c-card-header>
+                <c-card>
+                    <c-card-body>
+                        <div class="row mb-3">
+                            <label for="cardHolderName" class="col-sm-4 col-form-label" cLabel>Card Holder Name</label>
+                            <div class="col-sm-6">
+                                <input type="text" readonly class="form-control form-control-sm" id="cardHolderName">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <label for="cardNumber" class="col-sm-4 col-form-label" cLabel>Card Number</label>
+                            <div class="col-sm-6">
+                                <input type="text" readonly class="form-control form-control-sm" id="cardNumber">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <label for="referenceNo" class="col-sm-4 col-form-label" cLabel>Reference No</label>
+                            <div class="col-sm-6">
+                                <input type="text" readonly class="form-control form-control-sm" id="referenceNo">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <label for="approvalCode" class="col-sm-4 col-form-label" cLabel>Approval Code</label>
+                            <div class="col-sm-6">
+                                <input type="text" readonly class="form-control form-control-sm" id="approvalCode">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <label for="merchantId" class="col-sm-4 col-form-label" cLabel>Merchant Id</label>
+                            <div class="col-sm-6">
+                                <input type="text" readonly class="form-control form-control-sm" id="merchantId">
+                            </div>
+                        </div>
+                    </c-card-body>
+                </c-card>
+            </c-col>
+        </c-row>
+    </c-card-body>
+    <c-card-footer>
+    </c-card-footer>
+</app-card-app>
+<app-card-document [showUploadForm]="false"></app-card-document>
+<app-card-refund-deposit-approval-detail></app-card-refund-deposit-approval-detail>

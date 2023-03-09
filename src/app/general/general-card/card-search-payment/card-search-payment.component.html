@@ -1,0 +1,63 @@
+<c-row ngPreserveWhitespaces>
+    <c-col xs="12">
+        <form cForm>
+            <app-card-app title="Search Result">
+                <c-card-body>
+                    <table cTable id="tableSearchPatientInvoice" [responsive]="true">
+                        <thead>
+                            <tr>
+                                <th scope="col">Invoice Type</th>
+                                <th scope="col">Settlement No</th>
+                                <th scope="col">Settlement Date</th>
+                                <th scope="col">Invoice No</th>
+                                <th scope="col">Invoice Date</th>
+                                <th scope="col">Payment Method</th>
+                                <th scope="col">Account No</th>
+                                <th scope="col">Account Name</th>
+                                <th scope="col">Net</th>
+                                <th scope="col">Description</th>
+                                <th scope="col">Name</th>
+                                <th scope="col">MR No</th>
+                                <th scope="col">Status</th>
+                                <th scope="col">Create User</th>
+                                <th scope="col">Cancel Date</th>
+                                <th scope="col">Cancel User</th>
+                                <th scope="col">Cancel Notes</th>
+                                <th scope="col"></th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbodySearchPatientInvoice">
+                            <tr *ngFor="let p of listPayment">
+                                <td>{{p.invoice_type}}</td>
+                                <td>{{p.settlement_no}}</td>
+                                <td>{{p.settlement_date}}</td>
+                                <td>{{p.invoice_no}}</td>
+                                <td>{{p.invoice_date}}</td>
+                                <td>{{p.invoice_date}}</td>
+                                <td>{{p.account_no}}</td>
+                                <td>{{p.account_no}}</td>
+                                <td>{{p.net}}</td>
+                                <td>-</td>
+                                <td>{{p.patient_name}}</td>
+                                <td>{{p.mr_no}}</td>
+                                <td>{{p.settlement_status}}</td>
+                                <td>{{p.cancelled_by}}</td>
+                                <td>{{p.cancelled_date}}</td>
+                                <td>{{p.cancelled_by}}</td>
+                                <td>{{p.cancel_notes}}</td>
+                                <td><button type="button" size="sm" (click)="navigateToDetails()">
+                                        <svg cIcon class="me-2" name="cil-external-link"></svg>
+                                    </button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </c-card-body>
+                <c-card-footer footer class="text-center">
+                    <button cButton color="primary" id="btn-reset-patient" type="button" size="sm">
+                        <svg cIcon class="me-2" name="cilFile"></svg> Export
+                    </button>
+                </c-card-footer>
+            </app-card-app>
+        </form>
+    </c-col>
+</c-row>

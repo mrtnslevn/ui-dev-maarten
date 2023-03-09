@@ -1,0 +1,799 @@
+<div #appBookingPayment>
+    <c-row ngPreserveWhitespaces >
+        <c-col xs="12">
+                <form [formGroup]="addBookingForm">
+                    <app-card-app title="Add Booking" id="addBooking" [show]="false">
+                            <c-card-body>
+                                <c-row class="mb-3">
+                                    <label cLabel class="col-form-label" for="id-no">
+                                        <strong>Select Patient</strong>
+                                    </label>
+                                </c-row>
+                                <app-select-patient (getPatientEvent)="getPatientEvent($event)"></app-select-patient>
+                                <!-- <c-row class="mb-3">
+                                    <c-col sm="2">
+                                    <label cLabel class="col-form-label" for="id-no">
+                                        <strong>Input Booking</strong>
+                                    </label>
+                                    </c-col>
+                                    <c-col sm="2">
+                                    <input cFormCheckInput id="manually-radioStack" name="radioStack" type= "radio" value="manual" (change)="changeInputBooking($event)" checked/>
+                                    <label cFormCheckLabel for="manually-radioStack">Manually</label>
+                                    </c-col>
+                                    <c-col sm="3">
+                                    <input cFormCheckInput id="automatic-radioStack" name="radioStack" type="radio" value="automatic" (change)="changeInputBooking($event)"/>
+                                    <label cFormCheckLabel for="automatic-radioStack">Add From Medical Order</label>
+                                    </c-col>
+                                    <c-col sm="3">
+                                    <button cButton color="primary" id="btn-new-booking" type="button" size="sm" (click)="onClickNewBooking()">
+                                        <div *ngIf="!loadNewBooking">
+                                            <svg cIcon name="cil-search"></svg> New Booking              
+                                          </div>
+                                          <div *ngIf="loadNewBooking">
+                                            <c-spinner aria-hidden="true" size="sm" variant="grow"></c-spinner>
+                                            Loading...
+                                          </div>
+                                    </button>
+                                    </c-col>
+                                </c-row> -->
+                                <div>
+                                    <c-row class="mb-3">
+                                        <label cLabel class="col-form-label" for="id-no">
+                                            <strong>Select Service and Package</strong>
+                                        </label>    
+                                    </c-row>
+                                    <c-row class="mb-3">
+                                        <c-col sm="2">
+                                            <label cLabel class="col-form-label" for="service">
+                                            Service
+                                            </label>
+                                        </c-col>
+                                        <c-col sm="3">
+                                            <select class="form-select form-select-sm" id="service"
+                                            formControlName="service"
+                                            [ngClass]="isFormAddBookingValid('service')"
+                                            (ngModelChange)="onCheckPatient($event)"
+                                            >
+                                                <option selected="" disabled>-- Select Service --</option> 
+                                                <option *ngFor="let list of listService" [ngValue]="list">{{list.value}}</option>
+                                            </select>
+                                            <div *ngIf="isFormAddBookingError('service')" class="text-danger">
+                                                <div *ngFor="let e of getErrorsAddBooking('service') | keyvalue">
+                                                  {{ getErrorMessageAddBooking('service', e.key) }}
+                                                </div>
+                                            </div>
+                                        </c-col>
+                                        <c-col sm="2">
+                                            <label cLabel class="col-form-label" for="psi">
+                                            Package/Sales Item
+                                            </label>
+                                        </c-col>
+                                        <c-col sm="3">
+                                            <c-input-group>
+                                                <input aria-describedby="btn-search-mr" cFormControl sizing="sm" name="psi" id="psi"
+                                                readonly value="{{package.sales_item_name}}"/>
+                                                <button cButton color="primary" id="btn-search-mr" type="button" size="sm" disabled="{{readPackage}}"
+                                                (click)="onClickSearchPackage()">
+                                                <svg cIcon name="cil-search"></svg>
+                                                </button>
+                                            </c-input-group>
+                                        </c-col>
+                                    </c-row>
+                                    <c-row class="mb-3">
+                                        <c-col sm="2">
+                                            <label cLabel class="col-form-label" for="covidTestingType">
+                                            Covid Testing Type
+                                            </label>
+                                        </c-col>
+                                        <c-col sm="3">
+                                            <fieldset [disabled]="readCovidTestingType">
+                                                <select 
+                                                class="form-select form-select-sm" id="covidTestingType"
+                                                formControlName="covidTestingType"
+                                                [ngClass]="isFormAddBookingValid('covidTestingType')"
+                                                (ngModelChange)="onChangeCovidTestingType($event)">
+                                                    <option selected="" disabled>-- Select Testing Type --</option> 
+                                                    <option *ngFor="let list of listCovidTestingType" [ngValue]="list">{{list.name}}</option>
+                                                </select>
+                                                <div *ngIf="isFormAddBookingError('covidTestingType')" class="text-danger">
+                                                    <div *ngFor="let e of getErrorsAddBooking('covidTestingType') | keyvalue">
+                                                      {{ getErrorMessageAddBooking('covidTestingType', e.key) }}
+                                                    </div>
+                                                </div>
+                                                <c-alert [(visible)]="showWarningCovidTestingType"
+                                                    [dismissible]="true"
+                                                    color="warning"
+                                                    fade
+                                                    *ngIf="showWarningCovidTestingType">
+                                                    Please select Covid Package First
+                                                </c-alert>
+                                            </fieldset>
+                                        </c-col>
+                                        <c-col sm="5">
+                                        </c-col>
+                                    </c-row>
+                                    <c-row class="mb-3">
+                                        <label cLabel class="col-form-label" for="id-no">
+                                            <strong>Select Doctor and Detail Appointment</strong>
+                                        </label>    
+                                    </c-row>
+                                    <c-row class="mb-3">
+                                        <c-col sm="2">
+                                            <label cLabel class="col-form-label" for="specialization">
+                                            Specialization
+                                            </label>
+                                        </c-col>
+                                        <c-col sm="3">
+                                            <fieldset [disabled]="readSpecialization">
+                                                <ng-select
+                                                id="specialization"
+                                                formControlName="specialization"
+                                                [ngClass]="isFormAddBookingValid('specialization')"
+                                                (ngModelChange)="onChangeSpecialization($event)">
+                                                    <ng-option selected>-- Select Specialization --</ng-option>
+                                                    <ng-option *ngFor="let list of listSpecialization" [value]="list">{{list.speciality_name}}</ng-option>
+                                                </ng-select>
+                                            </fieldset>
+                                        </c-col>
+                                        <c-col sm="2">
+                                            <label cLabel class="col-form-label" for="doctor">
+                                            Doctor Name
+                                            </label>
+                                        </c-col>
+                                        <c-col sm="3" [hidden]="progressDoctor">
+                                            <fieldset [disabled]="readDoctorName">
+                                                <ng-select
+                                                id="doctor"
+                                                formControlName="doctor"
+                                                [ngClass]="isFormAddBookingValid('doctor')"
+                                                (ngModelChange)="onChangeDoctor($event)">
+                                                    <ng-option selected>-- Select Doctor --</ng-option>
+                                                    <ng-option *ngFor="let list of listDoctor" [value]="list">{{list.name}}</ng-option>
+                                                </ng-select>
+                                                <div *ngIf="isFormAddBookingError('doctor')" class="text-danger">
+                                                    <div *ngFor="let e of getErrorsAddBooking('doctor') | keyvalue">
+                                                      {{ getErrorMessageAddBooking('doctor', e.key) }}
+                                                    </div>
+                                                </div>
+                                            </fieldset>
+                                        </c-col>
+                                        <c-col sm="3" *ngIf="progressDoctor">
+                                            <div>
+                                                <c-spinner aria-hidden="true" size="sm" variant="grow"></c-spinner> Loading...
+                                            </div>
+                                        </c-col>
+                                    </c-row>
+                                    <c-row class="mb-3" [hidden]="isCovidSelected">
+                                        <c-col sm="2">
+                                            <label cLabel class="col-form-label" for="appointmentDate">
+                                            Appointment Date
+                                            </label>
+                                        </c-col>
+                                        <c-col sm="3" [hidden]="progressTimeSlot">
+                                            <fieldset [disabled]="disabledAppointmentDate">
+                                                <!-- <input cFormControl id="appointmentDate" type="text" sizing="sm" *ngIf="selectedService.key == ''"
+                                                placeholder="mm/dd/yyyy" formControlName="appointmentDate"
+                                                [ngClass]="isFormAddBookingValid('appointmentDate')"
+                                                (ngModelChange)="onChangeAppointmentDate($event)"
+                                                [isDisabled]="disabledAppointmentDate" autocomplete="off"
+                                                bsDatepicker [bsConfig]="{ showWeekNumbers: false }"> -->
+
+                                                <!-- MCU -->
+                                                <input cFormControl id="appointmentDate" type="text" sizing="sm" *ngIf="selectedService.key == '1' || selectedService.key == ''"
+                                                placeholder="mm/dd/yyyy" formControlName="appointmentDate"
+                                                [ngClass]="isFormAddBookingValid('appointmentDate')"
+                                                (ngModelChange)="onChangeAppointmentDate($event)"
+                                                [isDisabled]="disabledAppointmentDate" [minDate]="date" autocomplete="off"
+                                                bsDatepicker [daysDisabled]="[0]" [datesDisabled]="disabledMcuDate" [bsConfig]="{ showWeekNumbers: false }">
+
+                                                <!-- OPD -->
+                                                <input cFormControl id="appointmentDate" type="text" sizing="sm" *ngIf="selectedService.key == '3'"
+                                                placeholder="mm/dd/yyyy" formControlName="appointmentDate"
+                                                [ngClass]="isFormAddBookingValid('appointmentDate')"
+                                                (ngModelChange)="onChangeAppointmentDate($event)" autocomplete="off"
+                                                bsDatepicker [datesEnabled]="enabledAppointmentDates" [bsConfig]="{ showWeekNumbers: false }">
+                                                
+                                                <div *ngIf="isFormAddBookingError('appointmentDate')" class="text-danger">
+                                                    <div *ngFor="let e of getErrorsAddBooking('appointmentDate') | keyvalue">
+                                                      {{ getErrorMessageAddBooking('appointmentDate', e.key) }}
+                                                    </div>
+                                                </div>
+                                                <c-alert [(visible)]="showWarningAppointmentDate"
+                                                    [dismissible]="true"
+                                                    color="warning"
+                                                    fade
+                                                    *ngIf="showWarningAppointmentDate">
+                                                    Please select Doctor First
+                                                </c-alert>
+                                            </fieldset>
+                                        </c-col>
+                                        <c-col sm="2" [hidden]="progressTimeSlot">
+                                            <button cButton color="primary" id="btn-search-mr" type="button" size="sm" disabled="{{disabledViewSchedule}}" (click)="onClickViewSchedule()">
+                                            View Schedule
+                                            </button>
+                                        </c-col>
+                                        <c-col sm="5" *ngIf="progressTimeSlot">
+                                            <div>
+                                                <c-spinner aria-hidden="true" size="sm" variant="grow"></c-spinner> Loading...
+                                            </div>
+                                        </c-col>
+                                        <c-col sm="3"></c-col>
+                                    </c-row>
+                                    <c-row class="mb-3"[hidden]="isCovidSelected">
+                                        <c-col sm="2">
+                                            <label cLabel class="col-form-label" for="appointmentTime">
+                                            Appointment Time
+                                            </label>
+                                        </c-col>
+                                        <c-col sm="3">
+                                            <fieldset [disabled]="readAppointmentTime">
+                                                <select
+                                                class="form-select form-select-sm" id="appointmentTime" 
+                                                formControlName="appointmentTime"
+                                                [ngClass]="isFormAddBookingValid('appointmentTime')"
+                                                (ngModelChange)="onChangeAppointmentTime($event)">
+                                                    <option selected="">-- Select Time --</option>
+                                                    <option *ngFor="let list of listAppointmentTime" [ngValue]="list">{{list.from_time}} - {{list.to_time}}</option>
+                                                </select>
+                                                <div *ngIf="isFormAddBookingError('appointmentTime')" class="text-danger">
+                                                    <div *ngFor="let e of getErrorsAddBooking('appointmentTime') | keyvalue">
+                                                      {{ getErrorMessageAddBooking('appointmentTime', e.key) }}
+                                                    </div>
+                                                </div>
+                                                <c-alert [(visible)]="showWarningAppointmentTime"
+                                                    [dismissible]="true"
+                                                    color="warning"
+                                                    fade
+                                                    *ngIf="showWarningAppointmentTime">
+                                                    Please select Date First
+                                                </c-alert>
+                                            </fieldset>
+                                        </c-col>
+                                        <c-col sm="5"></c-col>
+                                    </c-row>
+                                    <c-row class="mb-3" *ngIf="isOpdSelected">
+                                        <c-col sm="2">
+                                            <label cLabel class="col-form-label" for="appointmentTimeSlot">
+                                            Appointment Time Slot
+                                            </label>
+                                        </c-col>
+                                        <c-col sm="3">
+                                            <fieldset [disabled]="disabledAppointmentTimeSlot">
+                                                <select class="form-select form-select-sm"
+                                                 id="appointmentTimeSlot" 
+                                                 formControlName="appointmentTimeSlot"
+                                                 [ngClass]="isFormAddBookingValid('appointmentTimeSlot')"
+                                                 (ngModelChange)="onChangeAppointmentTimeSlot($event)">
+                                                    <option selected="">-- Select Time Slot--</option>
+                                                    <option *ngFor="let list of timeSlotList" [ngValue]="list">{{list.schedule_from_time}} - {{list.schedule_to_time}}</option>
+                                                </select>
+                                                <div *ngIf="isFormAddBookingError('appointmentTimeSlot')" class="text-danger">
+                                                    <div *ngFor="let e of getErrorsAddBooking('appointmentTimeSlot') | keyvalue">
+                                                      {{ getErrorMessageAddBooking('appointmentTimeSlot', e.key) }}
+                                                    </div>
+                                                </div>
+                                            </fieldset>
+                                        </c-col>
+                                        <c-col sm="5"></c-col>
+                                    </c-row>
+                                    <c-row class="mb-3" *ngIf="isCovidSelected">
+                                        <c-col sm="2">
+                                            <label cLabel class="col-form-label" for="appointmentTimeCovidTesting">
+                                            Appointment Time Covid Testing
+                                            </label>
+                                        </c-col>
+                                        <c-col sm="3" [hidden]="progressTimeSlotCovidTesting">
+                                            <fieldset [disabled]="disabledAppointmentTimeCovid">
+                                                <select class="form-select form-select-sm" id="appointmentTimeCovidTesting"
+                                                 (ngModelChange)="onChangeCovidTestingSchedule($event)"
+                                                 formControlName="appointmentTimeCovidTesting"
+                                                 [ngClass]="isFormAddBookingValid('appointmentTimeCovidTesting')">
+                                                    <option selected="">-- Select Time --</option>
+                                                    <option *ngFor="let list of listCovidTestingSchedule" [ngValue]="list">{{list.day_name}}, {{list.checkup_date}} {{list.from_time}} - {{list.to_time}}</option>
+                                                </select>
+                                                <div *ngIf="isFormAddBookingError('appointmentTimeCovidTesting')" class="text-danger">
+                                                    <div *ngFor="let e of getErrorsAddBooking('appointmentTimeCovidTesting') | keyvalue">
+                                                      {{ getErrorMessageAddBooking('appointmentTimeCovidTesting', e.key) }}
+                                                    </div>
+                                                </div>
+                                            </fieldset>
+                                        </c-col>
+                                        <c-col sm="3" *ngIf="progressTimeSlotCovidTesting">
+                                            <div>
+                                                <c-spinner aria-hidden="true" size="sm" variant="grow"></c-spinner> Loading...
+                                            </div>
+                                        </c-col>
+                                        <c-col sm="5"></c-col>
+                                    </c-row>
+                                </div>
+                                <!-- <c-row class="mb-3" [hidden]="!showTableMedicalOrder">
+                                    <app-table-medical-order [status]="'booking'" [dataMedicalOrder]="dataMedicalOrder" (dataOutput)="getMOEvent($event)"></app-table-medical-order>
+                                </c-row> -->
+                            </c-card-body>
+                            <c-card-footer class="text-center">
+                                <button cButton color="primary" id="btn-add-booking"
+                                 type="button" size="sm" (click)="onAddData()" [disabled]="disabledAddBooking" >
+                                    <div *ngIf="!loadingAddButton">
+                                        Add
+                                    </div>
+                                    <div *ngIf="loadingAddButton">
+                                        <c-spinner aria-hidden="true" size="sm" variant="grow"></c-spinner>
+                                        Loading...
+                                    </div>
+                                </button>
+                            </c-card-footer>
+                    </app-card-app>
+                </form>
+        </c-col>
+    </c-row>
+
+    <c-row ngPreserveWhitespaces>
+    <c-col xs="12">
+        <form cForm>
+        <app-card-app title="Booking Information" id="bookingInformation" [show]="showCardBookingInformation">
+            <c-card-body>
+            <table cTable id="tableInformation" [responsive]="true">
+                <thead>
+                <tr>
+                    <th scope="col">Appointment Date</th>
+                    <th scope="col">Appointment Time</th>
+                    <th scope="col">Doctor</th>
+                    <th scope="col">Phone No.</th>
+                    <th scope="col">DOB</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Patient Name</th>
+                    <th scope="col">ID No.</th>
+                    <th scope="col">MR No.</th>
+                    <th scope="col">Package/Sales Item</th>
+                    <th scope="col">Service</th>
+                    <th scope="col">Covid Testing Type</th>
+                    <th scope="col">Price</th>
+                    <th scope="col">Booking ID</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr *ngFor="let bi of bookingInformation">
+                    <td scope="col">{{bi.appointment_date | date:'dd-MMM-yyyy'}}</td>
+                    <td scope="col">{{bi.appointment_time_from}} - {{bi.appointment_time_to}}</td>
+                    <td scope="col">{{bi.doctor}}</td>
+                    <td scope="col">{{bi.contact_no}}</td>
+                    <td scope="col">{{bi.dob}}</td>
+                    <td scope="col">{{bi.email}}</td>
+                    <td scope="col">{{bi.patient_name}}</td>
+                    <td scope="col">{{bi.id_no}}</td>
+                    <td scope="col">{{bi.mr_no}}</td>
+                    <td scope="col">{{bi.sales_item_name}}</td>
+                    <td scope="col">{{bi.service_name}}</td>
+                    <td scope="col">{{bi.covid_testing_type_name}}</td>
+                    <td scope="col">{{bi.price | number}}</td>
+                    <td scope="col">{{bi.booking_id}}</td>
+                    <th>
+                        <button cButton color="primary" id="btn-delete" type="button" size="sm" (click)="removeData(bi.uuid)">
+                            <svg cIcon class="me-2" name="cilDelete"></svg>
+                        </button>
+                    </th>
+                </tr>
+                </tbody>
+            </table>
+            </c-card-body>
+            <c-card-footer footer class="text-center">
+            <button cButton color="primary" id="btn-search-mr" type="button" size="sm" [disabled]="progressExport" (click)="bookingPaymentRepository.exportBookingInformationList()">
+                <div *ngIf="!progressExport">
+                    <svg cIcon class="me-2" name="cil-file" size="sm"></svg> Export
+                </div>
+                <div *ngIf="progressExport">
+                    <c-spinner aria-hidden="true" size="sm" variant="grow"></c-spinner>
+                    Loading...
+                </div>
+            </button>
+            <button cButton color="primary" id="btn-search-mr" type="button" size="sm" (click)="onSaveBookingInformation()">
+                <div *ngIf="!loadSaveBookingInformation">
+                    <svg cIcon class="me-2" name="cil-save"></svg> Save
+                </div>
+                <div *ngIf="loadSaveBookingInformation">
+                    <c-spinner aria-hidden="true" size="sm" variant="grow"></c-spinner>
+                    Loading...
+                </div>
+            </button>
+            </c-card-footer>
+        </app-card-app>
+        </form>
+    </c-col>
+    </c-row>
+
+    <c-row ngPreserveWhitespaces>
+        <c-col xs="12">
+            <form cForm [formGroup]="invoiceForm">
+                <app-card-app title="Invoice" id="invoiceCard" [show]="showCardInvoice">
+                    <div class='fade show modal-body' style='text-align: center;' *ngIf="loadInvoiceCard">
+                        <c-spinner aria-hidden="true" size="sm" variant="grow"></c-spinner>
+                        Loading...
+                      </div>
+                    <c-card-body [hidden]="loadInvoiceCard">
+                        <div class="row mb-3">
+                            <c-col sm="2">
+                                <label cLabel class="col-form-label" for="prepaid-id">
+                                    Prepaid ID
+                                </label>
+                            </c-col>
+                            <c-col sm="3">
+                                <input id="prepaid-id" cFormControl sizing="sm" name="prepaid-id" disabled value="{{prepaidId}}"/>
+                            </c-col>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <c-row class="mb-3">
+                                    <c-col sm="11" class="card-header">
+                                        Patient Total
+                                    </c-col>
+                                </c-row>
+                                <c-row class="mb-3">                           
+                                    <c-col sm="5">
+                                        <label cLabel class="col-form-label" for="gross">
+                                            Gross
+                                        </label>
+                                    </c-col>
+                                    <c-col sm="6">
+                                        <input id="gross" cFormControl sizing="sm" name="gross" disabled value="{{gross | number}}"/>
+                                    </c-col>
+                                </c-row>
+                                <ng-template contextDisposer let-context>
+                                    <div *ngIf="context.checkAction('0311_discount_invoice')">
+                                        <c-row class="mb-3">
+                                            <c-col sm="5">
+                                                <label cLabel class="col-form-label" for="discount-type">
+                                                    Discount Type
+                                                </label>
+                                            </c-col>
+                                            <c-col sm="6">
+                                                <select id="discount-type" name="discount-type"
+                                                class="form-select form-select-sm"
+                                                formControlName="discountType"
+                                                [ngClass]="isFormInvoiceValid('discountType')" 
+                                                (ngModelChange)="onChangeDiscountType($event)">
+                                                    <option value="" selected>--Select Discount Type--</option>
+                                                    <option *ngFor="let list of listDiscountType" [ngValue]="list">{{list.value}}</option>
+                                                </select>
+                                                <div *ngIf="isFormInvoiceError('discountType')" class="text-danger">
+                                                    <div *ngFor="let e of getInvoiceErrors('discountType') | keyvalue">
+                                                        {{ getInvoiceErrorMessage('discountType', e.key) }}
+                                                    </div>
+                                                </div>
+                                            </c-col>
+                                        </c-row>
+                                        <c-row class="mb-3">
+                                            <c-col sm="5">
+                                                <label cLabel class="col-form-label" for="discount-factor">
+                                                    Discount Factor
+                                                </label>
+                                            </c-col>
+                                            <c-col sm="6">
+                                                <input cFormControl type="text" sizing="sm"
+                                                [ngClass]="isFormInvoiceValid('discountFactor')"
+                                                [readOnly]="disabledDiscountFactor"
+                                                formControlName="discountFactor"
+                                                value = {{discountFactor}}
+                                                (ngModelChange)="onChangeDiscountFactor($event)" numeric/>
+                                                <div *ngIf="isFormInvoiceError('discountFactor')" class="text-danger">
+                                                    <div *ngFor="let e of getInvoiceErrors('discountFactor') | keyvalue">
+                                                        {{ getInvoiceErrorMessage('discountFactor', e.key) }}
+                                                    </div>
+                                                </div>
+                                            </c-col>
+                                        </c-row>
+                                        <c-row class="mb-3">
+                                            <c-col sm="5">
+                                                <label cLabel class="col-form-label" for="discount">
+                                                    Discount
+                                                </label>
+                                            </c-col>
+                                            <c-col sm="6">
+                                                <input id="discount" cFormControl sizing="sm" name="discount" disabled value="{{discountAmount | number}}"/>
+                                            </c-col>
+                                        </c-row>
+                                    </div>
+                                </ng-template>
+                                <!-- <c-row class="mb-3">
+                                    <c-col sm="5">
+                                        <label cLabel class="col-form-label" for="promotion-code">
+                                            Promotion Code
+                                        </label>
+                                    </c-col>
+                                    <c-col sm="6">
+                                        <input disabled id="promotion-code" cFormControl sizing="sm" name="promotion-code" />
+                                    </c-col>
+                                </c-row>
+                                <c-row class="mb-3">
+                                    <c-col sm="5">
+                                        <label cLabel class="col-form-label" for="gross">
+                                        </label>
+                                    </c-col>
+                                    <c-col sm="6">
+                                        <button disabled cButton color="primary" id="btn-apply" type="button" size="sm">
+                                            <svg cIcon name="cil-reload"></svg> Apply
+                                        </button>
+                                    </c-col>
+                                </c-row> -->
+                                <c-row class="mb-3">
+                                    <c-col sm="5">
+                                        <label cLabel class="col-form-label" for="net">
+                                            Net
+                                        </label>
+                                    </c-col>
+                                    <c-col sm="6">
+                                        <input id="net" cFormControl sizing="sm" name="net" disabled value="{{net | number}}" />
+                                    </c-col>
+                                </c-row>
+                                <c-row class="mb-3">
+                                    <c-col sm="5">
+                                        <label cLabel class="col-form-label" for="balance">
+                                            Balance
+                                        </label>
+                                    </c-col>
+                                    <c-col sm="6">
+                                        <input id="balance" cFormControl sizing="sm" name="balance" disabled value="{{balance | number}}" />
+                                    </c-col>
+                                </c-row>
+                            </div>
+                            <div class="col-md-6">
+                                <c-row class="mb-3">
+                                    <c-col sm="11" class="card-header">
+                                        Invoice Total
+                                    </c-col>
+                                </c-row>
+                                <c-row class="mb-3">
+                                    <c-col sm="5">
+                                        <label cLabel class="col-form-label" for="gross-invoice">
+                                            Gross
+                                        </label>
+                                    </c-col>
+                                    <c-col sm="6">
+                                        <input id="gross-invoice" cFormControl sizing="sm" name="gross-invoice" disabled value="{{gross | number}}"/>
+                                    </c-col>
+                                </c-row>
+                                <c-row class="mb-3">
+                                    <c-col sm="5">
+                                        <label cLabel class="col-form-label" for="discount-invoice">
+                                            Discount
+                                        </label>
+                                    </c-col>
+                                    <c-col sm="6">
+                                        <input id="dicsount-invoice" cFormControl sizing="sm" name="dicsount-invoice" disabled value="{{discountAmount | number}}"/>
+                                    </c-col>
+                                </c-row>
+                                <!-- <c-row class="mb-3">
+                                    <c-col sm="5">
+                                        <label cLabel class="col-form-label" for="rounding-invoice">
+                                            Rounding
+                                        </label>
+                                    </c-col>
+                                    <c-col sm="6">
+                                        <input id="rounding-invoice" cFormControl sizing="sm" name="rounding-invoice" disabled />
+                                    </c-col>
+                                </c-row> -->
+                                <c-row class="mb-3">
+                                    <c-col sm="5">
+                                        <label cLabel class="col-form-label" for="net-invoice">
+                                            Net
+                                        </label>
+                                    </c-col>
+                                    <c-col sm="6">
+                                        <input id="net-invoice" cFormControl sizing="sm" name="net-invoice" disabled value="{{net | number}}" />
+                                    </c-col>
+                                </c-row>
+                                <c-row class="mb-3">
+                                    <c-col sm="5">
+                                        <label cLabel class="col-form-label" for="balance-invoice">
+                                            Balance
+                                        </label>
+                                    </c-col>
+                                    <c-col sm="6">
+                                        <input id="balance-invoice" cFormControl sizing="sm" name="balance-invoice" disabled value="{{balance | number}}"/>
+                                    </c-col>
+                                </c-row>
+                            </div>
+                        </div>
+                    </c-card-body>
+                    <c-card-footer footer class="text-center">
+                        <button cButton color="primary" id="btn-search-mr" type="button" size="sm" (click)="onValidateSaveInvoice()" [disabled]="disabledSaveInvoice">
+                            <div *ngIf="!loadSaveInvoiceButton">
+                                <svg cIcon class="me-2" name="cil-save"></svg> Save
+                              </div>
+                              <div *ngIf="loadSaveInvoiceButton">
+                                <c-spinner aria-hidden="true" size="sm" variant="grow"></c-spinner>
+                                Loading...
+                              </div>
+                        </button>
+                        <ng-template contextDisposer let-context>
+                            <button cButton color="primary" id="btn-search-mr" type="button" size="sm"
+                            *ngIf="context.checkAction('0313_print_invoice_sementara')"
+                            (click)="showSendPrintTemporaryModal()" [disabled]="disabledSaveInvoice">
+                                <svg cIcon class="me-2" name="cil-send" size="sm"></svg> Print/Send Invoice Sementara
+                            </button>
+                        </ng-template>
+                    </c-card-footer>
+                </app-card-app>
+            </form>
+        </c-col>
+    </c-row>
+
+    <app-card-app title='Payment' [show]="showCardPayment">
+        <c-card-body>
+        <div class='fade show modal-body' style='text-align: center;' *ngIf="loadSaveInvoiceButton">
+            <c-spinner aria-hidden="true" size="sm" variant="grow"></c-spinner>
+            Loading...
+        </div>
+          <form [formGroup]="paymentForm" [hidden]="loadSaveInvoiceButton">
+            <c-row class="mb-3">
+              <c-col xs="6">
+                <app-card-app title='Amount to be Settled'>
+                  <c-card-body>
+                      <div class="row mb-3">
+                        <label for="amountToBeSettled" class="col-sm-4 col-form-label" cLabel>Amount to
+                          Settled</label>
+                        <div class="col-sm-6">
+                          <input type="text" class="form-control form-control-sm" id="amountToBeSettled"
+                            [disabled]="readOnlyAmountToSettled" value="{{payment.amount_to_settled | number}}">
+                        </div>
+                      </div>
+                      <div class="row mb-3">
+                        <label for="settleAmount" class="col-sm-4 col-form-label" cLabel>Settled
+                          Amount</label>
+                        <div class="col-sm-6">
+                          <input type="text" class="form-control form-control-sm" id="settleAmount"
+                            [disabled]="readOnlySettleAmount"  value="{{payment.settle_amount | number}}">
+                        </div>
+                      </div>
+                      <div class="row mb-3">
+                        <label for="balance" class="col-sm-4 col-form-label" cLabel>Balance</label>
+                        <div class="col-sm-6">
+                          <input type="text" class="form-control form-control-sm" id="balance" [disabled]="readOnlyBalance"
+                          value="{{payment.balance | number}}">
+                        </div>
+                      </div>
+                      <!-- <div class="row mb-3">
+                        <label for="depositBalance" class="col-sm-4 col-form-label-sm">Deposit
+                          Balance</label>
+                        <div class="col-sm-6">
+                          <input type="text" class="form-control form-control-sm" id="depositBalance"
+                            [disabled]="readOnlyDeposit" value="{{ payment.deposit_balance | number}}">
+                        </div>
+                      </div> -->
+                      <div class="row mb-3">
+                        <label for="amount" class="col-sm-4 col-form-label" cLabel>Amount</label>
+                        <div class="col-sm-6">
+                          <fieldset [disabled]="readOnlyAmount">
+                            <input cFormControl type="text" id="amount" formControlName="amount"
+                            class="form-control form-control-sm currency_input"
+                            [ngClass]="isFormValid('amount')"
+                            (ngModelChange)="onChangePaymentAmount($event)"
+                            numeric>
+                          </fieldset>
+                          <div *ngIf="isFormError('amount')" class="text-danger">
+                            <div *ngFor="let e of getErrors('amount') | keyvalue">{{ getErrorMessage('amount', e.key) }}</div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row mb-3">
+                        <label for="paymentMode" class="col-sm-4 col-form-label" cLabel>Payment
+                          Mode</label>
+                        <div class="col-sm-6">
+                          <fieldset [disabled]="readOnlyPaymentMode">
+                            <select cSelect id="paymentMode" formControlName="paymentMode" 
+                            class="form-select form-select-sm" 
+                            [ngClass]="isFormValid('paymentMode')"
+                            (ngModelChange)="onChangePaymentMode($event)">
+                                <option selected="" disabled="">-- Select Payment Mode --</option>
+                                <option *ngFor="let p of paymentModeList" [ngValue]="p">{{ p.value }}</option>
+                            </select>
+                          </fieldset>
+                          <div *ngIf="isFormError('paymentMode')" class="text-danger">
+                            <div *ngFor="let e of getErrors('paymentMode') | keyvalue">{{ getErrorMessage('paymentMode', e.key) }}</div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row mb-3" id="divQrisBank" style="display: none">
+                        <label for="qrisBank" class="col-sm-4 col-form-label" cLabel>Bank</label>
+                        <div class="col-sm-6">
+                          <select class="form-select form-select-sm" id="qrisBank" [disabled]="readOnlyBank">
+                            <option selected></option>
+                            <option value="1">Nobu</option>
+                            <option value="2">CIMB Niaga</option>
+                          </select>
+                        </div>
+                      </div>
+                      <div class="row mb-3">
+                        <label for="netPayment" class="col-sm-4 col-form-label" cLabel>Net</label>
+                        <div class="col-sm-6">
+                          <input type="text" class="form-control form-control-sm" id="netPayment" [disabled]="readOnlyNet" value="{{payment.net | number}}">
+                        </div>
+                      </div>
+                    
+                  </c-card-body>
+                </app-card-app>
+              </c-col>
+              <c-col xs="6">
+                <app-div-bank-transfer 
+                [readOnly]="!paymentMode.bankTransfer"
+                [submitted]="submitted"
+                [(formValid)]="formValid.bankTransfer"
+                [hidden]="!paymentMode.bankTransfer"
+                [(data)]="bankTransfer"></app-div-bank-transfer>
+                <app-div-cash
+                [readOnly]="!paymentMode.cash"  
+                [submitted]="submitted" 
+                [(formValid)]="formValid.cash" 
+                [hidden]="!paymentMode.cash"
+                [payment]="payment"
+                [(data)]="cash"
+                >                
+                </app-div-cash>
+                <app-div-digital-payment 
+                [readOnly]="!paymentMode.digitalPayment" 
+                [submitted]="submitted"
+                [(formValid)]="formValid.digitalPayment"
+                [patientInfo]="patient" [payment]="payment"
+                [hidden]="!paymentMode.digitalPayment"
+                [transactionType]="'Prepaid'"
+                [prepaidDate]="prepaidDate"
+                [prepaidId]="prepaidId"
+                [paymentFormValid]="paymentForm.valid"
+                [(data)]="digitalPayment">
+                </app-div-digital-payment>
+                <app-div-edc 
+                [readOnly]="!paymentMode.edc" 
+                [submitted]="submitted"
+                [(formValid)]="formValid.edc" 
+                [hidden]="!paymentMode.edc"
+                [payment]="payment"
+                [(data)]="card"
+                [paymentFormValid]="paymentForm.valid">
+                </app-div-edc>
+                <app-div-giro [(data)]="giro" [readOnly]="!paymentMode.giro"
+                [(formValid)]="formValid.giro" [submitted]="submitted" 
+                [hidden]="!paymentMode.giro"></app-div-giro>
+                <app-div-payer
+                [(data)]="payer" [readOnly]="!paymentMode.payer"
+                [(formValid)]="formValid.payer" [submitted]="submitted" 
+                [hidden]="!paymentMode.payer">
+                </app-div-payer>
+              </c-col>
+            </c-row>
+          </form>
+        </c-card-body>
+        <c-card-footer>
+          <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+            <ng-template contextDisposer let-context>
+                <button cButton id="btnAdd" class="btn btn-primary btn-sm" [disabled]="disabledAdd"
+                  (click)="addPaymentMode()" *ngIf="context.checkAction('0312_add_payment')">
+                  <svg cIcon name="cilPlus" size="sm"></svg>
+                  Add
+                </button>
+            </ng-template>
+            <button cButton id="btnSave" class="btn btn-primary btn-sm"
+              (click)="submitAddPayment()" [disabled]="progress || disabledSave">
+              <div *ngIf="!progress">
+                <svg cIcon name="cilSave" size="sm"></svg> Save
+              </div>
+              <div *ngIf="progress">
+                <c-spinner aria-hidden="true" size="sm" variant="grow"></c-spinner>
+                Loading...
+              </div>
+            </button>
+            <button cButton id="btnCancel" [disabled]="disabledCancel" class="btn btn-primary btn-sm"
+              (click)="cancelAddPaymentMode()">
+              <svg cIcon name="cilX" size="sm"></svg>
+              Cancel
+            </button>
+          </div>
+        </c-card-footer>
+      </app-card-app>
+      <ng-template contextDisposer let-context>
+          <app-card-payment-settlement [type]="'prepaid'" [showFooter]="true"
+          [show]="showCardPaymentSettlement"
+          [patientInfo]="patient" [prepaidId]="prepaidId" [params]="paymentSettlementParams" 
+          [showPrintOri]="context.checkAction('0314_print_invoice_original') || context.checkAction('0315_print_invoice_original_many_times')"
+          [showPrintCopy]="context.checkAction('0316_print_invoice_copy')"></app-card-payment-settlement>
+      </ng-template>
+</div>

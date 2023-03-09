@@ -1,0 +1,84 @@
+<div class="modal-header">
+  <h5 class="modal-title pull-left">Cancel Reason</h5>
+  <button type="button" class="btn-close close pull-right" aria-label="Close" (click)="bsModalRef.hide()">
+    <span aria-hidden="true" class="visually-hidden">&times;</span>
+  </button>
+</div>
+<div class='fade show modal-body' style='text-align: center' *ngIf="getReason">
+  <c-spinner aria-hidden="true" size="sm" variant="grow"></c-spinner>
+  Loading...
+</div>
+<div class="modal-body" [hidden]="getReason">
+  <c-row ngPreserveWhitespaces>
+    <c-col xs="12">
+      <form cForm>
+        <c-row class="mb-3">
+          <c-col sm="2">
+            <label cLabel class="col-form-label" for="rejectReason">Reject Reason</label>
+          </c-col>
+          <c-col sm="5">
+            <select class="form-select form-select-sm" id="cancelReason" name="cancelReason" [ngModel]="selectedCancelReason" (ngModelChange)="onChangeCancelReason($event)">
+              <option selected="" disabled="">-- Select Reason --</option>
+              <option *ngFor="let list of listCancelReason" [ngValue]="list">{{list.value}}</option>
+            </select>
+          </c-col>
+        </c-row>
+        <c-row class="mb-3">
+          <c-col sm="2">
+            <label cLabel class="col-form-label" for="notes">Notes</label>
+          </c-col>
+          <c-col sm="5">
+            <textarea cFormControl class="form-control form-control-sm" id="reject-reason-notes" name="notes" [ngModel]="notes" (ngModelChange)="onChangeNotes($event)"></textarea>
+          </c-col>
+        </c-row>
+        <c-row class="mb-3" *ngIf="statusPage != 'sales'">
+          <label class="col-sm-12 col-form-label-sm">
+            <i style="color: red">Please Input Supervisor's User ID and Password</i>
+          </label>
+          <br />
+          <label class="col-sm-12 col-form-label-sm"><i style="color: red">(Leave it blank if the cancel request is
+            going to be sent to
+            Approval Bucket)</i></label>
+          </c-row>
+        <form [formGroup]="cancelForm" *ngIf="statusPage != 'sales'">
+          <c-row class="mb-3">
+            <label for="userId" class="col-sm-2 col-form-label-sm">User ID</label>
+            <div class="col-sm-5">
+              <input type="text" class="form-control form-control-sm" id="userId" formControlName="userId" (ngModelChange)="onChangeUserId($event)"/>
+            </div>
+          </c-row>
+          <c-row class="mb-3">
+              <label for="password" class="col-sm-2 col-form-label-sm">Password</label>
+              <div class="col-sm-5">
+                <input cForm type="password" required 
+                class="form-control form-control-sm" id="password" formControlName="password" 
+                (ngModelChange)="onChangePassword($event)"
+                [ngClass]="{ 'is-invalid': (submitted || f['password'].touched) && f['password'].errors, 'is-valid': f['password'].touched && !f['password'].errors }"
+                />
+                <div *ngIf="submitted && f['password'].errors">
+                  Password is required
+                </div>
+              </div>
+          </c-row>
+        </form>
+      </form>
+    </c-col>
+  </c-row>
+</div>
+<div class="modal-footer d-block">
+  <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+    <button cButton color="primary" id="btn-ok" type="button" size="sm" 
+    (click)="onValidate()" *ngIf="!getReason" [disabled]="progress">
+      <div *ngIf="!progress">
+        Ok
+      </div>
+      <div *ngIf="progress">
+        <c-spinner aria-hidden="true" size="sm" variant="grow"></c-spinner>
+        Loading...
+      </div>
+    </button>
+    <button cButton color="primary" id="btn-close-modal" type="button" size="sm" (click)="bsModalRef.hide()">
+      Close
+    </button>
+  </div>
+</div>

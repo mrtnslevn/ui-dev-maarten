@@ -1,0 +1,42 @@
+<app-card-app title="Refund Approval History" [show]="show">
+      <c-card-body>
+        <table cTable id="tableRefundApprovalHistory" [responsive]="true" small>
+          <thead style="font-size: 14px">
+            <tr>
+              <th scope="col">Type</th>
+              <th scope="col">User Id</th>
+              <th scope="col">Performed date</th>
+              <th scope="col">Approval Status</th>
+              <th scope="col">Reason</th>
+              <th scope="col">Note</th>
+            </tr>
+          </thead>
+          <!-- <tbody id="tbodySearchPatientInvoice" *ngIf="patient_list.length > 0; else no_data">
+            <tr *ngFor="let patient of patient_list">
+              <td>{{patient.type}}</td>
+              <td>{{patient.patient_name}}</td>
+              <td>{{patient.id_no}}</td>
+              <td>{{patient.dob | date:'dd-MMM-yyyy'}}</td>
+              <td>{{patient.reason}}</td>
+              <td>{{patient.note}}</td>
+              <td></td>
+            </tr>
+          </tbody> -->
+        </table>
+        <ng-template #no_data>
+          <tr ngClass="text-center">
+            <td colspan="8">No Data</td>
+          </tr>
+        </ng-template>
+        <!-- <pagination *ngIf="paging.total_row > 0"
+          [boundaryLinks]="true"
+          [totalItems]="paging.total_row"
+          [(ngModel)]="current_page"
+          (pageChanged)="pageChanged($event)"
+          [itemsPerPage]="paging.rows_per_page"
+          [rotate]="false"
+          [maxSize]="paging.max_size" [disabled]="progress">
+        </pagination> -->
+      </c-card-body>
+
+    </app-card-app>

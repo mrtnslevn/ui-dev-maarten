@@ -1,0 +1,65 @@
+<app-card-app title='Combined Bill' [show]="show">
+  <div class='fade show modal-body' style='text-align: center;' *ngIf="loadPage">
+    <c-spinner aria-hidden="true" size="sm" variant="grow"></c-spinner>
+    Loading...
+  </div>
+  <c-card-body *ngIf="loadPage == false">
+    <table cTable id="tableCombinedBill"
+           class="table table-striped table-hover table-sm"
+           style="width: 100%; white-space: nowrap; overflow-x: auto;"
+           [responsive]="true">
+      <thead>
+        <tr>
+          <th scope="col" [hidden]="!checkbox">
+            <input cFormCheckInput id="checkAllCombinedBill" type="checkbox" (change)="combinedBillSelectAll($event)">
+          </th>
+          <th scope="col">Admission ID</th>
+          <th scope="col">Admission Type</th>
+          <th scope="col">Admission Sub Type</th>
+          <th scope="col">Payer</th>
+          <th scope="col">Admission No</th>
+          <th scope="col">Admission Date</th>
+          <th scope="col">MR No</th>
+          <th scope="col">Name</th>
+        </tr>
+      </thead>
+      <tbody id="tbodyCombinedBill"  *ngIf="data.length>0; else no_data">
+        <tr *ngFor="let d of data">
+          <td [hidden]="!checkbox">
+            <input cFormCheckInput type="checkbox" [checked]="d.checked" (change)="combinedBillListChangeRadio(d, $event)">
+          </td>
+          <td>{{d.admission_id}}</td>
+          <td>{{d.admission_type}}</td>
+          <td>{{d.admission_sub_type}}</td>
+          <td>{{d.payer_name}}</td>
+          <td>{{d.admission_no}}</td>
+          <td>{{d.admission_date | date: 'dd-MMM-yyyy HH:mm'}}</td>
+          <td>{{d.mr_no}}</td>
+          <td>{{d.patient_name}}</td>
+        </tr>
+      </tbody>
+    </table>
+    <ng-template #no_data>
+      <tr ngClass="text-center">
+        <td colspan="9">No Data</td>
+      </tr>
+    </ng-template>
+  </c-card-body>
+  <c-card-footer [hidden]="!footer || data.length < 1">
+    <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+      <button cButton color="primary" id="btn-delete" type="button" size="sm" (click)="removeBill()">
+        <svg cIcon class="me-2" name="cilDelete"></svg> Remove
+      </button>
+      <button cButton color="primary" id="btn-export-combined-bill" type="button" size="sm" (click)="exportCombinedBill()"
+      [disabled]="progress">
+        <div *ngIf="!progress">
+          <svg cIcon class="me-2" name="cilFile"></svg> Export
+        </div>
+        <div *ngIf="progress">
+          <c-spinner aria-hidden="true" size="sm" variant="grow"></c-spinner>
+          Loading...
+        </div>
+      </button>
+    </div>
+  </c-card-footer>
+</app-card-app>

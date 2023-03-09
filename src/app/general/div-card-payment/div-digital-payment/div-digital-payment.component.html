@@ -1,0 +1,196 @@
+<div class="col-md-12" id="divDigitalPayment">
+  <app-card-app title="Digital Payment">
+  <c-card-body>
+    <div *ngIf="_readOnly; else elseBlock">
+      <div class="row mb-3">
+        <label for="paymentCode"
+               class="col-sm-4 col-form-label-sm">Payment Code</label>
+        <div class="col-sm-6">
+          <input type="text" class="form-control form-control-sm" id="paymentCode" readonly
+          value="{{ data.payment_code }}">
+        </div>
+      </div>
+      <div class="row mb-3">
+        <label for="dpTransactionId" class="col-sm-4 col-form-label-sm">Transaction Id</label>
+        <div class="col-sm-6">
+          <input type="text" class="form-control form-control-sm" id="dpTransactionId" readonly
+          value="{{ data.transaction_id }}">
+        </div>
+      </div>
+      <div class="row mb-3">
+        <label for="dpPaymentType" class="col-sm-4 col-form-label-sm">Payment Type</label>
+        <div class="col-sm-6">
+          <input type="text" class="form-control form-control-sm" id="dpPaymentType" readonly
+          value="{{ data.payment_type }}">
+        </div>
+      </div>
+      <div class="row mb-3">
+        <label for="dpAcquiringBank" class="col-sm-4 col-form-label-sm">Acquiring Bank</label>
+        <div class="col-sm-6">
+          <input type="text" class="form-control form-control-sm" id="dpAcquiringBank" readonly
+          value="{{ data.acquiring_bank }}">
+        </div>
+      </div>
+      <div class="row mb-3">
+        <label for="dpBankNumber" class="col-sm-4 col-form-label-sm">Bank Number</label>
+        <div class="col-sm-6">
+          <input type="text" class="form-control form-control-sm" id="dpBankNumber" readonly
+          value="{{ data.bank_number }}">
+        </div>
+      </div>
+      <div class="row mb-3">
+        <label for="dpCardAssoc" class="col-sm-4 col-form-label-sm">Card Assoc</label>
+        <div class="col-sm-6">
+          <input type="text" class="form-control form-control-sm" id="dpCardAssoc" readonly
+          value="{{ data.card_assoc }}">
+        </div>
+      </div>
+      <div class="row mb-3">
+        <label for="dpCardNo" class="col-sm-4 col-form-label-sm">Card No</label>
+        <div class="col-sm-6">
+          <input type="text" class="form-control form-control-sm" id="dpCardNo" readonly
+          value="{{ data.card_no }}">
+        </div>
+      </div>
+      <div class="row mb-3">
+        <label for="dpCustomerName" class="col-sm-4 col-form-label-sm">Customer Name</label>
+        <div class="col-sm-6">
+          <input type="text" class="form-control form-control-sm" id="dpCustomerName" readonly
+          value="{{ data.customer_name }}">
+        </div>
+      </div>
+      <div class="row mb-3">
+        <label for="dpNotes" class="col-sm-4 col-form-label-sm">Notes</label>
+        <div class="col-sm-6">
+          <input type="text" class="form-control form-control-sm" id="dpNotes" readonly
+          value="{{ data.notes }}">
+        </div>
+      </div>
+    </div>
+    
+    <ng-template #elseBlock>
+      <form [formGroup]="form">
+        <div>
+          <div class="row mb-3">
+            <label for="dpWA" class="col-sm-4 col-form-label-sm">Whatsapp No.</label>
+            <div class="col-sm-6">
+              <input type="text" id="dpWA" formControlName="whatsappNo" 
+              class="form-control form-control-sm" [ngClass]="isFormValid('whatsappNo')"
+              (ngModelChange)="onChangeWhatsappNo($event)">
+              <div *ngIf="isFormError('whatsappNo')" class="text-danger">
+                <div *ngFor="let e of getErrors('whatsappNo') | keyvalue">{{ getErrorMessage('whatsappNo', e.key) }}</div>
+              </div>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label for="dpEmail" class="col-sm-4 col-form-label-sm">Email</label>
+            <div class="col-sm-6">
+              <input type="text" id="dpEmail" formControlName="email" 
+              class="form-control form-control-sm" [ngClass]="isFormValid('email')"
+              (ngModelChange)="onChangeEmail($event)">
+              <div *ngIf="isFormError('email')" class="text-danger">
+                <div *ngFor="let e of getErrors('email') | keyvalue">{{ getErrorMessage('email', e.key) }}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </ng-template>
+    <div class="row mb-3" *ngIf="!isPaymentSettlement">
+      <label class="col-sm-6 col-form-label-sm">Send Digital Payment Request</label>
+      <div class="col-sm-3">
+        <button type="button" class="btn btn-primary btn-sm"(click)="onValidateProcessDigitalPayment();"
+        [disabled]="progress">
+          <div *ngIf="!progress">
+            <svg cIcon name="cilReload" size="sm"></svg> Process
+          </div>
+          <div *ngIf="progress">
+            <c-spinner aria-hidden="true" size="sm" variant="grow"></c-spinner>
+            Loading...
+          </div>
+        </button>
+      </div>
+    </div>
+    <div class="row mb-3" id="divDigitalPaymentAdd1" [hidden]="!processed">
+      <label for="paymentCode" class="col-sm-4 col-form-label-sm">Payment Code</label>
+      <div class="col-sm-4">
+        <input type="text" class="form-control form-control-sm" id="paymentCode" readonly="readonly" value="{{ data.payment_code }}">
+      </div>
+    </div>
+    <div class="row mb-3" id="divDigitalPaymentAdd2" [hidden]="!processed" 
+    style="width: 100%;  white-space: nowrap; overflow-x: auto;">
+      <div class="row mb-3">
+        <label class="col-sm-4 col-form-label-sm"></label>
+        <div class="col-sm-6">
+          <button type="button" class="btn btn-primary btn-sm" (click)="checkDigitalPaymentStatus();"
+          [disabled]="progress">
+            <div *ngIf="!progress">
+              <svg cIcon class="me-2" name="cil-search"></svg> Check Payment Status
+            </div>
+            <div *ngIf="progress">
+              <c-spinner aria-hidden="true" size="sm" variant="grow"></c-spinner>
+              Loading...
+            </div>
+          </button>
+        </div>
+      </div>
+      <div class="row mb-3">
+        <label for="dpTransactionId" class="col-sm-4 col-form-label-sm">Transaction Id</label>
+        <div class="col-sm-6">
+          <input type="text" class="form-control form-control-sm" id="dpTransactionId" 
+          readonly="readonly" value="{{ data.transaction_id }}">
+        </div>
+      </div>
+      <div class="row mb-3">
+        <label for="dpPaymentType" class="col-sm-4 col-form-label-sm">Payment Type</label>
+        <div class="col-sm-6">
+          <input type="text" class="form-control form-control-sm" id="dpPaymentType" 
+          readonly="readonly" value="{{ data.payment_type }}">
+        </div>
+      </div>
+      <div class="row mb-3">
+        <label for="dpAcquiringBank" class="col-sm-4 col-form-label-sm">Acquiring Bank</label>
+        <div class="col-sm-6">
+          <input type="text" class="form-control form-control-sm" id="dpAcquiringBank" 
+          readonly="readonly" value="{{ data.acquiring_bank }}">
+        </div>
+      </div>
+      <div class="row mb-3">
+        <label for="dpBankNumber" class="col-sm-4 col-form-label-sm">Bank Number</label>
+        <div class="col-sm-6">
+          <input type="text" class="form-control form-control-sm" id="dpBankNumber" 
+          readonly="readonly" value="{{ data.bank_number }}">
+        </div>
+      </div>
+      <div class="row mb-3">
+        <label for="dpCardAssoc" class="col-sm-4 col-form-label-sm">Card Assoc</label>
+        <div class="col-sm-6">
+          <input type="text" class="form-control form-control-sm" id="dpCardAssoc" 
+          readonly="readonly" value="{{ data.card_assoc }}">
+        </div>
+      </div>
+      <div class="row mb-3">
+        <label for="dpCardNo" class="col-sm-4 col-form-label-sm">Card No</label>
+        <div class="col-sm-6">
+          <input type="text" class="form-control form-control-sm" id="dpCardNo" 
+          readonly="readonly" value="{{ data.card_no }}">
+        </div>
+      </div>
+      <div class="row mb-3">
+        <label for="dpCustomerName" class="col-sm-4 col-form-label-sm">Customer Name</label>
+        <div class="col-sm-6">
+          <input type="text" class="form-control form-control-sm" id="dpCustomerName" 
+          readonly="readonly" value="{{ data.customer_name }}">
+        </div>
+      </div>
+
+      <div class="row mb-3">
+        <label for="dpNotes" class="col-sm-4 col-form-label-sm">Notes</label>
+        <div class="col-sm-6">
+          <input type="text" id="dpNotes" class="form-control form-control-sm" [(ngModel)]="data.notes">
+        </div>
+      </div>
+    </div>
+  </c-card-body>
+  </app-card-app>
+</div>

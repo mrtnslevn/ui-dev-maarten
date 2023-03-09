@@ -1,0 +1,144 @@
+<app-card-app title='Patient Information' [show]="show">
+  <div class='fade show modal-body' style='text-align: center;' *ngIf="loadPage">
+    <c-spinner aria-hidden="true" size="sm" variant="grow"></c-spinner>
+    Loading...
+  </div>
+  <c-card-body [hidden]="loadPage">
+    <div class="row mb-3">
+      <label cLabel for="patientMrNo" class="col-sm-2 col-form-label">MR No.</label>
+      <div class="col-sm-2">
+        <input type="text" class="form-control form-control-sm" id="patientMrNo"
+               value="{{data.mr_no}}" readonly>
+      </div>
+      <label cLabel for="patientNotes" class="col-sm-2 col-form-label">Notes</label>
+      <div class="col-sm-2">
+        <input type="text" class="form-control form-control-sm" id="patientNotes"
+               value="{{data.notes}}" [(ngModel)]="data.notes" (ngModelChange)="onChangeNotes($event)" [disabled]="!payment">
+      </div>
+      <label cLabel for="patientBirthDate" class="col-sm-2 col-form-label">Birth
+        Date</label>
+      <div class="col-sm-2">
+        <input type="text" class="form-control form-control-sm"
+               id="patientBirthDate" value="{{data.dob | date:'dd-MMM-yyyy'}}" readonly>
+      </div>
+    </div>
+    <div class="row mb-3">
+      <label for="patientAdmissionNo" class="col-sm-2 col-form-label" cLabel>Admission
+        No.</label>
+      <div class="col-sm-2">
+        <input type="text" class="form-control form-control-sm"
+               id="patientAdmissionNo" value="{{data.admission_no}}" readonly>
+      </div>
+      <label for="patientPrimaryDoctor" class="col-sm-2 col-form-label" cLabel>Primary
+        Doctor</label>
+      <div class="col-sm-2">
+        <input type="text" class="form-control form-control-sm"
+               id="patientPrimaryDoctor" value="{{data.primary_doctor}}" readonly>
+      </div>
+      <label for="patientAge" class="col-sm-2 col-form-label" cLabel>Age</label>
+      <div class="col-sm-2">
+        <input type="text" class="form-control form-control-sm" id="patientAge"
+               value="{{data.age}}" readonly>
+      </div>
+    </div>
+    <div class="row mb-3">
+      <label for="patientAdmissionDate" class="col-sm-2 col-form-label" cLabel>Admission
+        Date</label>
+      <div class="col-sm-2">
+        <input type="text" class="form-control form-control-sm"
+               id="patientAdmissionDate" value="{{data.admission_date | date: 'dd-MMM-yyyy HH:mm'}}" readonly>
+      </div>
+      <label for="patientBed" class="col-sm-2 col-form-label-sm">Bed</label>
+      <div class="col-sm-2">
+        <input type="text" class="form-control form-control-sm" id="patientBed"
+               value="{{data.bed}}" readonly>
+      </div>
+      <label for="patientSex" class="col-sm-2 col-form-label" cLabel>Sex</label>
+      <div class="col-sm-2">
+        <input type="text" class="form-control form-control-sm" id="patientSex"
+               value="{{data.sex}}" readonly>
+      </div>
+    </div>
+    <div class="row mb-3">
+      <label for="patientName" class="col-sm-2 col-form-label" cLabel >Name</label>
+      <div class="col-sm-2">
+        <input type="text" class="form-control form-control-sm" id="patientName"
+               value="{{data.patient_name}}" readonly>
+      </div>
+      <label for="patientEmail" class="col-sm-2 col-form-label" cLabel>Email</label>
+      <div class="col-sm-2">
+        <input type="text" class="form-control form-control-sm" id="patientEmail"
+               value="{{data.email}}" readonly>
+      </div>
+      <label for="patientIdNo" class="col-sm-2 col-form-label" cLabel>ID No.</label>
+      <div class="col-sm-2">
+        <input type="text" class="form-control form-control-sm" id="patientIdNo"
+               value="{{data.id_no}}" readonly>
+      </div>
+    </div>
+
+  <div class="row mb-3">
+      <label for="patientPayer" class="col-sm-2 col-form-label" cLabel>Patient Type</label>
+      <div class="col-sm-2">
+        <select class="form-select form-select-sm" [(ngModel)]="selectedPatientType"
+        (ngModelChange)="onChangePatientType($event)" *ngIf="payment">
+          <option *ngFor="let list of listPatientType" [ngValue]="list">{{ list.value }}</option>
+        </select>
+        <input type="text" class="form-control form-control-sm" id="patientType" 
+        value="{{data.patient_type}}" *ngIf="!payment" readonly="readonly">
+      </div>
+    </div>
+
+    <div class="row mb-3" *ngIf="searchPayer; else elseBlock">
+      <label for="patientPayer" class="col-sm-2 col-form-label" cLabel>Payer</label>
+      <div class="col-sm-2">
+        <div class="row">
+          <div class="col-9">
+            <input type="text" class="form-control form-control-sm" id="patientPayer" readonly="" value="{{data.payer_name}}">
+          </div>
+          <div class="col-1 m-0 p-0">
+            <button cButton id="btnSearchPatient" class="btn btn-primary btn-sm " 
+            (click)="openModalSearchPayer();" [disabled]="disableSearchPayer">
+              <svg cIcon name="cilSearch" size="sm"></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+      <label for="patientPayerId" class="col-sm-2 col-form-label" cLabel>Payer ID
+        No.</label>
+      <div class="col-sm-2">
+        <input type="text" class="form-control form-control-sm" id="patientPayerId"
+          [disabled]="disablePayerIdNo" value="{{data.payer_id_no}}" 
+          [ngModel]="data.payer_id_no" (ngModelChange)="onChangePayerIdNo($event)">
+      </div>
+      <label for="patientEligibilityNo" class="col-sm-2 col-form-label" cLabel>Eligibility
+        No.</label>
+      <div class="col-sm-2">
+        <input type="text" class="form-control form-control-sm" id="patientEligibilityNo"
+        [disabled]="disableEligibilityNo" value="{{data.eligibility_no}}" 
+        [ngModel]="data.eligibility_no" (ngModelChange)="onChangeEligibilityNo($event)">
+      </div>
+    </div>
+    <ng-template #elseBlock>
+      <div class="row mb-3">
+        <label for="patientPayer" class="col-sm-2 col-form-label" cLabel>Payer</label>
+        <div class="col-sm-2  ">
+          <input type="text" class="form-control form-control-sm" id="patientPayer"
+                 readonly="readonly" value="{{data.payer_name}}">
+        </div>
+        <label for="patientPayerId" class="col-sm-2 col-form-label" cLabel>Payer ID
+          No.</label>
+        <div class="col-sm-2">
+          <input type="text" class="form-control form-control-sm" id="patientPayerId"
+                 readonly="readonly" value="{{data.payer_id_no}}">
+        </div>
+        <label for="patientEligibilityNo" class="col-sm-2 col-form-label" cLabel>Eligibility
+          No.</label>
+        <div class="col-sm-2">
+          <input type="text" class="form-control form-control-sm"
+                 id="patientEligibilityNo" readonly="readonly" value="{{data.eligibility_no}}">
+        </div>
+      </div>
+    </ng-template>
+  </c-card-body>
+</app-card-app>
